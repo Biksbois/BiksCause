@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from dataset_object import dataset, init_obj
+from dataset_object import *
 
 def calc_lambda(n, d):
     return n / d
@@ -34,6 +34,6 @@ def get_LL(ds_obj):
     return calc_LL(ds_obj)
 
 if __name__ == '__main__':
-    ds_obj = init_obj()
+    ds_obj = init_obj_test()
     ll = get_LL()
     print(f"The Log Likelihood is: {ll}")

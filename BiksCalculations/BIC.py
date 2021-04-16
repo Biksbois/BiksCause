@@ -1,5 +1,5 @@
 from LL import get_LL
-from dataset_object import dataset, init_obj
+from dataset_object import *
 import numpy as np
 
 def calc_ln(ds_obj):
@@ -22,7 +22,7 @@ def calc_BIC(ll, ds_obj):
     return ll - ln * sum_u, ln, sum_u
 
 if __name__ == '__main__':
-    ds_obj = init_obj()
+    ds_obj = init_obj_weather_main()
     ll = get_LL(ds_obj)
     bic, ln, sum_u = calc_BIC(ll, ds_obj)
     

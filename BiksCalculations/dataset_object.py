@@ -54,7 +54,14 @@ class dataset():
         for i in range(self.window_size-1, self.get_col_len()):
             yield self.data[self.col_name][self.calc_min(i):i]
 
-def init_obj():
+def init_obj_weather_main():
+    window_size = 7
+    col_name = 'weather_main'
+    ds_path = "input_csv\Metro_Interstate_Traffic_Volume.csv"
+
+    return dataset(ds_path, col_name, window_size)
+
+def init_obj_test():
     window_size = 3
     col_name = 'label'
     ds_path = "BiksCalculations\data.csv"
