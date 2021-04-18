@@ -18,8 +18,9 @@ def calc_sum(ds_obj):
 def calc_BIC(ll, ds_obj):
     ln = calc_ln(ds_obj)
     sum_u = calc_sum(ds_obj)
+    bic = ll - (ln * sum_u)
     
-    return ll - (ln * sum_u), ln, sum_u
+    return bic, ln, sum_u
 
 if __name__ == '__main__':
     ds_obj = init_obj_test()

@@ -6,23 +6,24 @@ class dataset():
             self.data = pd.read_csv(ds_path)
         else:
             self.data = pd.read_csv(ds_path).head(head_val)
+        
         self.col_dict = {}
         self.window_size = window_size
         self.col_name = col_name
         self.pot_parent = {}
         
         #self.create_dict(col_name)
-        #self.identify_pot_parents()
+        self.identify_pot_parents()
         
     def identify_pot_parents(self):
         for win in self.get_window(windows_size = self.window_size+1):
             w = win.tolist()
             if w[-1] not in self.pot_parent:
                 self.pot_parent[w[-1]] = []
+            
             self.pot_parent[w[-1]].extend(w[0:-1])
             self.pot_parent[w[-1]] = list(set(self.pot_parent[w[-1]]))
-        print(self.pot_parent)
-        
+        # print(self.pot_parent)
 
     def extract_x(self):
         return self.data[self.col_name].unique().tolist()
@@ -55,7 +56,7 @@ class dataset():
         result = 0
         for w in self.get_window():
             w_list = w.tolist()
-            if u in w_list and x in w_list and w_list.index(x) > w_list.index(u):
+            if u in w_list and w_list[-1] == x: #x in w_list and w_listx.index(x) > w_list.index(u):
                 result += 1
         return result
     
@@ -69,7 +70,7 @@ class dataset():
         if windows_size == -1:
             windows_size = self.window_size
         for i in range(windows_size, self.get_col_len()):
-            print(self.calc_min(i, windows_size))
+            # print(self.calc_min(i, windows_size))
             yield self.data[self.col_name][self.calc_min(i, windows_size):i]
 
 def init_obj_weather_main():
@@ -82,6 +83,13 @@ def init_obj_weather_main():
 def init_obj_test(head_val = -1):
     window_size = 3
     col_name = 'label'
-    ds_path = "BiksCalculations\data.csv"
+    ds_path = "data.csv"
+    # ds_path = "BiksCalculations\data.csv"
 
     return dataset(ds_path, col_name, window_size, head_val = head_val)
+
+if __name__ == '__main__':
+    obj = init_obj_test()
+    
+    for key in obj.pot_parent.keys():
+        print(f"key = {key}, value = {obj.pot_parent[key]}")
