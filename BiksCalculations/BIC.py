@@ -19,10 +19,10 @@ def calc_BIC(ll, ds_obj):
     ln = calc_ln(ds_obj)
     sum_u = calc_sum(ds_obj)
     
-    return ll - ln * sum_u, ln, sum_u
+    return ll - (ln * sum_u), ln, sum_u
 
 if __name__ == '__main__':
-    ds_obj = init_obj_weather_main()
+    ds_obj = init_obj_test()
     ll = get_LL(ds_obj)
     bic, ln, sum_u = calc_BIC(ll, ds_obj)
     

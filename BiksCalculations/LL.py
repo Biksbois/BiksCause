@@ -15,7 +15,7 @@ def one_ll(u, x, ds):
     d = calc_d(u, ds)
     n = calc_n(x, u, ds)
     l = calc_lambda(n, d)
-
+    print(l)
     return (- l) * d + n * np.log(l)
 
 def calc_LL(ds):

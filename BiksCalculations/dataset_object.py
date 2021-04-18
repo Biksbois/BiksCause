@@ -1,13 +1,28 @@
 import pandas as pd
 
 class dataset():
-    def __init__(self, ds_path, col_name, window_size):
-        self.data = pd.read_csv(ds_path)
+    def __init__(self, ds_path, col_name, window_size, head_val = -1):
+        if head_val == -1:
+            self.data = pd.read_csv(ds_path)
+        else:
+            self.data = pd.read_csv(ds_path).head(head_val)
         self.col_dict = {}
         self.window_size = window_size
         self.col_name = col_name
+        self.pot_parent = {}
         
-        self.create_dict(col_name)
+        #self.create_dict(col_name)
+        #self.identify_pot_parents()
+        
+    def identify_pot_parents(self):
+        for win in self.get_window(windows_size = self.window_size+1):
+            w = win.tolist()
+            if w[-1] not in self.pot_parent:
+                self.pot_parent[w[-1]] = []
+            self.pot_parent[w[-1]].extend(w[0:-1])
+            self.pot_parent[w[-1]] = list(set(self.pot_parent[w[-1]]))
+        print(self.pot_parent)
+        
 
     def extract_x(self):
         return self.data[self.col_name].unique().tolist()
@@ -47,12 +62,15 @@ class dataset():
     def get_col_len(self):
         return len(self.data[self.col_name]) + 1
     
-    def calc_min(self, i):
-        return i-self.window_size
+    def calc_min(self, i, window_size):
+        return i-(window_size)
     
-    def get_window(self):
-        for i in range(self.window_size-1, self.get_col_len()):
-            yield self.data[self.col_name][self.calc_min(i):i]
+    def get_window(self, windows_size = -1):
+        if windows_size == -1:
+            windows_size = self.window_size
+        for i in range(windows_size, self.get_col_len()):
+            print(self.calc_min(i, windows_size))
+            yield self.data[self.col_name][self.calc_min(i, windows_size):i]
 
 def init_obj_weather_main():
     window_size = 7
@@ -61,9 +79,9 @@ def init_obj_weather_main():
 
     return dataset(ds_path, col_name, window_size)
 
-def init_obj_test():
+def init_obj_test(head_val = -1):
     window_size = 3
     col_name = 'label'
     ds_path = "BiksCalculations\data.csv"
 
-    return dataset(ds_path, col_name, window_size)
+    return dataset(ds_path, col_name, window_size, head_val = head_val)
