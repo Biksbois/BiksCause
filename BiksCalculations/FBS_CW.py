@@ -11,6 +11,8 @@ def forward_search(ds_obj, x):
     score = forward_run(ds_obj, x, set_z)
     set_x = [x]
     
+    print(f"For event '{x}', the potential parents are {set_z}")
+    
     # while True:
     for z in set_z:
         if z not in set_u:
