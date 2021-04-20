@@ -1,34 +1,29 @@
 import unittest
 from dataset_object import *
 from LL import calc_lambda
+from NST import *
+from CIR import *
 
-# ds_obj = dt.init_obj_test(head_val = 5)
-# win_expected_3 = [["x","y","z"],["y","z","y"]]
-# win_expected_4 = [["x","y","z","y"],["y","z","y","x"]]
-# win_actual = []
-# for w in ds_obj.get_window(windows_size=4):
-#     win_actual.append(w.tolist())
-# print(win_actual)
 class Test_dataset(unittest.TestCase):
-    
-    def test_windows_3(self):
-        ds_obj_3 = init_obj_test(head_val = 4)
+    def test_get_windows(self):
+        ds_obj = init_obj_test(head_val=6)
+        expected = [('y', ['x', 'y', 'z']), ('x' ,['y', 'z', 'y']), ('y', ['z', 'y', 'x'])]
+        actual = []
         
-        win_expected_3 = [["x","y","z"],["y","z","y"]]
-        win_actual = []
-        for w in ds_obj_3.get_window(windows_size=3):
-            win_actual.append(w.tolist())
-        self.assertEqual(win_expected_3, win_actual)
-    
-    def test_windows_4(self):
-        ds_obj_4 = init_obj_test(head_val = 5)
-
-        win_expected_4 = [["x","y","z","y"],["y","z","y","x"]]
-        win_actual = []
+        for w in ds_obj.get_window():
+            actual.append(w)
         
-        for w in ds_obj_4.get_window(windows_size=4):
-            win_actual.append(w.tolist())
-        self.assertEqual(win_expected_4, win_actual)
+        self.assertListEqual(expected, actual)
+    
+    def test_get_windows_backwards(self):
+        ds_obj = init_obj_test(head_val=6)
+        expected = [('x', ['y', 'z', 'y']), ('y', ['z', 'y', 'x']), ('z', ['y', 'x', 'y'])]
+        actual = []
+        
+        for w in ds_obj.get_window(backwards=False):
+            actual.append(w)
+        
+        self.assertListEqual(expected, actual)
     
     def test_n(self):
         ds_obj = init_obj_test()
@@ -36,7 +31,7 @@ class Test_dataset(unittest.TestCase):
         x = 'x'
         u = 'y'
         
-        expected = 2
+        expected = 4
         actual = ds_obj.calc_n(u, x)
         
         self.assertEqual(expected, actual)
@@ -46,7 +41,7 @@ class Test_dataset(unittest.TestCase):
         
         u = 'y'
         
-        expected = 15
+        expected = 14
         actual = ds_obj.calc_d(u)
         
         self.assertEqual(expected, actual)
@@ -58,3 +53,132 @@ class Test_dataset(unittest.TestCase):
         actual = calc_lambda(15, 2)
         
         self.assertEqual(expected, actual)
+    
+    def test_count(self):
+        ds_obj = init_obj_test()
+        x_expected = 5
+        y_expected = 7
+        z_expected = 7
+        
+        self.assertTrue(x_expected == ds_obj.col_dict['x'] and 
+                        y_expected == ds_obj.col_dict['y'] and 
+                        z_expected == ds_obj.col_dict['z'])
+    
+    def test_p_x(self):
+        ds_obj = init_obj_test()
+        expected = 0.2632
+        actual = round(ds_obj.calc_prob('x'), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_p_y(self):
+        ds_obj = init_obj_test()
+        expected = 0.3684
+        actual = round(ds_obj.calc_prob('y'), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_nec(self):
+        ds_obj = init_obj_test()
+        
+        expected = 0.2105
+        actual = round(ds_obj.calc_nec('x', 'y'), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_suf(self):
+        ds_obj = init_obj_test()
+        
+        expected = 0.1579
+        actual = round(ds_obj.calc_suf('x', 'y'), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_nst_rhs(self):
+        ds_obj = init_obj_test()
+        actual = 0.9832
+        alpha_val = 0.66
+        lambda_val = 0.5
+        x = 'x'
+        y = 'y'
+        
+        expected = round(nst_rhs(ds_obj, alpha_val, lambda_val, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_nst_lhs(self):
+        ds_obj = init_obj_test()
+        actual = 1.2435
+        alpha_val = 0.66
+        lambda_val = 0.5
+        x = 'x'
+        y = 'y'
+        
+        expected = round(nst_lhs(ds_obj, alpha_val, lambda_val, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_nst(self):
+        ds_obj = init_obj_test()
+        
+        expected = 1.2227
+        alpha_val = 0.66
+        lambda_val = 0.5
+        x = 'x'
+        y = 'y'
+        actual = round(get_nst(ds_obj, alpha_val, lambda_val, x, y), 4)
+
+        self.assertEqual(expected, actual)
+    
+    def test_cir_b(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 1.0857
+        expected = round(calc_cir_b(ds_obj, x, y), 4)
+        
+        self.assertEqual(actual, expected)
+    
+    def test_cir_c(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 1.4286
+        expected = round(calc_cir_c(ds_obj, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_cir_c_den(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 0.2
+        expected = round(cir_c_den(ds_obj, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_cir_c_den_den(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 5
+        expected = round(cir_c_den_den(ds_obj, x, y), 4)
+    
+    def test_cir_c_den_nom(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 1
+        expected = round(cir_c_den_nom(ds_obj, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_cir_nom(self):
+        ds_obj = init_obj_test()
+        x = 'x'
+        y = 'y'
+        actual = 0.2857
+        expected = round(cir_nom(ds_obj, x, y), 4)
+        
+        self.assertEqual(expected, actual)
+
