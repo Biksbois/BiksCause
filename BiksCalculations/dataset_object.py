@@ -163,9 +163,7 @@ def date_window_method(data, i, cause_column, effect_column, backwards, window_s
 
 def init_obj_test(cause_column='label', effect_column='label', time_column='time', head_val = -1):
     window_size = 3
-    # col_name = 'label'
     ds_path = "csv/data.csv"
-    # ds_path = "BiksCalculations\data.csv"
 
     return dataset(ds_path, cause_column, effect_column, window_size,test_window_method, time_column, head_val = head_val)
 
