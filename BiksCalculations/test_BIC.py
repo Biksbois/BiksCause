@@ -5,10 +5,24 @@ from LL import calc_lambda
 from NST import *
 from CIR import *
 
-class Test_Window(unittest.TestCase):
-    def test_get_windows(self):
-        ds_obj = init_obj_test(head_val=6)
-        expected = [('y', ['x', 'y', 'z']), ('x' ,['y', 'z', 'y']), ('y', ['z', 'y', 'x'])]
+class Test_Date_Window(unittest.TestCase):
+    def test_forward_window(self):
+        ds_obj = init_obj_test_trafic(head_val=6)
+        expected = [('scattered clouds', ['broken clouds', 'overcast clouds', 'overcast clouds']),
+                    ('broken clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
+                    ('overcast clouds', ['overcast clouds', 'broken clouds', 'sky is clear'])]
+        actual = []
+        
+        for w in ds_obj.get_window(backwards=False):
+            actual.append(w)
+        
+        self.assertListEqual(expected, actual)
+
+    def test_backwards_window_two_colums(self):
+        ds_obj = init_obj_test_trafic(head_val=6)
+        expected = [('overcast clouds', ['overcast clouds', 'broken clouds', 'scattered clouds']),
+                    ('broken clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
+                    ('sky is clear', ['broken clouds', 'overcast clouds', 'overcast clouds'])]
         actual = []
         
         for w in ds_obj.get_window():
@@ -16,7 +30,42 @@ class Test_Window(unittest.TestCase):
         
         self.assertListEqual(expected, actual)
     
+    def test_forward_window_colums(self):
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6)
+        expected = [('Clouds', ['broken clouds', 'overcast clouds', 'overcast clouds']),
+                    ('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
+                    ('Clouds', ['overcast clouds', 'broken clouds', 'sky is clear'])]
+        actual = []
+        
+        for w in ds_obj.get_window(backwards=False):
+            actual.append(w)
+        
+        self.assertListEqual(expected, actual)
+
+    def test_backwards_window(self):
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6)
+        expected = [('Clouds', ['overcast clouds', 'broken clouds', 'scattered clouds']),
+                    ('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
+                    ('Clear', ['broken clouds', 'overcast clouds', 'overcast clouds'])]
+        actual = []
+        
+        for w in ds_obj.get_window():
+            actual.append(w)
+        
+        self.assertListEqual(expected, actual)
+
+class Test_Window(unittest.TestCase):
     def test_get_windows_backwards(self):
+        ds_obj = init_obj_test(head_val=6)
+        expected = [('y', ['z', 'y', 'x']), ('x' ,['y', 'z', 'y']), ('y', ['x', 'y', 'z'])]
+        actual = []
+        
+        for w in ds_obj.get_window():
+            actual.append(w)
+        
+        self.assertListEqual(expected, actual)
+    
+    def test_get_windows_forwards(self):
         ds_obj = init_obj_test(head_val=6)
         expected = [('x', ['y', 'z', 'y']), ('y', ['z', 'y', 'x']), ('z', ['y', 'x', 'y'])]
         actual = []
@@ -26,9 +75,9 @@ class Test_Window(unittest.TestCase):
         
         self.assertListEqual(expected, actual)
     
-    def test_get_windows_two_columns(self):
+    def test_get_windows_backwards_two_columns(self):
         ds_obj = init_obj_test(effect_column='dur_cluster', head_val=6)
-        expected = [('y', ['x', 'y', 'z']), ('x' ,['y', 'z', 'y']), ('y', ['z', 'y', 'x'])]
+        expected = [('c3', ['z', 'y', 'x']), ('c3' ,['y', 'z', 'y']), ('c2', ['x', 'y', 'z'])]
         actual = []
         
         for w in ds_obj.get_window():
@@ -36,9 +85,9 @@ class Test_Window(unittest.TestCase):
         
         self.assertListEqual(expected, actual)
     
-    def test_get_windows_backwards_two_columns(self):
-        ds_obj = init_obj_test(cause_column='dur_cluster', head_val=6)
-        expected = [('x', ['y', 'z', 'y']), ('y', ['z', 'y', 'x']), ('z', ['y', 'x', 'y'])]
+    def test_get_windows_forwards_two_columns(self):
+        ds_obj = init_obj_test(effect_column='dur_cluster', head_val=6)
+        expected = [('c1', ['y', 'z', 'y']), ('c1', ['z', 'y', 'x']), ('c2', ['y', 'x', 'y'])]
         actual = []
         
         for w in ds_obj.get_window(backwards=False):
@@ -98,21 +147,36 @@ class Test_Probability(unittest.TestCase):
         y_expected = 7
         z_expected = 7
         
-        self.assertTrue(x_expected == ds_obj.col_dict['x'] and 
-                        y_expected == ds_obj.col_dict['y'] and 
-                        z_expected == ds_obj.col_dict['z'])
+        self.assertTrue(x_expected == ds_obj.cause_dict['x'] and 
+                        y_expected == ds_obj.cause_dict['y'] and 
+                        z_expected == ds_obj.effect_dict['z'])
     
-    def test_p_x(self):
+    def test_p_x_cause(self):
         ds_obj = init_obj_test()
         expected = 0.2632
-        actual = round(ds_obj.calc_prob('x'), 4)
+        actual = round(ds_obj.calc_cause_prob('x'), 4)
+        
+        self.assertEqual(expected, actual)
+        
+    
+    def test_p_x_effect(self):
+        ds_obj = init_obj_test()
+        expected = 0.2632
+        actual = round(ds_obj.calc_effect_prob('x'), 4)
         
         self.assertEqual(expected, actual)
     
-    def test_p_y(self):
+    def test_p_y_effect(self):
         ds_obj = init_obj_test()
         expected = 0.3684
-        actual = round(ds_obj.calc_prob('y'), 4)
+        actual = round(ds_obj.calc_effect_prob('y'), 4)
+        
+        self.assertEqual(expected, actual)
+    
+    def test_p_y_cause(self):
+        ds_obj = init_obj_test()
+        expected = 0.3684
+        actual = round(ds_obj.calc_cause_prob('y'), 4)
         
         self.assertEqual(expected, actual)
     

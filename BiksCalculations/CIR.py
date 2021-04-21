@@ -6,10 +6,10 @@ def cir_nom(ds_obj, x, y):
     return n / d
 
 def cir_b_den(ds_obj, x):
-    return ds_obj.calc_prob(x)
+    return ds_obj.calc_effect_prob(x)
 
 def cir_c_den_nom(ds_obj, x, y):
-    return ds_obj.col_dict[x] - ds_obj.calc_n(y, x)
+    return ds_obj.effect_dict[x] - ds_obj.calc_n(y, x)
 
 def cir_c_den_den(ds_obj, x, y):
     return ds_obj.get_col_len() - ds_obj.calc_d(y)
