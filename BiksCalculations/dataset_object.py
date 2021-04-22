@@ -46,11 +46,13 @@ class dataset():
         return result / self.get_col_len()
 
     def extract_x(self):
-        return self.data[self.col_name].unique().tolist()
+        return self.data[self.effect_column].unique().tolist()
     
-    def extract_u(self, x, cur_x):
-        x.remove(cur_x)
-        return x
+    def extract_u(self):
+        # x.remove(cur_x)
+        return self.data[self.cause_column].unique().tolist()
+        
+        # return x
     
     def calc_cause_prob(self, key):
         return self.cause_dict[key] / self.get_col_len()

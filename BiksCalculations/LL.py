@@ -28,11 +28,11 @@ def calc_ll_temp(set_u, x, ds):
         ll_temp += one_ll(u, x, ds)
     return ll_temp
 
-def ll_with_set(ds, set):
+def ll_with_set(ds, set_x):
     ll_score = 0
     print(set_x)
     for x in set_x:
-        set_u = ds.extract_u(set_x.copy(), x)
+        set_u = ds.extract_u()
         ll_temp = calc_ll_temp(set_u, x, ds)
         ll_score += ll_temp
         # print(f"score: {ll_temp}, event: {x}, parents: {set_u}") 
@@ -52,7 +52,7 @@ def get_LL(ds_obj):
     return calc_LL(ds_obj)
 
 if __name__ == '__main__':
-    ds_obj = init_obj_test()
+    ds_obj = init_obj_test(cause_column='label', effect_column='label')
     ll = get_LL(ds_obj)
     
     print(f"The Log Likelihood is: {ll}")

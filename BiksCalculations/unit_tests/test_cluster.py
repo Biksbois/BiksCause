@@ -9,7 +9,7 @@ from dataset_object import *
 from clustering_method import *
 
 class test_cluster(unittest.TestCase):
-    def Test_Create_Cluster(self):
+    def test_create_cluster(self):
         ds_obj = init_obj_test()
         Test_set = {
         'Test': [4, 5, 9, 10]
@@ -21,16 +21,16 @@ class test_cluster(unittest.TestCase):
 
         self.assertEqual(col_actual, col_expected)
 
-    def Test_Apply_Jenks(self):
+    def test_apply_jenks(self):
         pass
 
-    def Test_cl_arr(self):
+    def test_cl_arr(self):
         pass
 
-    def Test_gvf_score(self):
+    def test_gvf_score(self):
         pass
 
-    def Test_create_labels(self):
+    def test_create_labels(self):
         pass
 
     
