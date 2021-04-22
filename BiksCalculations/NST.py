@@ -5,13 +5,13 @@ def calc_den(x, y, alpha_val):
 
 def nst_rhs(ds_obj, alpha_val, lambda_val, x, y):
     suf = ds_obj.calc_suf(x, y)
-    den = calc_den(ds_obj.calc_prob(x), ds_obj.calc_prob(y), alpha_val)
+    den = calc_den(ds_obj.calc_effect_prob(x), ds_obj.calc_cause_prob(y), alpha_val)
     
     return (suf / den) ** (lambda_val - 1) 
 
 def nst_lhs(ds_obj, alpha_val, lambda_val, x, y):
     nes = ds_obj.calc_nec(x, y)
-    den = calc_den(ds_obj.calc_prob(y), ds_obj.calc_prob(x), alpha_val)
+    den = calc_den(ds_obj.calc_cause_prob(y), ds_obj.calc_effect_prob(x), alpha_val)
 
     return (nes / den) ** (lambda_val)
 
