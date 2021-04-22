@@ -21,7 +21,13 @@ def calc_cir_b(ds_obj, x, y):
     return cir_nom(ds_obj, x, y) / cir_b_den(ds_obj, x)
 
 def calc_cir_c(ds_obj, x, y):
-    return cir_nom(ds_obj, x, y) / cir_c_den(ds_obj, x, y)
+    nom = cir_nom(ds_obj, x, y)
+    den = cir_c_den(ds_obj, x, y)
+    
+    if den == 0:
+        return 0
+    else:
+        return nom / den
 
 if __name__ == '__main__':
     ds_obj = init_obj_test()
