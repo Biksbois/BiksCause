@@ -44,24 +44,34 @@ def get_jenks(df, col_name, min_gvf = 0.9):
     gvf_score = 0
     nclasses = 2    
 
-    while gvf_score < min_gvf:
-        try:
-            df[cl_col_name] = apply_jenks(df, col_name, nclasses)
-            ds_arr = np.asarray(df[col_name])
-            cl_arrs = create_cl_arrays(df, col_name)
-            gvf_score = calc_gvf(ds_arr, cl_arrs)
-        except:
-            print("Duplicate error.")
-        nclasses += 1 
+    df[cl_col_name] = apply_jenks(df, col_name, 3)
+    ds_arr = np.asarray(df[col_name])
+    cl_arrs = create_cl_arrays(df, col_name)
+    print(len(cl_arrs))
+    gvf_score = calc_gvf(ds_arr, cl_arrs)
+    print(gvf_score)
+
+    #while gvf_score < 0.9:
+    #    try:
+    #        df[cl_col_name] = apply_jenks(df, col_name, nclasses)
+    #        ds_arr = np.asarray(df[col_name])
+    #        cl_arrs = create_cl_arrays(df, col_name)
+    #        print(len(cl_arrs))
+    #        gvf_score = calc_gvf(ds_arr, cl_arrs)
+    #        print(gvf_score)
+    #    except:
+    #        print("Duplicate error. " + str(nclasses))
+    #    nclasses += 1 
 
     return df       
 
 def create_cluster(df, path, col_name):
-    jdf = get_jenks(df, col_name)
-    jdf.to_csv(path)
+    print(df)
+    #jdf = get_jenks(df, col_name)
+    #jdf.to_csv(path)
 
 if __name__ == '__main__':
     sales = {
         'Total': [1, 5, 9, 10, 15, 16, 26, 28]
     }
-    create_cluster(sales,'Total')
+    create_cluster(sales, 'testµ.csv' ,'Total')
