@@ -56,8 +56,7 @@ def get_jenks(df, col_name, min_gvf = 0.9):
 
     return df       
 
-def create_cluster(ds, path, col_name):
-    df = pd.DataFrame(ds)
+def create_cluster(df, path, col_name):
     jdf = get_jenks(df, col_name)
     jdf.to_csv(path)
 
