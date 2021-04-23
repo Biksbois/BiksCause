@@ -4,6 +4,11 @@ import pandas as pd
 
 cl_col_name = 'Clusters'
 
+
+# To calculate the goodness of variance (GVF), the first element which is needed, is the groups
+# the data is split up in. Therefore we extract an array for each cluster, to compare them. 
+# The parameters which are included, is the dataframe df which contains the clusters, and the
+# col_name which is a string with the name of the column containing the data.
 def create_cl_arrays(df, col_name):
     df_arr = []
     values = np.asarray(df[cl_col_name].drop_duplicates().values)
@@ -11,6 +16,11 @@ def create_cl_arrays(df, col_name):
         df_arr.append(np.asarray(df[col_name].loc[df[cl_col_name] == v].values))
     return df_arr
 
+# The method takes two arrays, an array over all the data ds_arr, and an array of the individual clusters cl_arr.
+# The sum of squared deviations for array mean (sdam) is then calculated with the formula taking
+# the mean of all the data and then minus it with each value in the ds_arr, and the powered by two.
+# The next part is finding the sum of squared deviations for class means (sdcm), where the standard deviation is 
+# found for each cluster.
 def calc_gvf(ds_arr, cl_arr):
     sdam = np.sum((ds_arr - ds_arr.mean()) ** 2)
     sdcm = sum([np.sum((cl - cl.mean()) ** 2) for cl in cl_arr])
@@ -46,13 +56,13 @@ def get_jenks(df, col_name, min_gvf = 0.9):
 
     return df       
 
-def create_cluster(ds, col_name):
+def create_cluster(ds, path, col_name):
     df = pd.DataFrame(ds)
-    return get_jenks(df, col_name)
+    jdf = get_jenks(df, col_name)
+    jdf.to_csv(path)
 
 if __name__ == '__main__':
     sales = {
         'Total': [1, 5, 9, 10, 15, 16, 26, 28]
     }
-    df = create_cluster(sales, 'Total')
-    print(df)
+    create_cluster(sales,'Total')
