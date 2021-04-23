@@ -9,11 +9,7 @@ def create_cl_arrays(df, col_name):
     values = np.asarray(df[cl_col_name].drop_duplicates().values)
     for v in values:
         df_arr.append(np.asarray(df[col_name].loc[df[cl_col_name] == v].values))
-    return df_arr    
-    #for dist_col in vdf[cl_col_name]:
-    #    df.loc[df[cl_col_name] == 
-
-    #print(df[cl_col_name].drop_duplicates())
+    return df_arr
 
 def calc_gvf(ds_arr, cl_arr):
     sdam = np.sum((ds_arr - ds_arr.mean()) ** 2)
@@ -60,25 +56,3 @@ if __name__ == '__main__':
     }
     df = create_cluster(sales, 'Total')
     print(df)
-
-    #df = pd.DataFrame(sales)
-    #t = jpy.jenks_breaks(df['Total'], nb_class=2)
-    #jpy.jenks_breaks()
-    #sdam = calc_gvf(sales,2)
-    #print(sdam)
-    #print(t)
-    
-
-
-#sales = {
-#    'Total': [1500, 2100, 80, 20, 75, 1100,40, 2, 1]
-#}
-#df = pd.DataFrame(sales)
-#sdf = df.sort_values(by='Total')
-#breaks = jenkspy.jenks_breaks(df['Total'], nb_class=3)
-#sdf['cut_jenksv2'] = pd.cut(df['Total'],
-#                        bins=breaks,
-#                        labels=['bucket_1', 'bucket_2','bucket_3'],
-#                        include_lowest=True)
-
-#print(sdf)
