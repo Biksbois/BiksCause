@@ -22,11 +22,11 @@ def generate_csv_name(csv_path, current_row):
 def add_to_csv(start, end, duration, csv_name, c_start, c_end, c_duration):
     with open(csv_name, 'a+', newline='') as write_obj:
         csv_writer = writer(write_obj)
-        csv_writer.writerow([start, end, duration])
+        csv_writer.writerow([start, end, duration, csv_name])
 
-def create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration):
-    data = {c_start:[start], c_end:[end],c_duration:[duration]}
-    df = pd.DataFrame(data, columns=[c_start, c_end, c_duration])
+def create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration, cluster_col):
+    data = {c_start:[start], c_end:[end],c_duration:[duration], cluster_col:[csv_name]}
+    df = pd.DataFrame(data, columns=[c_start, c_end, c_duration, cluster_col])
     df.to_csv(csv_name, index=False, header=True)
 
 def translate_date(date):
@@ -50,7 +50,17 @@ def add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_en
     if path.exists(csv_name):
         add_to_csv(start, end, duration, csv_name, c_start, c_end, c_duration)
     else:
-        create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration)
+        create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration, current_row)
+
+def extract_start_end(colum, temp_csv_path, i, c_start, c_end):
+    csv_path = f"{temp_csv_path}/{colum}.csv"
+    csv_file = pd.read_csv(csv_path)
+    
+    for j in range(len(csv_file[c_start])):
+        if i >= int(csv_file[c_start][j]):
+            return int(csv_file[c_start][j]), int(csv_file[c_end][j]), csv_file[colum][j]
+    print("ERROR")
+    return '', '', ''
 
 if __name__ == '__main__':
     ds_path = u'BiksCalculations\csv\\ny_trafic.csv'
@@ -82,4 +92,18 @@ if __name__ == '__main__':
             start = i
     
     add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration)
+    
+    
+    
+    start = 0
+    end = 0
+    
+    new_data = []
+    
+    for i in range(len(data[colum])):
+        if i <= start or i >= end:
+            start, end, cluster = extract_start_end(data[colum][i], temp_csv_path, i, c_start, c_end)
+        new_data.append(cluster)
+    data[new_colum_name] = new_data
+    data.to_csv(ds_path, index=False, header=True)
     
