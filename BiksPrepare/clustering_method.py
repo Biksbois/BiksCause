@@ -38,40 +38,56 @@ def apply_jenks(df, col_name, cl_num):
     return pd.cut(df[col_name],
                         bins=breaks,
                         labels=create_labels(cl_num),
-                        include_lowest=True)
+                        include_lowest=True, duplicates='drop')
 
 def get_jenks(df, col_name, min_gvf = 0.9):
     gvf_score = 0
     nclasses = 2    
 
-    df[cl_col_name] = apply_jenks(df, col_name, 3)
-    ds_arr = np.asarray(df[col_name])
-    cl_arrs = create_cl_arrays(df, col_name)
-    print(len(cl_arrs))
-    gvf_score = calc_gvf(ds_arr, cl_arrs)
-    print(gvf_score)
+    # df[cl_col_name] = apply_jenks(df, col_name, 2)
+    # ds_arr = np.asarray(df[col_name])
+    # cl_arrs = create_cl_arrays(df, col_name)
+    # print(len(cl_arrs))
+    # gvf_score = calc_gvf(ds_arr, cl_arrs)
+    # print(gvf_score)
 
-    #while gvf_score < 0.9:
-    #    try:
-    #        df[cl_col_name] = apply_jenks(df, col_name, nclasses)
-    #        ds_arr = np.asarray(df[col_name])
-    #        cl_arrs = create_cl_arrays(df, col_name)
-    #        print(len(cl_arrs))
-    #        gvf_score = calc_gvf(ds_arr, cl_arrs)
-    #        print(gvf_score)
-    #    except:
-    #        print("Duplicate error. " + str(nclasses))
-    #    nclasses += 1 
+    while gvf_score < 0.9 and nclasses < len(df[col_name].unique().tolist()):
+       try:
+           df[cl_col_name] = apply_jenks(df, col_name, nclasses)
+           ds_arr = np.asarray(df[col_name])
+           cl_arrs = create_cl_arrays(df, col_name)
+           gvf_score = calc_gvf(ds_arr, cl_arrs)
+       except:
+           pass
+       nclasses += 1 
 
     return df       
 
+# def check_length(df, col_name, min_size = 2):
+#     if df.groupby([col_name]).sum() > min_size:
+#         return true
+#     else:
+#         return false
+
+def check_difference(df, col_name):
+    return len(df[col_name].unique().tolist()) == 1 or len(df[col_name].unique().tolist()) == 2
+
+def add_to_clust(df, col_name):
+    df['Clusters'] = pd.qcut(df[col_name], q=1, labels=create_labels(1))
+    return df
+
+def check_df(df, col_name):
+    if check_difference(df, col_name):
+        df = add_to_clust(df, col_name)
+    return df
+    
 def create_cluster(df, path, col_name):
-    print(df)
-    #jdf = get_jenks(df, col_name)
-    #jdf.to_csv(path)
+    df = check_df(df, col_name)
+    jdf = get_jenks(df, col_name)
+    jdf.to_csv(path)
 
 if __name__ == '__main__':
     sales = {
-        'Total': [1, 5, 9, 10, 15, 16, 26, 28]
+        'Total': [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5 ,5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 26, 26, 26 , 26, 26, 26, 70, 70, 70, 70, 70]
     }
-    create_cluster(sales, 'testµ.csv' ,'Total')
+    create_cluster(sales, 'test.csv', 'Total')
