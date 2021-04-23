@@ -95,20 +95,20 @@ if __name__ == '__main__':
     
     add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration)
     
-    for file in os.listdir(temp_csv_path):
-        temp_path = f"{temp_csv_path}/{file}"
-        temp_data = pd.read_csv(temp_path)
-        create_cluster(temp_data, temp_path, c_duration)
+    # for file in os.listdir(temp_csv_path):
+    #     temp_path = f"{temp_csv_path}/{file}"
+    #     temp_data = pd.read_csv(temp_path)
+    #     create_cluster(temp_data, temp_path, c_duration)
     
-    # start = 0
-    # end = 0
+    start = 0
+    end = 0
     
-    # new_data = []
+    new_data = []
     
-    # for i in range(len(data[colum])):
-    #     if i <= start or i >= end:
-    #         start, end, cluster = extract_start_end(data[colum][i], temp_csv_path, i, c_start, c_end)
-    #     new_data.append(cluster)
-    # data[new_colum_name] = new_data
-    # data.to_csv(ds_path, index=False, header=True)
+    for i in range(len(data[colum])):
+        if i <= start or i >= end:
+            start, end, cluster = extract_start_end(data[colum][i], temp_csv_path, i, c_start, c_end)
+        new_data.append(cluster)
+    data[new_colum_name] = new_data
+    data.to_csv(ds_path, index=False, header=True)
     
