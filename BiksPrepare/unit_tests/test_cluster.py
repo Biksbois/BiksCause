@@ -92,6 +92,20 @@ class test_cluster(unittest.TestCase):
         arr_len_expected = 5
 
         self.assertEqual(arr_len_actual, arr_len_expected)
+
+    def Test_one_cluster(self):
+        pass
+
+    def Test_two_clusters(self):
+        pass
+
+    def Test_duplicates(self):
+        pass
+
+    def Test_upper_lower_bound(self):
+        pass
+
+    
         
 
     
