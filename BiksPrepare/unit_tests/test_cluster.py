@@ -1,12 +1,12 @@
-import sys, os, inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
+# import sys, os, inspect
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# sys.path.insert(0, parentdir)
 
 import unittest
 import datetime
-from dataset_object import *
-from clustering_method import *
+from BiksCalculations.dataset_object import *
+from BiksPrepare.clustering_method import *
 
 class test_cluster(unittest.TestCase):
     def test_create_cluster(self):

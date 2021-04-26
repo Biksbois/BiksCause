@@ -10,9 +10,11 @@ from LL import calc_lambda
 from NST import *
 from CIR import *
 
+_ds_path = "BiksCalculations/csv/data.csv"
+
 class test_cir(unittest.TestCase):
     def test_cir_b(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 1.0857
@@ -21,7 +23,7 @@ class test_cir(unittest.TestCase):
         self.assertEqual(actual, expected)
     
     def test_cir_c(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 1.4286
@@ -30,7 +32,7 @@ class test_cir(unittest.TestCase):
         self.assertEqual(expected, actual)
     
     def test_cir_c_den(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 0.2
@@ -39,14 +41,14 @@ class test_cir(unittest.TestCase):
         self.assertEqual(expected, actual)
     
     def test_cir_c_den_den(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 5
         expected = round(cir_c_den_den(ds_obj, x, y), 4)
     
     def test_cir_c_den_nom(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 1
@@ -55,7 +57,7 @@ class test_cir(unittest.TestCase):
         self.assertEqual(expected, actual)
     
     def test_cir_nom(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         x = 'x'
         y = 'y'
         actual = 0.2857

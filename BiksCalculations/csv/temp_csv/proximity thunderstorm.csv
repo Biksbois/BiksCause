@@ -1,6 +1,6 @@
-start,end,duration,proximity thunderstorm
-528,529,1,BiksCalculations\csv\temp_csv\proximity thunderstorm.csv
-544,545,1,BiksCalculations\csv\temp_csv\proximity thunderstorm.csv
-547,548,1,BiksCalculations\csv\temp_csv\proximity thunderstorm.csv
-551,552,1,BiksCalculations\csv\temp_csv\proximity thunderstorm.csv
-557,558,1,BiksCalculations\csv\temp_csv\proximity thunderstorm.csv
+,start,end,duration,cluster
+0,528,529,1,proximity thunderstorm.csv_0
+1,544,545,1,proximity thunderstorm.csv_0
+2,547,548,1,proximity thunderstorm.csv_0
+3,551,552,1,proximity thunderstorm.csv_0
+4,557,558,1,proximity thunderstorm.csv_0

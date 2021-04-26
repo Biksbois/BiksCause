@@ -10,9 +10,11 @@ from LL import calc_lambda
 from NST import *
 from CIR import *
 
+_ds_path = "BiksCalculations/csv/data.csv"
+
 class test_nst(unittest.TestCase):
     def test_nst_rhs(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         actual = 0.9832
         alpha_val = 0.66
         lambda_val = 0.5
@@ -24,7 +26,7 @@ class test_nst(unittest.TestCase):
         self.assertEqual(expected, actual)
     
     def test_nst_lhs(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         actual = 1.2435
         alpha_val = 0.66
         lambda_val = 0.5
@@ -36,7 +38,7 @@ class test_nst(unittest.TestCase):
         self.assertEqual(expected, actual)
     
     def test_nst(self):
-        ds_obj = init_obj_test()
+        ds_obj = init_obj_test(ds_path=_ds_path)
         
         expected = 1.2227
         alpha_val = 0.66

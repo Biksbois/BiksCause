@@ -51,14 +51,14 @@ def get_jenks(df, cl_col_name, cl_label_name, col_name, min_gvf = 0.9):
     # gvf_score = calc_gvf(ds_arr, cl_arrs)
     # print(gvf_score)
     while gvf_score < 0.9 and nclasses < len(df[col_name].unique().tolist()):
-       try:
-           df[cl_col_name] = apply_jenks(df, col_name, cl_label_name, nclasses)
-           ds_arr = np.asarray(df[col_name])
-           cl_arrs = create_cl_arrays(df, col_name, cl_col_name)
-           gvf_score = calc_gvf(ds_arr, cl_arrs)
-       except:
-           pass
-       nclasses += 1 
+        try:
+            df[cl_col_name] = apply_jenks(df, col_name, cl_label_name, nclasses)
+            ds_arr = np.asarray(df[col_name])
+            cl_arrs = create_cl_arrays(df, col_name, cl_col_name)
+            gvf_score = calc_gvf(ds_arr, cl_arrs)
+        except:
+            pass
+        nclasses += 1 
 
     return df       
 

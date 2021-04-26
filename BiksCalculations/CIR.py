@@ -1,4 +1,4 @@
-from dataset_object import *
+from BiksCalculations.dataset_object import *
 
 def cir_nom(ds_obj, x, y):
     n = ds_obj.calc_n(y, x)

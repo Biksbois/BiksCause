@@ -1,2 +1,2 @@
-start,end,duration,snow
-963,964,1,BiksCalculations\csv\temp_csv\snow.csv
+,start,end,duration,cluster
+0,963,964,1,snow.csv_0

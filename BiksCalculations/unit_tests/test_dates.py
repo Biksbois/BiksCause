@@ -10,9 +10,11 @@ from LL import calc_lambda
 from NST import *
 from CIR import *
 
+_ds_path = "BiksCalculations/csv/ny_trafic.csv"
+
 class test_dates(unittest.TestCase):
     def test_delta_date_hour(self):
-        ds_obj = init_obj_test_trafic()
+        ds_obj = init_obj_test_trafic(ds_path=_ds_path)
         
         t1 = translate_date('2012-10-02 09:00:00')
         t2 = translate_date('2012-10-02 10:00:00')
@@ -23,7 +25,7 @@ class test_dates(unittest.TestCase):
         self.assertEqual(actual, expected)
     
     def test_delta_date_days(self):
-        ds_obj = init_obj_test_trafic()
+        ds_obj = init_obj_test_trafic(ds_path=_ds_path)
         
         t1 = translate_date('2012-10-02 10:00:00')
         t2 = translate_date('2012-10-22 10:00:00')
@@ -34,7 +36,7 @@ class test_dates(unittest.TestCase):
         self.assertEqual(actual, expected)
     
     def test_delta_date_years(self):
-        ds_obj = init_obj_test_trafic()
+        ds_obj = init_obj_test_trafic(ds_path=_ds_path)
         
         t1 = translate_date('2012-10-02 10:00:00')
         t2 = translate_date('2013-10-02 10:00:00')
@@ -45,7 +47,7 @@ class test_dates(unittest.TestCase):
         self.assertEqual(actual, expected)
     
     def test_str_to_datetime(self):
-        ds_obj = init_obj_test_trafic()
+        ds_obj = init_obj_test_trafic(ds_path=_ds_path)
         expected = datetime.datetime(2012, 10, 2, 9, 0, 0)
         actual = translate_date('2012-10-02 09:00:00')
         self.assertEqual(expected, actual)

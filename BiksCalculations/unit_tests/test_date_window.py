@@ -10,9 +10,11 @@ from LL import calc_lambda
 from NST import *
 from CIR import *
 
+_ds_path = "BiksCalculations/csv/ny_trafic.csv"
+
 class Test_Date_Window(unittest.TestCase):
     def test_forward_window_3(self):
-        ds_obj = init_obj_test_trafic(head_val=6)
+        ds_obj = init_obj_test_trafic(head_val=6, ds_path=_ds_path)
         expected = [('scattered clouds', ['broken clouds', 'overcast clouds', 'overcast clouds']),
                     ('broken clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
                     ('overcast clouds', ['overcast clouds', 'broken clouds', 'sky is clear'])]
@@ -24,7 +26,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
 
     def test_backwards_window_3(self):
-        ds_obj = init_obj_test_trafic(head_val=6)
+        ds_obj = init_obj_test_trafic(head_val=6, ds_path=_ds_path)
         expected = [('overcast clouds', ['overcast clouds', 'broken clouds', 'scattered clouds']),
                     ('broken clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
                     ('sky is clear', ['broken clouds', 'overcast clouds', 'overcast clouds'])]
@@ -36,7 +38,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
     
     def test_forward_window_two_colums_3(self):
-        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6)
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, ds_path=_ds_path)
         expected = [('Clouds', ['broken clouds', 'overcast clouds', 'overcast clouds']),
                     ('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
                     ('Clouds', ['overcast clouds', 'broken clouds', 'sky is clear'])]
@@ -48,7 +50,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
 
     def test_backwards_window_two_colums_3(self):
-        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6)
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, ds_path=_ds_path)
         expected = [('Clouds', ['overcast clouds', 'broken clouds', 'scattered clouds']),
                     ('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds']),
                     ('Clear', ['broken clouds', 'overcast clouds', 'overcast clouds'])]
@@ -60,7 +62,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
         
     def test_forward_window_4(self):
-        ds_obj = init_obj_test_trafic(head_val=6, windows_size = 4)
+        ds_obj = init_obj_test_trafic(head_val=6, windows_size = 4, ds_path=_ds_path)
         expected = [('scattered clouds', ['broken clouds', 'overcast clouds', 'overcast clouds', 'broken clouds']),
                     ('broken clouds', ['overcast clouds', 'overcast clouds', 'broken clouds', 'sky is clear'])]
         actual = []
@@ -71,7 +73,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
     
     def test_backwards_window_4(self):
-        ds_obj = init_obj_test_trafic(head_val=6, windows_size = 4)
+        ds_obj = init_obj_test_trafic(head_val=6, windows_size = 4, ds_path=_ds_path)
         expected = [('broken clouds', ['overcast clouds' ,'overcast clouds', 'broken clouds', 'scattered clouds']),
                     ('sky is clear', ['broken clouds','overcast clouds', 'overcast clouds', 'broken clouds'])]
         actual = []
@@ -82,7 +84,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
         
     def test_forward_window_two_colums_3(self):
-        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, windows_size = 4)
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, windows_size = 4, ds_path=_ds_path)
         expected = [('Clouds', ['broken clouds', 'overcast clouds', 'overcast clouds','broken clouds']),
                     ('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds', 'sky is clear'])]
         actual = []
@@ -93,7 +95,7 @@ class Test_Date_Window(unittest.TestCase):
         self.assertListEqual(expected, actual)
 
     def test_backwards_window_two_colums_3(self):
-        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, windows_size = 4)
+        ds_obj = init_obj_test_trafic(effect_column='weather_main', head_val=6, windows_size = 4, ds_path=_ds_path)
         expected = [('Clouds', ['overcast clouds', 'overcast clouds', 'broken clouds', 'scattered clouds']),
                     ('Clear', ['broken clouds' ,'overcast clouds', 'overcast clouds', 'broken clouds'])]
         actual = []

@@ -1,2 +1,2 @@
-start,end,duration,proximity shower rain
-358,359,0,BiksCalculations\csv\temp_csv\proximity shower rain.csv
+,start,end,duration,cluster
+0,358,359,0,proximity shower rain.csv_0

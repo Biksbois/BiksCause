@@ -1,4 +1,4 @@
-from dataset_object import *
+from BiksCalculations.dataset_object import *
 
 def calc_den(x, y, alpha_val):
     return (x ** alpha_val) * y

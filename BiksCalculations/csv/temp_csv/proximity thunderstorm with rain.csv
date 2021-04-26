@@ -1,2 +1,2 @@
-start,end,duration,proximity thunderstorm with rain
-651,652,1,BiksCalculations\csv\temp_csv\proximity thunderstorm with rain.csv
+,start,end,duration,cluster
+0,651,652,1,proximity thunderstorm with rain.csv_0
