@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime
 from collections import OrderedDict
+from BiksCalculations.time_conversion import *
 
 class dataset():
     def __init__(self, ds_path, cause_column, effect_column, window_size, window_method,time_column, head_val = -1):
@@ -49,10 +50,7 @@ class dataset():
         return self.data[self.effect_column].unique().tolist()
     
     def extract_u(self):
-        # x.remove(cur_x)
         return self.data[self.cause_column].unique().tolist()
-        
-        # return x
     
     def calc_cause_prob(self, key):
         return self.cause_dict[key] / self.get_col_len()
@@ -128,14 +126,14 @@ def test_window_method(data, i, cause_column, effect_column, backwards, window_s
     
     return effect, cause
 
-def translate_date(date):
-    return datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S') # 2012-10-02 09:00:00
+# def translate_date(date):
+#     return datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S') # 2012-10-02 09:00:00
 
-def calc_deltatime(t1, t2):
-    diff = t2-t1
-    days, seconds = diff.days, diff.seconds
-    hours = days * 24 + seconds // 3600
-    return hours
+# def calc_deltatime(t1, t2):
+#     diff = t2-t1
+#     days, seconds = diff.days, diff.seconds
+#     hours = days * 24 + seconds // 3600
+#     return hours
 
 def date_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
     current_time = translate_date(data[time_column][i])
@@ -174,7 +172,7 @@ def init_obj_test_trafic(cause_column='weather_description', effect_column='weat
     window_size = windows_size
     # col_name = 'weather_description'
     if ds_path == '':   
-        ds_path = "csv/ny_trafic.csv"
+        ds_path = "BiksCalculations/csv/ny_trafic.csv"
 
     return dataset(ds_path, cause_column, effect_column , window_size,date_window_method, time_column, head_val = head_val)
 

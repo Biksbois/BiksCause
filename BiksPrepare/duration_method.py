@@ -2,6 +2,8 @@ import pandas as pd
 import sys
 from os import path
 from tqdm import trange
+from BiksCalculations.time_conversion import *
+
 
 
 import datetime
@@ -32,15 +34,6 @@ def create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration, c
     df = pd.DataFrame(data, columns=[c_start, c_end, c_duration])
     df.to_csv(csv_name, index=False, header=True)
 
-def translate_date(date):
-    return datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S') # 2012-10-02 09:00:00
-
-def calc_deltatime(t1, t2):
-    diff = t2-t1
-    days, seconds = diff.days, diff.seconds
-    hours = days * 24 + seconds // 3600
-    return hours
-
 def delta_time(start, end, data, time_colum):
     return calc_deltatime(translate_date(data[time_colum][start]), translate_date((data[time_colum][end])))
 
@@ -63,7 +56,7 @@ def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name):
         if i >= int(csv_file[c_start][j]) and i <= int(csv_file[c_end][j]):
             return int(csv_file[c_start][j]), int(csv_file[c_end][j]), csv_file[cluster_name][j]
     print("ERROR")
-    return '', '', ''
+    return '-ERROR-', '-ERROR-', '-ERROR-'
 
 def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path, data):
     start = 0
@@ -90,6 +83,7 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
 def create_clusters(c_duration, temp_csv_path, data):
     for file in os.listdir(temp_csv_path):
         temp_path = f"{temp_csv_path}/{file}"
+        # print(f"PATH ---------- {temp_path}")
         temp_data = pd.read_csv(temp_path)
         create_cluster(temp_data, temp_path, c_duration, 'cluster', file)
 

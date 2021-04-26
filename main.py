@@ -16,13 +16,23 @@ def run_cluster():
     
     generate_clusters(ds_path, colum, time_colum, temp_csv_path)
 
-def run_experiments():
-    cause_column = 'label'
-    effect_column = 'label'
-    colum_list = ['label', 'test','dur_cluster']
-    base_path = 'BiksCalculations/results'
+# def run_experiments():
+#     cause_column = 'label'
+#     effect_column = 'label'
+#     colum_list = ['label', 'test','dur_cluster']
+#     base_path = 'BiksCalculations/results'
 
-    do_calculations(cause_column, effect_column, base_path, colum_list)
+#     do_calculations(cause_column, effect_column, base_path, colum_list)
+#     print("The experiments are now successfully done, and the program will exit.")
+
+def run_experiments():
+    cause_column = 'weather_description'
+    effect_column = 'weather_description'
+    colum_list = ['weather_main','weather_description','weather_description_cluster']
+    base_path = 'BiksCalculations/results'
+    experiment_type = 'ny_traffic'
+
+    do_calculations(cause_column, effect_column, base_path, colum_list, experiment_type)
     print("The experiments are now successfully done, and the program will exit.")
 
 if __name__ == '__main__':
