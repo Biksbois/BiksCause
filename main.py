@@ -1,4 +1,6 @@
 import sys
+import time
+
 from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
 
@@ -36,6 +38,8 @@ def run_experiments():
     print("The experiments are now successfully done, and the program will exit.")
 
 if __name__ == '__main__':
+    start_time = time.time()
+    
     user_input = get_userinput()
     
     if user_input == 'cluster' or user_input == '':
@@ -47,3 +51,5 @@ if __name__ == '__main__':
         run_experiments()
     else:
         print("The given input was not valid.\nThe program will now exit.")
+    
+    print("--- %s seconds ---" % (time.time() - start_time))

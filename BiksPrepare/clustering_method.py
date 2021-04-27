@@ -2,7 +2,8 @@ import jenkspy as jpy
 import numpy as np
 import pandas as pd
 
-
+def calc_silhoutte():
+    pass
 
 # To calculate the goodness of variance (GVF), the first element which is needed, is the groups
 # the data is split up in. Therefore we extract an array for each cluster, to compare them. 
@@ -34,7 +35,8 @@ def create_labels(cl_label_name, cl_num):
 
 def apply_jenks(df, col_name, cl_label_name, cl_num):
     breaks = jpy.jenks_breaks(df[col_name], nb_class=cl_num)
-
+    if len(set(breaks)) == cl_num:
+        cl_num -= 1
     return pd.cut(df[col_name],
                         bins=breaks,
                         labels=create_labels(cl_label_name, cl_num),
@@ -87,7 +89,7 @@ def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
 
 if __name__ == '__main__':
     sales = {
-        'Total': [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5 ,5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 26, 26, 26 , 26, 26, 26, 70, 70, 70, 70, 70]
+        'Total': [1, 3, 2, 2, 1, 1]
     }
     df = pd.DataFrame(sales)
     create_cluster(df, 'test.csv', 'Total', 'cluster', 'cl')
