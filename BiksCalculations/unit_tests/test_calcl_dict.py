@@ -54,9 +54,9 @@ class test_dict(unittest.TestCase):
         
     def test_list_splitter_2_split_1(self):
         lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        expected = [1, 2, 3,4, 5]
+        expected = [1, 2, 3, 4, 5]
         actual = []
-        for l in List_spliter(lst,3):
+        for l in List_spliter(lst,2):
             actual.append(l)
         self.assertListEqual(actual[0], expected)
         
@@ -64,7 +64,7 @@ class test_dict(unittest.TestCase):
         lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         expected = [6, 7, 8, 9, 10]
         actual = []
-        for l in List_spliter(lst,3):
+        for l in List_spliter(lst,2):
             actual.append(l)
         self.assertListEqual(actual[1], expected)
 
