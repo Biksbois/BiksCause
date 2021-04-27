@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ,start,end,duration
 0,0,1,1
 1,53,56,3
@@ -5,3 +6,12 @@
 3,79,81,2
 4,89,90,1
 5,92,93,1
+=======
+,start,end,duration,cluster
+0,0,1,1,scattered clouds.csv_0
+1,53,56,3,scattered clouds.csv_0
+2,60,61,2,scattered clouds.csv_0
+3,79,81,2,scattered clouds.csv_0
+4,89,90,1,scattered clouds.csv_0
+5,92,93,1,scattered clouds.csv_0
+>>>>>>> 7fa0628b38e9e7071b69f7739bc475073be9cf73
