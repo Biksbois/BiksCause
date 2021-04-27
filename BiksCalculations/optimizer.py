@@ -38,8 +38,8 @@ def List_spliter(str_list , parts):
     i = 0
     while i < len(str_list):
         if remain_list == len(str_list)-i:
-            yield str_list[i : remain_list-i]
+            yield str_list[i : remain_list+i]
             break;
         else:
-            yield str_list[i : i + sublist]
+            yield str_list[i : i + sublist_size]
         i += sublist_size
