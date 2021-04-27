@@ -9,7 +9,7 @@ def get_userinput():
         return ''
 
 def run_cluster():
-    ds_path = u'BiksCalculations\csv\\ny_trafic.csv'
+    ds_path = u'input_csv\Metro_Interstate_Traffic_Volume.csv'
     colum = 'weather_description'
     time_colum = 'date_time'
     temp_csv_path = u'BiksCalculations\csv\\temp_csv'
