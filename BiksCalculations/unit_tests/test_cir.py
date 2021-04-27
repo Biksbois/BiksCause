@@ -64,3 +64,12 @@ class test_cir(unittest.TestCase):
         expected = round(cir_nom(ds_obj, x, y), 4)
         
         self.assertEqual(expected, actual)
+    
+    def test_get_n(self):
+        ds_obj = init_obj_test(ds_path=_ds_path)
+        x = 'x'
+        y = 'y'
+        test_dict = {x:{y:5}}
+        actual = get_n(ds_obj, x, y, test_dict)
+        expected = 5
+        self.assertEqual(actual, expected)
