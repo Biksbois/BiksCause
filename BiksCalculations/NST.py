@@ -4,7 +4,7 @@ def calc_den(x, y, alpha_val):
     return (x ** alpha_val) * y
 
 def nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict={}):
-    suf = ds_obj.calc_suf(x, y, big_dict=big_dict)
+    suf = ds_obj.calc_suf(x, y, suf_dict=big_dict)
     den = calc_den(ds_obj.calc_effect_prob(x), ds_obj.calc_cause_prob(y), alpha_val)
     
     if suf == 0:
@@ -13,7 +13,7 @@ def nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict={}):
         return (suf / den) ** (lambda_val - 1) 
 
 def nst_lhs(ds_obj, alpha_val, lambda_val, x, y,big_dict={}):
-    nes = ds_obj.calc_nec(x, y, big_dict=big_dict)
+    nes = ds_obj.calc_nec(x, y, nec_dict=big_dict)
     den = calc_den(ds_obj.calc_cause_prob(y), ds_obj.calc_effect_prob(x), alpha_val)
 
     if nes == 0:
