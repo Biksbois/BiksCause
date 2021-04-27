@@ -1,8 +1,9 @@
-from dataset_object import *
+from BiksCalculations.dataset_object import *
 
-# def generate_lookup_dict():
-#     dst_obj = init_obj_test()
-#     return (generate_suf(dst_obj),generate_nec(dst_obj))
+def generate_lookup_dict():
+    # dst_obj = init_obj_test()
+    dst_obj = init_obj_test_trafic()
+    return generate_suf(dst_obj), generate_nec(dst_obj)
 
 def generate_suf(dst_obj):
     nec_dict = {}

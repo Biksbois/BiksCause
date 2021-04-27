@@ -40,8 +40,10 @@ if __name__ == '__main__':
     
     if user_input == 'cluster' or user_input == '':
         run_cluster()
-        run_experiments()
     elif user_input == 'experiment':
+        run_experiments()
+    elif user_input == '':
+        run_cluster()
         run_experiments()
     else:
         print("The given input was not valid.\nThe program will now exit.")
