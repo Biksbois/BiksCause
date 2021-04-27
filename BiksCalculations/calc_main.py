@@ -58,6 +58,10 @@ def do_calculations(cause_column, effect_column, base_path, colum_list, experime
     
     
     suf_dict, nec_dict = generate_lookup_dict()
+
+    # suf_dict = {}
+    # nec_dict = {}
+
     # print(big_dict)
     
     # for cause in colum_list:

@@ -34,12 +34,12 @@ class dataset():
 
     def calc_suf(self, x, y, suf_dict={}):
         if x in suf_dict and y in suf_dict[x]:
-            return suf_dict[x][y]
+            return suf_dict[x][y] / self.get_col_len()        
         return self.calc_nec_suf(x, y , False)
 
     def calc_nec(self, x, y, nec_dict={}):
         if x in nec_dict and y in nec_dict[x]:
-            return nec_dict[x][y]
+            return nec_dict[x][y] / self.get_col_len()
         return self.calc_nec_suf(x, y, True)
 
     def calc_nec_suf(self, x, y, direction):
