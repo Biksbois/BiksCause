@@ -55,7 +55,6 @@ def do_calculations(cause_column, effect_column, base_path, colum_list, experime
     
     matrixes = init_matrixes(scores, distinct_values, base_path, experiment_type)
     
-    
     # for cause in colum_list:
     for i in tqdm(range(len(colum_list))):
         cause = colum_list[i]
