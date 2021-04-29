@@ -88,6 +88,10 @@ def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
     jdf.to_csv(path)
 
 if __name__ == '__main__':
+    test_x_cluster = {
+        'x': [2, 43, 50, 43, 46]
+    }
+
     x_cluster = {
         'x': [2, 43, 50, 43, 46]
     }
@@ -124,5 +128,8 @@ if __name__ == '__main__':
     print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(y_df['y'],y_df['y_cl'],y_gvf))
     print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(z_df['z'],z_df['z_cl'],z_gvf))
 
+    test_x_df = pd.DataFrame(test_x_cluster)
+    jdf = get_jenks(test_x_df, 'cl_test', 'cl', 'x')
+    print("X_Cluster: \n{} \n{}.".format(test_x_df['x'],test_x_df['cl_test']))
     
 
