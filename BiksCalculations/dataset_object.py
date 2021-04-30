@@ -280,7 +280,7 @@ def init_obj_test(cause_column='label', effect_column='label', time_column='time
     if ds_path == '':
         ds_path = "BiksCalculations/csv/data.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---",flush=True)
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,number_method, time_column, number_multiple_method, head_val = head_val)
 
@@ -289,7 +289,7 @@ def init_obj_test_trafic(cause_column='weather_description', effect_column='weat
     if ds_path == '':   
         ds_path = "BiksCalculations/csv/ny_trafic.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---",flush=True)
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
 
     return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val)
 

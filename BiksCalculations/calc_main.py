@@ -41,7 +41,7 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
     scores = ['nst', 'cir_c', 'cir_b']
 
     # ds_obj = init_obj_test(cause_column=cause_column, effect_column=effect_column)
-    ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column)
+    # ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column)
 
     
     colum_dict = {}
