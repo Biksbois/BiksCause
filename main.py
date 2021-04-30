@@ -21,8 +21,27 @@ def get_userinput():
     else:
         return ''
 
+<<<<<<< HEAD
 def run_cluster(cluster_colum):
     generate_clusters(ds_path, cluster_colum, time_colum, temp_csv_path)
+=======
+def run_cluster():
+    ds_path = u'input_csv\Metro_Interstate_Traffic_Volume.csv'
+    colum = 'weather_description'
+    time_colum = 'date_time'
+    temp_csv_path = u'BiksCalculations\csv\\temp_csv'
+    
+    generate_clusters(ds_path, colum, time_colum, temp_csv_path)
+
+# def run_experiments():
+#     cause_column = 'label'
+#     effect_column = 'label'
+#     colum_list = ['label', 'test','dur_cluster']
+#     base_path = 'BiksCalculations/results'
+
+#     do_calculations(cause_column, effect_column, base_path, colum_list)
+#     print("The experiments are now successfully done, and the program will exit.")
+>>>>>>> df8e36a2c6a7b24da1c3163c1a173f6f95e4eec3
 
 def run_experiments(use_optimizer=True):
     ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path)
