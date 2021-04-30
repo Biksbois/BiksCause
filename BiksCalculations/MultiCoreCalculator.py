@@ -62,23 +62,6 @@ def do_calculations(cause_column, effect_column, base_path, colum_list, experime
     for s in scores:
         save_path = create_matix_path(s, base_path, experiment_type)
         matrixes[s].to_csv(save_path, index=True, header=True)
-    print("yyet")
-    # for cause in colum_list:
-    # for i in tqdm(range(len(colum_list))):
-    #     cause = colum_list[i]
-    #     ds_obj.cause_dict = colum_dict[cause]
-    #     ds_obj.cause_column = cause
-        
-    #     # for effect in colum_list:
-    #     for j in tqdm(range(len(colum_list))):
-    #         effect = colum_list[j]
-    #         ds_obj.effect_dict = colum_dict[effect]
-            
-    #         ds_obj.effect_column = effect
-            
-    #         for c in colum_dict[cause]:
-    #             for e in colum_dict[effect]:
-    #                 calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict)
 def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict):
     lsts = []
     progs = []
