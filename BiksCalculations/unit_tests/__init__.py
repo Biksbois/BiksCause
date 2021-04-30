@@ -7,6 +7,7 @@ from BiksCalculations.unit_tests.test_dates import *
 from BiksCalculations.unit_tests.test_nst import *
 from BiksCalculations.unit_tests.test_probability import *
 from BiksCalculations.unit_tests.test_calcl_dict import *
+from BiksCalculations.unit_tests.test_run import *
 
 if __name__ == '__main__':
     unittest.main()

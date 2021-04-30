@@ -88,8 +88,48 @@ def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
     jdf.to_csv(path)
 
 if __name__ == '__main__':
-    sales = {
-        'Total': [1, 3, 2, 2, 1, 1]
+    test_x_cluster = {
+        'x': [2, 43, 50, 43, 46]
     }
-    df = pd.DataFrame(sales)
-    create_cluster(df, 'test.csv', 'Total', 'cluster', 'cl')
+
+    x_cluster = {
+        'x': [2, 43, 50, 43, 46]
+    }
+
+    y_cluster = {
+        'y': [19, 55, 23, 29, 58, 31, 31]
+    }
+
+    z_cluster = {
+        'z': [38, 47, 52, 24, 59, 6, 15]
+    }
+
+    x_df = pd.DataFrame(x_cluster)
+    y_df = pd.DataFrame(y_cluster)
+    z_df = pd.DataFrame(z_cluster)
+
+    x_df['x_cl'] = apply_jenks(x_df, 'x', 'x_cl', 3)
+    y_df['y_cl'] = apply_jenks(y_df, 'y', 'y_cl', 3)
+    z_df['z_cl'] = apply_jenks(z_df, 'z', 'z_cl', 3)
+
+    x_ds_arr = np.asarray(x_df['x'])
+    y_ds_arr = np.asarray(y_df['y'])
+    z_ds_arr = np.asarray(z_df['z'])
+
+    x_cl_arr = create_cl_arrays(x_df, 'x', 'x_cl')
+    y_cl_arr = create_cl_arrays(y_df, 'y', 'y_cl')
+    z_cl_arr = create_cl_arrays(z_df, 'z', 'z_cl')
+
+    x_gvf = calc_gvf(x_ds_arr, x_cl_arr)
+    y_gvf = calc_gvf(y_ds_arr, y_cl_arr)
+    z_gvf = calc_gvf(z_ds_arr, z_cl_arr)
+
+    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(x_df['x'],x_df['x_cl'],x_gvf))
+    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(y_df['y'],y_df['y_cl'],y_gvf))
+    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(z_df['z'],z_df['z_cl'],z_gvf))
+
+    test_x_df = pd.DataFrame(test_x_cluster)
+    jdf = get_jenks(test_x_df, 'cl_test', 'cl', 'x')
+    print("X_Cluster: \n{} \n{}.".format(test_x_df['x'],test_x_df['cl_test']))
+    
+
