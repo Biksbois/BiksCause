@@ -5,10 +5,10 @@ from BiksCalculations.optimizer import *
 
 from tqdm import tqdm
 
-def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, alpha_val = 0.66, lambda_val = 0.5):
+def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, alpha_val = 0.66, lambda_val = 0.5):
     nst = get_nst(ds_obj, alpha_val, lambda_val, x, y, nec_dict=nec_dict, suf_dict=suf_dict)
-    cir_c = calc_cir_c(ds_obj, x, y, big_dict=nec_dict)
-    cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict)
+    cir_c = calc_cir_c(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
+    cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     
     matrixes['nst'].xs(x)[y] = round(nst, 2)
     matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
@@ -36,16 +36,12 @@ def init_matrixes(scores, distinct_values, base_path, experiment_type):
         matrix_dict[s] = create_datafram_matric(distinct_values, save_path)
     return matrix_dict
 
-def do_calculations(cause_column, effect_column, base_path, colum_list, experiment_type):
+def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, experiment_type, csv_path, use_optimizer=True):
     scores = ['nst', 'cir_c', 'cir_b']
 
     print("The differet scores will now be calculated in the following order:")
     for s in scores:
         print(f"    - {s}")
-
-    # ds_obj = init_obj_test(cause_column=cause_column, effect_column=effect_column)
-    ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column)
-
     
     colum_dict = {}
     
@@ -53,16 +49,14 @@ def do_calculations(cause_column, effect_column, base_path, colum_list, experime
         colum_dict[c] = ds_obj.create_dict(c)
     
     distinct_values = extract_values(colum_list, colum_dict)
-    
     matrixes = init_matrixes(scores, distinct_values, base_path, experiment_type)
     
-    
-    suf_dict, nec_dict = generate_lookup_dict()
-
-    # suf_dict = {}
-    # nec_dict = {}
-
-    # print(big_dict)
+    if use_optimizer:
+        suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list, ds_obj)
+    else:
+        suf_dict = {}
+        nec_dict = {}
+        d_dict = {}
     
     # for cause in colum_list:
     for i in tqdm(range(len(colum_list))):
@@ -79,7 +73,7 @@ def do_calculations(cause_column, effect_column, base_path, colum_list, experime
             
             for c in colum_dict[cause]:
                 for e in colum_dict[effect]:
-                    calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict)
+                    calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict, d_dict)
     
     for s in scores:
         save_path = create_matix_path(s, base_path, experiment_type)

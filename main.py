@@ -3,6 +3,17 @@ import time
 
 from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
+from BiksCalculations.dataset_object import init_obj_test_trafic
+
+ds_path = u'input_csv\Metro_Interstate_Traffic_Volume.csv'
+# ds_path = u'BiksCalculations\csv\\ny_trafic.csv'
+time_colum = 'date_time'
+temp_csv_path = u'BiksCalculations\csv\\temp_csv'
+col_list = ['weather_main','weather_description','weather_description_cluster'] # 
+cause_column = 'weather_description'
+effect_column = 'weather_description'
+experiment_type = 'ny_traffic'
+result_path = 'BiksCalculations/results'
 
 def get_userinput():
     if len(sys.argv) >= 2:
@@ -10,6 +21,10 @@ def get_userinput():
     else:
         return ''
 
+<<<<<<< HEAD
+def run_cluster(cluster_colum):
+    generate_clusters(ds_path, cluster_colum, time_colum, temp_csv_path)
+=======
 def run_cluster():
     ds_path = u'input_csv\Metro_Interstate_Traffic_Volume.csv'
     colum = 'weather_description'
@@ -26,28 +41,26 @@ def run_cluster():
 
 #     do_calculations(cause_column, effect_column, base_path, colum_list)
 #     print("The experiments are now successfully done, and the program will exit.")
+>>>>>>> df8e36a2c6a7b24da1c3163c1a173f6f95e4eec3
 
-def run_experiments():
-    cause_column = 'weather_description'
-    effect_column = 'weather_description'
-    colum_list = ['weather_main','weather_description','weather_description_cluster']
-    base_path = 'BiksCalculations/results'
-    experiment_type = 'ny_traffic'
+def run_experiments(use_optimizer=True):
+    ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path)
 
-    do_calculations(cause_column, effect_column, base_path, colum_list, experiment_type)
+    do_calculations(ds_obj, cause_column, effect_column, result_path, col_list, experiment_type, ds_path, use_optimizer=use_optimizer)
     print("The experiments are now successfully done, and the program will exit.")
 
 if __name__ == '__main__':
     start_time = time.time()
     
     user_input = get_userinput()
+    cluster_colum = 'traffic_volume'
     
-    if user_input == 'cluster' or user_input == '':
-        run_cluster()
+    if user_input == 'cluster':
+        run_cluster(cluster_colum)
     elif user_input == 'experiment':
         run_experiments()
     elif user_input == '':
-        run_cluster()
+        run_cluster(cluster_colum)
         run_experiments()
     else:
         print("The given input was not valid.\nThe program will now exit.")
