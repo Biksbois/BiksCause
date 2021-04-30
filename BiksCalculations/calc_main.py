@@ -37,6 +37,27 @@ def init_matrixes(scores, distinct_values, base_path, experiment_type):
         matrix_dict[s] = create_datafram_matric(distinct_values, save_path)
     return matrix_dict
 
+def Construct_Result_Table(dts):
+    #It is assumed that all instances in the list will contain the same columes
+    experiments = list(dts[0].keys())
+    colums = dts[0][experiments[0]].head()
+    result = {}
+    real_result = {}
+    for experiment in experiments:
+        result[experiment] = []
+    for i in range(len(dts)):
+        for experiment in experiments:
+            for col in colums:
+                if dts[i][experiment][col][0] == "":
+                    dts[i][experiment] = remove_columes(dts[i][experiment], [col])
+            result[experiment].append(dts[i][experiment])
+    for experiment in experiments:   
+        real_result[experiment] = pd.concat([result[experiment][0], result[experiment][1], result[experiment][2]], ignore_index=False, axis=1)
+    return real_result
+        
+def remove_columes(df,lst):
+    return df.drop(columns=lst)
+
 def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, experiment_type, csv_path, use_optimizer=True):
     scores = ['nst', 'cir_c', 'cir_b']
 
@@ -59,32 +80,28 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
         suf_dict = {}
         nec_dict = {}
         d_dict = {}
-    mat_list = list(Threading_max(colum_list,colum_dict,ds_obj, matrixes,suf_dict, nec_dict, d_dict))
+
+    mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict))
     res = []
-    #pd.concat([df1,df2], ignore_index=False)
-    tl = pd.merge(mat_list[0]['nst'],mat_list[1]['nst'], how='right', on=['Clouds','Clear'])
-    
-    save_path = create_matix_path('cir_b', base_path, experiment_type+'yeet')
-    tl.to_csv(save_path, index=True, header=True)
-    
+    matrixes = Construct_Result_Table(mat_list)
+
     for s in scores:
         save_path = create_matix_path(s, base_path, experiment_type)
         matrixes[s].to_csv(save_path, index=True, header=True)
-def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict):
+def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_count = 3):
     lsts = []
     progs = []
     matris = []
     manager = multiprocessing.Manager()
     shared_dict = manager.list()
     
-    for l in List_spliter(lst,3):
+    for l in List_spliter(lst,core_count):
         lsts.append(l)
     for ls in lsts:
         p = multiprocessing.Process(target=calc_procces, args=(ls,lst,dic,ds_obj,matrixes,suf_dict,nec_dict,shared_dict,d_dict))
         p.start()
         progs.append(p)
-    #p = Process(target=f, args=('bob',))
-    #p.start()
+
     for pro in progs:
         pro.join()
     return shared_dict
@@ -95,7 +112,6 @@ def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dic
         ds_obj.cause_dict = colum_dict[cause]
         ds_obj.cause_column = cause
 
-        # for effect in colum_list:
         for j in tqdm(range(len(colum_list))):
             effect = colum_list[j]
             ds_obj.effect_dict = colum_dict[effect]
@@ -105,5 +121,4 @@ def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dic
             for c in colum_dict[cause]:
                 for e in colum_dict[effect]:
                     calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict,d_dict)
-        #ret_dict = {**ret_dict, **matrixes}
     ret_dict.append(matrixes)
