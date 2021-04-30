@@ -286,14 +286,8 @@ def init_obj_test(cause_column='label', effect_column='label', time_column='time
 
 def init_obj_test_trafic(cause_column='weather_description', effect_column='weather_description', time_column='date_time', head_val = -1, windows_size = 3, ds_path=''):
     window_size = windows_size
-<<<<<<< HEAD
     if ds_path == '':   
         ds_path = "BiksCalculations/csv/ny_trafic.csv"
-=======
-    # col_name = 'weather_description'
-    # if ds_path == '':   
-    ds_path = "input_csv\Metro_Interstate_Traffic_Volume.csv"
->>>>>>> df8e36a2c6a7b24da1c3163c1a173f6f95e4eec3
 
     print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---",flush=True)
 
