@@ -68,3 +68,31 @@ class test_window(unittest.TestCase):
         actual = round(ds_obj.calc_suf('x', 'y'), 4)
         
         self.assertEqual(expected, actual)
+    
+    def test_get_multiple_windows_backwards(self):
+        ds_obj = init_obj_test(head_val=6, ds_path = _ds_path)
+        columns = ['label','duration','dur_cluster','test']
+        expected = [(['y','55','c3','c'], ['z','38','c2','b','y','19','c1','a','x','2','c1','a']), 
+                    (['x','43','c3','a'], ['y','55','c3','c','z','38','c2','b','y','19','c1','a']), 
+                    (['y','23','c2','b'], ['x','43','c3','a','y','55','c3','c','z','38','c2','b'])]
+        actual = []
+        
+        for w in ds_obj.get_multiple_window(columns):
+            actual.append(w)
+        
+        self.maxDiff = None
+        self.assertListEqual(expected, actual)
+
+    def test_get_multiple_windows_forwards(self):
+        ds_obj = init_obj_test(head_val=6, ds_path = _ds_path)
+        columns = ['label','duration','dur_cluster','test']
+        expected = [(['x','2','c1','a'], ['y', '19', 'c1', 'a', 'z', '38', 'c2', 'b', 'y', '55', 'c3', 'c']), 
+                    (['y','19','c1','a'], ['z', '38', 'c2', 'b', 'y', '55', 'c3', 'c', 'x', '43', 'c3', 'a']), 
+                    (['z','38','c2','b'], ['y', '55', 'c3', 'c', 'x', '43', 'c3', 'a', 'y', '23', 'c2', 'b'])]
+        actual = []
+        
+        for w in ds_obj.get_multiple_window(columns, backwards=False):
+            actual.append(w)
+        
+        self.maxDiff = None
+        self.assertListEqual(expected, actual)

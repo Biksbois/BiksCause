@@ -64,14 +64,18 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
     duration = 0
     csv_name = ""
     current_row = ''
-    
-    
+
     empty_folder(temp_csv_path)
 
+    # for i in range(len(data[colum])):
+    #     start = i
+    #     end = i + 1
+    #     current_row = data[colum][i]
+    #     add_new_line(temp_csv_path, 'trafic_stuffs', i, start, time_colum, c_start, c_end, c_duration, data)
+    
     for i in range(len(data[colum])):
         if current_row != data[colum][i] and current_row != '':
             add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration, data)
-            
             current_row = ''
         
         if current_row == '':
