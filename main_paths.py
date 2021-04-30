@@ -14,7 +14,7 @@ def get_small_traffic():
 def get_large_traffic():
     return u'input_csv\Metro_Interstate_Traffic_Volume.csv'
 
-def get_trafic_timecol():
+def get_trafic_time():
     return 'date_time'
 
 def get_temp_csv_path():
@@ -31,3 +31,4 @@ def get_large_trafic_exp_type():
 
 def get_result_path():
     return 'BiksCalculations/results'
+
