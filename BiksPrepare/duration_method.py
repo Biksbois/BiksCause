@@ -71,14 +71,16 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
     empty_folder(temp_csv_path)
 
     if is_cluster_numbers:
-        for i in range(len(data[colum])):
+        for i in trange(len(data[colum])):
+        # for i in range(len(data[colum])):
             start = i
             end = i + 1
             current_row = data[colum][i]
             add_new_line(temp_csv_path, csv_if_number, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
         add_new_line(temp_csv_path, csv_if_number, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
     else:
-        for i in range(len(data[colum])):
+        for i in trange(len(data[colum])):
+        # for i in range(len(data[colum])):
             if current_row != data[colum][i] and current_row != '':
                 add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
                 current_row = ''
@@ -89,7 +91,10 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
         add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
 
 def create_clusters(c_duration, temp_csv_path, data):
-    for file in os.listdir(temp_csv_path):
+    
+    for f in trange(len(os.listdir(temp_csv_path))):
+    # for file in os.listdir(temp_csv_path):
+        file = os.listdir(temp_csv_path)[f]
         temp_path = f"{temp_csv_path}/{file}"
         temp_data = pd.read_csv(temp_path)
         create_cluster(temp_data, temp_path, c_duration, 'cluster', file.replace('.csv', ''))
@@ -100,7 +105,8 @@ def add_clusters(c_start, c_end, ds_path, colum, cluster_name, new_colum_name, t
     
     new_data = []
 
-    for i in range(len(data[colum])):
+    for i in trange(len(data[colum])):
+    # for i in range(len(data[colum])):
         if i >= end:
             csv_to_test = csv_if_number if is_cluster_numbers else data[colum][i] 
             start, end, cluster = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name)
