@@ -53,6 +53,7 @@ def Construct_Result_Table(dts):
             result[experiment].append(dts[i][experiment])
     for experiment in experiments:   
         real_result[experiment] = pd.concat([result[experiment][0], result[experiment][1], result[experiment][2]], ignore_index=False, axis=1)
+        #real_result[experiment] = result[experiment]
     return real_result
         
 def remove_columes(df,lst):

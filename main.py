@@ -135,7 +135,7 @@ if __name__ == '__main__':
     
     cluster_colums = [('traffic_volume', True), ('weather_description', False)]
     
-    col_list = ['weather_description_cluster', 'traffic_volume_cluster']
+    col_list = ['weather_main','weather_description','weather_description_cluster']
     
     if user_input == cluster:
         print_start(is_trafic, is_large, user_input, window_size)
