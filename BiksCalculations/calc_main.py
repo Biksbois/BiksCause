@@ -61,10 +61,6 @@ def remove_columes(df,lst):
 def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, experiment_type, csv_path, use_optimizer=True):
     scores = ['nst', 'cir_c', 'cir_b']
 
-    # ds_obj = init_obj_test(cause_column=cause_column, effect_column=effect_column)
-    # ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column)
-
-    
     colum_dict = {}
     
     for c in colum_list:
@@ -88,6 +84,7 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
     for s in scores:
         save_path = create_matix_path(s, base_path, experiment_type)
         matrixes[s].to_csv(save_path, index=True, header=True)
+
 def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_count = 3):
     lsts = []
     progs = []
@@ -105,7 +102,7 @@ def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_c
     for pro in progs:
         pro.join()
     return shared_dict
-        
+
 def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, ret_dict,d_dict):
     for i in tqdm(range(len(lst))):
         cause = lst[i]

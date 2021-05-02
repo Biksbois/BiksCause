@@ -3,7 +3,7 @@ from BiksCalculations.dataset_object import *
 def calc_den(x, y, alpha_val):
     return (x ** alpha_val) * y
 
-def nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict={}):
+def nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict=None):
     suf = ds_obj.calc_suf(x, y, suf_dict=big_dict)
     den = calc_den(ds_obj.calc_effect_prob(x), ds_obj.calc_cause_prob(y), alpha_val)
     
@@ -12,7 +12,7 @@ def nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict={}):
     else:
         return (suf / den) ** (lambda_val - 1) 
 
-def nst_lhs(ds_obj, alpha_val, lambda_val, x, y,big_dict={}):
+def nst_lhs(ds_obj, alpha_val, lambda_val, x, y,big_dict=None):
     nes = ds_obj.calc_nec(x, y, nec_dict=big_dict)
     den = calc_den(ds_obj.calc_cause_prob(y), ds_obj.calc_effect_prob(x), alpha_val)
 
@@ -21,7 +21,7 @@ def nst_lhs(ds_obj, alpha_val, lambda_val, x, y,big_dict={}):
     else:
         return (nes / den) ** (lambda_val)
 
-def get_nst(ds_obj, alpha_val, lambda_val, x, y, nec_dict={}, suf_dict={}):
+def get_nst(ds_obj, alpha_val, lambda_val, x, y, nec_dict=None, suf_dict=None):
     return nst_lhs(ds_obj, alpha_val, lambda_val, x, y, big_dict=nec_dict) * nst_rhs(ds_obj, alpha_val, lambda_val, x, y, big_dict=suf_dict)
 
 if __name__ == '__main__':

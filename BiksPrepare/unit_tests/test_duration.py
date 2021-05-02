@@ -40,7 +40,7 @@ class test_duration(unittest.TestCase):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 5
         
-        expected_cluster = 'sky is clear.csv_0'
+        expected_cluster = 'sky is clear_0'
         _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
 
         self.assertEqual(expected_cluster, actual_cluster)
@@ -65,7 +65,7 @@ class test_duration(unittest.TestCase):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 8
         
-        expected_cluster = 'sky is clear.csv_0'
+        expected_cluster = 'sky is clear_0'
         _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
         self.assertEqual(expected_cluster, actual_cluster)
     
@@ -89,6 +89,6 @@ class test_duration(unittest.TestCase):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 11
         
-        expected_cluster = 'sky is clear.csv_2'
+        expected_cluster = 'sky is clear_2'
         _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
         self.assertEqual(expected_cluster, actual_cluster)

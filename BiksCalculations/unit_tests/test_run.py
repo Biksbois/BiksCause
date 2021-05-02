@@ -3,6 +3,7 @@ import datetime
 from BiksCalculations.dataset_object import *
 from main import *
 import filecmp
+from main_paths import *
 
 def get_results():
     actual_base_path = 'BiksCalculations/test_results/actual'
@@ -10,8 +11,15 @@ def get_results():
     
     csv_path = 'BiksCalculations/csv/test_ny_trafic.csv'
     
-    run_experiments(use_optimizer=False, base_path=actual_base_path, csv_path=csv_path)
-    run_experiments(use_optimizer=True, base_path=expected_base_path, csv_path=csv_path)
+    cause_column, effect_column = get_cause_effect_col()
+    col_list = ['weather_main','weather_description']
+    
+    ds_path = get_small_traffic()
+    experiment_type = get_small_trafic_exp_type()
+    ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path)
+    
+    run_experiments(ds_obj, cause_column, effect_column, ds_path, actual_base_path, col_list, experiment_type, use_optimizer=True)
+    run_experiments(ds_obj, cause_column, effect_column, ds_path, expected_base_path, col_list, experiment_type, use_optimizer=False)
 
 class test_run(unittest.TestCase):
     def test_a_cir_b(self):

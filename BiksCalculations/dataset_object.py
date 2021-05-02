@@ -38,13 +38,14 @@ class dataset():
         if not suf_dict == None and x in suf_dict and y in suf_dict[x]:
             return suf_dict[x][y] / self.get_col_len() 
         elif not suf_dict == None:
-            suf = self.calc_nec_suf(x, y , False, divide=False)
+            # suf = self.calc_nec_suf(x, y , False, divide=False)
             
-            if not x in suf_dict:
-                suf_dict[x] = {}
-            
-            suf_dict[x][y] = suf
-            return suf / self.get_col_len() 
+            # if not x in suf_dict:
+            #     suf_dict[x] = {}
+            # print(f"SUF={suf}, {x} - {y}")
+            # suf_dict[x][y] = suf
+            # return suf / self.get_col_len() 
+            return 0
         # print("CALC_SUF")       
         return self.calc_nec_suf(x, y , False)
 
@@ -52,13 +53,15 @@ class dataset():
         if not nec_dict == None and x in nec_dict and y in nec_dict[x]:
             return nec_dict[x][y] / self.get_col_len()
         elif not nec_dict == None:
-            nec = self.calc_nec_suf(x, y , True, divide=False)
+            # nec = self.calc_nec_suf(x, y , True, divide=False)
             
-            if not x in nec_dict:
-                nec_dict[x] = {}
+            # if not x in nec_dict:
+            #     nec_dict[x] = {}
+            # print(f"NEC={nec}, {x} - {y}")
             
-            nec_dict[x][y] = nec
-            return nec / self.get_col_len() 
+            # nec_dict[x][y] = nec
+            # return nec / self.get_col_len() 
+            return 0
         return self.calc_nec_suf(x, y, True)
 
     def calc_nec_suf(self, x, y, direction, divide = True):

@@ -30,7 +30,7 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
     print("The experiments are now successfully done, and the program will exit.")
 
 
-def small_trafic_experiment(col_list, window_size):
+def small_trafic_experiment(col_list, window_size, use_optimizer=True):
     cause_column, effect_column = get_cause_effect_col()
     result_path = get_result_path()
     
@@ -38,7 +38,7 @@ def small_trafic_experiment(col_list, window_size):
     experiment_type = get_small_trafic_exp_type()
     ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path, windows_size=window_size)
     
-    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type)
+    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, use_optimizer=True)
 
 def large_trafic_experiment(col_list, window_size):
     cause_column, effect_column = get_cause_effect_col()
