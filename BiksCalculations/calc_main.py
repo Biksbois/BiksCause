@@ -82,7 +82,10 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
 
     mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict))
     res = []
-    matrixes = Construct_Result_Table(mat_list)
+    try:
+        matrixes = Construct_Result_Table(mat_list)
+    except Exception as e:
+        print(f"\n---\nERROR: {e}\nThe program was unable to save.\n---\n\n")
 
     for s in scores:
         save_path = create_matix_path(s, base_path, experiment_type)
@@ -121,4 +124,5 @@ def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dic
             for c in colum_dict[cause]:
                 for e in colum_dict[effect]:
                     calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict,d_dict)
+    
     ret_dict.append(matrixes)

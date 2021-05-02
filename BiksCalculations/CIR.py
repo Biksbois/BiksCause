@@ -19,16 +19,21 @@ def get_d(ds_obj, y, d_dict=None):
     if not d_dict == None and y in d_dict:
         return d_dict[y]
     elif not d_dict == None:
-        d = ds_obj.calc_d(y)
-        d_dict[y] = d
-        return d
+        # d = ds_obj.calc_d(y)
+        # d_dict[y] = d
+        # return d
+        return 0
     else:
         return ds_obj.calc_d(y)
 
 def cir_nom(ds_obj, x, y, big_dict=None, d_dict=None):
     n = get_n(ds_obj, x, y, big_dict=big_dict) #ds_obj.calc_n(y, x)
     d = get_d(ds_obj, y, d_dict=d_dict)
-    return n / d
+    
+    if n == 0 or d == 0:
+        return 0
+    else:
+        return n / d
 
 def cir_b_den(ds_obj, x):
     return ds_obj.calc_effect_prob(x)

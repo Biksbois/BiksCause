@@ -50,14 +50,14 @@ def add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_en
     else:
         create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration, current_row)
 
-def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name):
+def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name, j_start):
     csv_path = f"{temp_csv_path}\{colum}.csv"
     csv_file = pd.read_csv(csv_path)
     
-    for j in range(len(csv_file[c_start])):
+    for j in range(j_start, len(csv_file[c_start])):
         if i >= int(csv_file[c_start][j]) and i <= int(csv_file[c_end][j]):
             cluster_name = csv_file[cluster_name][j].replace('.csv', '')
-            return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name
+            return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name, j
     print("\n\n--- ERROR in 'extract_start_end' ---\n\n")
     return '-ERROR-', '-ERROR-', '-ERROR-'
 
@@ -104,12 +104,12 @@ def add_clusters(c_start, c_end, ds_path, colum, cluster_name, new_colum_name, t
     end = 0
     
     new_data = []
-
+    j_start = 0
     for i in trange(len(data[colum])):
     # for i in range(len(data[colum])):
         if i >= end:
             csv_to_test = csv_if_number if is_cluster_numbers else data[colum][i] 
-            start, end, cluster = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name)
+            start, end, cluster, j_start = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name, j_start)
         new_data.append(cluster)
 
     data[new_colum_name] = new_data

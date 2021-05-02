@@ -21,74 +21,82 @@ class test_duration(unittest.TestCase):
     def test_extract_start_i5(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 5
-        
+        j_start = 0
         expected_start = 5
-        actual_start, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        actual_start, _, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
 
         self.assertEqual(expected_start, actual_start)
     
     def test_extract_end_i5(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 5
+        j_start = 0
         
         expected_end = 8
-        _, actual_end, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, actual_end, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
 
         self.assertEqual(expected_end, actual_end)
     
     def test_extract_cluster_i5(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 5
+        j_start = 0
         
         expected_cluster = 'sky is clear_0'
-        _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, _, actual_cluster, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
 
         self.assertEqual(expected_cluster, actual_cluster)
     
     def test_extract_start_i8(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 8
+        j_start = 0
         
         expected_start = 5
-        actual_start, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        actual_start, _, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_start, actual_start)
     
     def test_extract_end_i8(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 8
+        j_start = 0
         
         expected_end = 8
-        _, actual_end, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, actual_end, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_end, actual_end)
     
     def test_extract_cluster_i8(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 8
+        j_start = 0
         
         expected_cluster = 'sky is clear_0'
-        _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, _, actual_cluster, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_cluster, actual_cluster)
     
     def test_extract_start_i11(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 11
+        j_start = 0
         
         expected_start = 11
-        actual_start, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        actual_start, _, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_start, actual_start)
     
     def test_extract_end_i11(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 11
+        j_start = 0
         
         expected_end = 29
-        _, actual_end, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, actual_end, _, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_end, actual_end)
     
     def test_extract_cluster_i11(self):
         colum, csv_path, c_start, c_end, cluster_name = init_data()
         i = 11
+        j_start = 0
         
         expected_cluster = 'sky is clear_2'
-        _, _, actual_cluster = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name)
+        _, _, actual_cluster, _ = extract_start_end(colum, csv_path, i, c_start, c_end, cluster_name, j_start)
         self.assertEqual(expected_cluster, actual_cluster)
