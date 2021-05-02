@@ -39,21 +39,23 @@ def init_matrixes(scores, distinct_values, base_path, experiment_type):
 
 def Construct_Result_Table(dts):
     #It is assumed that all instances in the list will contain the same columes
-    experiments = list(dts[0].keys())
-    colums = dts[0][experiments[0]].head()
-    result = {}
-    real_result = {}
-    for experiment in experiments:
-        result[experiment] = []
-    for i in range(len(dts)):
+    if len(dts) != 1:
+        experiments = list(dts[0].keys())
+        colums = dts[0][experiments[0]].head()
+        result = {}
+        real_result = {}
         for experiment in experiments:
-            for col in colums:
-                if dts[i][experiment][col][0] == "":
-                    dts[i][experiment] = remove_columes(dts[i][experiment], [col])
-            result[experiment].append(dts[i][experiment])
-    for experiment in experiments:   
-        real_result[experiment] = pd.concat([result[experiment][0], result[experiment][1], result[experiment][2]], ignore_index=False, axis=1)
-        #real_result[experiment] = result[experiment]
+            result[experiment] = []
+        for i in range(len(dts)):
+            for experiment in experiments:
+                for col in colums:
+                    if dts[i][experiment][col][0] == "":
+                        dts[i][experiment] = remove_columes(dts[i][experiment], [col])
+                result[experiment].append(dts[i][experiment])
+        for experiment in experiments:   
+            real_result[experiment] = pd.concat([result[experiment][0], result[experiment][1], result[experiment][2]], ignore_index=False, axis=1)
+    else:
+        real_result = dts[0]
     return real_result
         
 def remove_columes(df,lst):
