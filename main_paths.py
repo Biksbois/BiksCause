@@ -9,8 +9,8 @@
 # result_path = 'BiksCalculations/results'
 
 def get_small_traffic():
-    # return u'input_csv\Metro_Interstate_Traffic_Volume.csv'
-    return u'BiksCalculations\csv\\ny_trafic.csv'
+    return u'input_csv\Metro_Interstate_Traffic_Volume.csv'
+    # return u'BiksCalculations\csv\\ny_trafic.csv'
 
 def get_large_traffic():
     return u'input_csv\Metro_Interstate_Traffic_Volume.csv'
