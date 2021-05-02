@@ -91,26 +91,26 @@ def large_trafic_cluster(cluster_colums):
         run_cluster(ds_path, col_name, is_number, time_colum, temp_csv_path)
 
 
-def print_start(is_trafic, is_large, exp_type, window_size, head_val):
-    if head_val == -1:
-        message = "full"
+def print_start(is_trafic, is_large, exp_type, window_size, head_val_small, head_val_large):
+    if is_large:
+        message = head_val_large
     else:
-        message = head_val
+        message = head_val_small
     
     print(f"---\nThe experiment with the following input will now run:\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n  - windowsize: {window_size}\n  - head_val = {message}")
     
 
-def call_experiment(col_list, is_trafic, is_large, window_size, head_val):
+def call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large):
     if is_trafic:
         if is_large:
-            large_trafic_experiment(col_list, window_size, head_val)
+            large_trafic_experiment(col_list, window_size, head_val_large)
         else:
-            small_trafic_experiment(col_list, window_size, head_val)
+            small_trafic_experiment(col_list, window_size, head_val_small)
     else:
         if is_large:
-            large_test_experiment(col_list, head_val)
+            large_test_experiment(col_list, head_val_large)
         else:
-            small_test_experiment(col_list, head_val)
+            small_test_experiment(col_list, head_val_small)
 
 def call_cluster(cluster_colums, is_trafic, is_large):
     if is_trafic:
@@ -135,25 +135,27 @@ if __name__ == '__main__':
     test = 'test'
     
     window_size = 3
-    head_val = 7000
+    head_val_small = 100
+    head_val_large = 50000
     
     is_trafic, is_large, user_input = get_userinput(cluster, experiment, large, traffic, test)
     
-    cluster_colums = [('traffic_volume', True), ('weather_description', False)]
+    cluster_colums = [('traffic_volume', True)]
+    # cluster_colums = [('traffic_volume', True), ('weather_description', False)]
     
     # col_list = ['weather_main','weather_description','weather_description_cluster']
     col_list = ['weather_main','weather_description','weather_description_cluster', 'traffic_volume_cluster']
     
     if user_input == cluster:
-        print_start(is_trafic, is_large, user_input, window_size, head_val)
+        print_start(is_trafic, is_large, user_input, window_size, head_val_small, head_val_large)
         call_cluster(cluster_colums, is_trafic, is_large)
     elif user_input == experiment:
-        print_start(is_trafic, is_large, user_input, window_size, head_val)
-        call_experiment(col_list, is_trafic, is_large, window_size, head_val)
+        print_start(is_trafic, is_large, user_input, window_size, head_val_small, head_val_large)
+        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large)
     elif user_input == '':
-        print_start(is_trafic, is_large, f'{cluster} and {experiment}', window_size, head_val)
+        print_start(is_trafic, is_large, f'{cluster} and {experiment}', window_size, head_val_small, head_val_large)
         call_cluster(cluster_colums, is_trafic, is_large)
-        call_experiment(col_list, is_trafic, is_large, window_size, head_val)
+        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large)
     else:
         print("The given input was not valid.\nThe program will now exit.")
     

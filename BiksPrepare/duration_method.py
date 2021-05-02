@@ -50,16 +50,21 @@ def add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_en
     else:
         create_and_add(start, end, duration, csv_name, c_start, c_end, c_duration, current_row)
 
-def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name, j_start):
+def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name, j_end, is_cluster_numbers):
     csv_path = f"{temp_csv_path}\{colum}.csv"
     csv_file = pd.read_csv(csv_path)
     
-    for j in range(j_start, len(csv_file[c_start])):
+    start = j_end if is_cluster_numbers else 0
+    # start = 0
+    
+    for j in range(start, len(csv_file[c_start])):
         if i >= int(csv_file[c_start][j]) and i <= int(csv_file[c_end][j]):
             cluster_name = csv_file[cluster_name][j].replace('.csv', '')
-            return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name, j
+            return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name, j - 1 if j - 1 > 0 and is_cluster_numbers else 0
+    
+    print(f"j_start = {j_start}\npath = {csv_path}\ni={i}\nj={j}")
     print("\n\n--- ERROR in 'extract_start_end' ---\n\n")
-    return '-ERROR-', '-ERROR-', '-ERROR-'
+    return '-ERROR-', '-ERROR-', '-ERROR-', '-ERROR-'
 
 def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path, data, is_cluster_numbers, csv_if_number):
     start = 0
@@ -104,12 +109,12 @@ def add_clusters(c_start, c_end, ds_path, colum, cluster_name, new_colum_name, t
     end = 0
     
     new_data = []
-    j_start = 0
+    j_end = 0
     for i in trange(len(data[colum])):
     # for i in range(len(data[colum])):
         if i >= end:
             csv_to_test = csv_if_number if is_cluster_numbers else data[colum][i] 
-            start, end, cluster, j_start = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name, j_start)
+            start, end, cluster, j_end = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name, j_end, is_cluster_numbers)
         new_data.append(cluster)
 
     data[new_colum_name] = new_data
