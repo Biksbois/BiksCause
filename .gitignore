@@ -129,4 +129,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-BiksCalculations\csv\temp_csv
+BiksCalculations/csv/temp_csv
