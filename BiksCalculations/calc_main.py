@@ -7,6 +7,9 @@ import multiprocessing
 from tqdm import tqdm
 
 def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, alpha_val, lambda_val):
+    # alpha_val = 0.66
+    # lambda_val = 0.5
+    
     nst = get_nst(ds_obj, alpha_val, lambda_val, x, y, nec_dict=nec_dict, suf_dict=suf_dict)
     cir_c = calc_cir_c(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
