@@ -25,12 +25,12 @@ def get_userinput(cluster, experiment, large, traffic, test):
 def run_cluster(ds_path, cluster_colum, is_cluster_numbers, time_colum, temp_csv_path):
     generate_clusters(ds_path, cluster_colum, is_cluster_numbers, time_colum, temp_csv_path)
 
-def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, use_optimizer=True):
-    do_calculations(ds_obj, cause_column, effect_column, result_path, col_list, experiment_type, ds_path, use_optimizer=use_optimizer)
+def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, lambda_val, alpha_val, use_optimizer=True):
+    do_calculations(ds_obj, cause_column, effect_column, result_path, col_list, experiment_type, ds_path, lambda_val, alpha_val, use_optimizer=use_optimizer)
     print("The experiments are now successfully done, and the program will exit.")
 
 
-def small_trafic_experiment(col_list, window_size, head_val, use_optimizer=True):
+def small_trafic_experiment(col_list, window_size, head_val, lambda_val, alpha_val, use_optimizer=True):
     cause_column, effect_column = get_cause_effect_col()
     result_path = get_result_path()
     
@@ -38,9 +38,9 @@ def small_trafic_experiment(col_list, window_size, head_val, use_optimizer=True)
     experiment_type = get_small_trafic_exp_type()
     ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path, windows_size=window_size, head_val=head_val)
     
-    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, use_optimizer=True)
+    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, lambda_val, alpha_val, use_optimizer=True)
 
-def large_trafic_experiment(col_list, window_size, head_val):
+def large_trafic_experiment(col_list, window_size, head_val, lambda_val, alpha_val):
     cause_column, effect_column = get_cause_effect_col()
     result_path = get_result_path()
     
@@ -48,7 +48,7 @@ def large_trafic_experiment(col_list, window_size, head_val):
     experiment_type = get_large_trafic_exp_type()
     ds_obj = init_obj_test_trafic(cause_column=cause_column, effect_column=effect_column, ds_path=ds_path, windows_size=window_size, head_val=head_val)
     
-    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type)
+    run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, col_list, experiment_type, lambda_val, alpha_val)
 
 def test_cluster():
     pass
@@ -100,12 +100,12 @@ def print_start(is_trafic, is_large, exp_type, window_size, head_val_small, head
     print(f"---\nThe experiment with the following input will now run:\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n  - windowsize: {window_size}\n  - head_val = {message}")
     
 
-def call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large):
+def call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large, lambda_val, alpha_val):
     if is_trafic:
         if is_large:
-            large_trafic_experiment(col_list, window_size, head_val_large)
+            large_trafic_experiment(col_list, window_size, head_val_large, lambda_val, alpha_val)
         else:
-            small_trafic_experiment(col_list, window_size, head_val_small)
+            small_trafic_experiment(col_list, window_size, head_val_small, lambda_val, alpha_val)
     else:
         if is_large:
             large_test_experiment(col_list, head_val_large)
@@ -137,6 +137,8 @@ if __name__ == '__main__':
     window_size = 3
     head_val_small = 100
     head_val_large = 50000
+    alpha_val = 0.66
+    lambda_val = 0.5
     
     is_trafic, is_large, user_input = get_userinput(cluster, experiment, large, traffic, test)
     
@@ -151,11 +153,11 @@ if __name__ == '__main__':
         call_cluster(cluster_colums, is_trafic, is_large)
     elif user_input == experiment:
         print_start(is_trafic, is_large, user_input, window_size, head_val_small, head_val_large)
-        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large)
+        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large, lambda_val, alpha_val)
     elif user_input == '':
         print_start(is_trafic, is_large, f'{cluster} and {experiment}', window_size, head_val_small, head_val_large)
         call_cluster(cluster_colums, is_trafic, is_large)
-        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large)
+        call_experiment(col_list, is_trafic, is_large, window_size, head_val_small, head_val_large, lambda_val, alpha_val)
     else:
         print("The given input was not valid.\nThe program will now exit.")
     

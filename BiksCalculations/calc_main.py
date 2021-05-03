@@ -6,7 +6,7 @@ import multiprocessing
 
 from tqdm import tqdm
 
-def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, alpha_val = 0.66, lambda_val = 0.5):
+def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, alpha_val, lambda_val):
     nst = get_nst(ds_obj, alpha_val, lambda_val, x, y, nec_dict=nec_dict, suf_dict=suf_dict)
     cir_c = calc_cir_c(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
@@ -61,7 +61,7 @@ def Construct_Result_Table(dts):
 def remove_columes(df,lst):
     return df.drop(columns=lst)
 
-def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, experiment_type, csv_path, use_optimizer=True):
+def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, experiment_type, csv_path, lambda_val, alpha_val, use_optimizer=True):
     scores = ['nst', 'cir_c', 'cir_b']
 
     colum_dict = {}
@@ -80,7 +80,7 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
         nec_dict = {}
         d_dict = {}
 
-    mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict))
+    mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict, lambda_val, alpha_val))
     res = []
     try:
         matrixes = Construct_Result_Table(mat_list)
@@ -91,7 +91,7 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
         save_path = create_matix_path(s, base_path, experiment_type)
         matrixes[s].to_csv(save_path, index=True, header=True)
 
-def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_count = 3):
+def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, lambda_val, alpha_val, core_count = 3):
     lsts = []
     progs = []
     matris = []
@@ -101,7 +101,7 @@ def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_c
     for l in List_spliter(lst,core_count):
         lsts.append(l)
     for ls in lsts:
-        p = multiprocessing.Process(target=calc_procces, args=(ls,lst,dic,ds_obj,matrixes,suf_dict,nec_dict,shared_dict,d_dict))
+        p = multiprocessing.Process(target=calc_procces, args=(ls,lst,dic,ds_obj,matrixes,suf_dict,nec_dict,shared_dict,d_dict, lambda_val, alpha_val))
         p.start()
         progs.append(p)
 
@@ -109,7 +109,7 @@ def Threading_max(lst, dic, ds_obj, matrixes, suf_dict, nec_dict, d_dict, core_c
         pro.join()
     return shared_dict
 
-def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, ret_dict,d_dict):
+def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, ret_dict,d_dict, lambda_val, alpha_val):
     for i in tqdm(range(len(lst))):
         cause = lst[i]
         ds_obj.cause_dict = colum_dict[cause]
@@ -123,6 +123,6 @@ def calc_procces(lst,colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dic
             
             for c in colum_dict[cause]:
                 for e in colum_dict[effect]:
-                    calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict,d_dict)
+                    calculate(e, c, ds_obj, matrixes, suf_dict, nec_dict,d_dict, lambda_val, alpha_val)
     
     ret_dict.append(matrixes)
