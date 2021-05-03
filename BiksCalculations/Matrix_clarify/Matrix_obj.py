@@ -42,7 +42,7 @@ class result_matrix():
         return self.matrix_list
         
         
-rs = result_matrix('BiksCalculations\\results\large_ny_traffic_nst_matrix.csv', 'nst')
+rs = result_matrix('BiksCalculations\\results\\traffic_cir_b_h50000_w6_matrix.csv', 'nst')
 rs.tolist()
 rs.sort_matrix()
-print(rs.matrix_sorted_list[100:150])
+print(rs.matrix_sorted_list[:100])
