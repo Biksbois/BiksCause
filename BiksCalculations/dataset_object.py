@@ -126,8 +126,8 @@ class dataset():
             yield self.window_method(self.data, i, self.cause_column, self.effect_column, backwards, self.window_size, self.time_column)
 
     def get_multiple_window(self, columns, backwards=True):
-            for i in range(self.window_size, self.get_col_len()):
-                yield self.window_multiple_method(self.data, i, columns, backwards, self.window_size, self.time_column)
+        for i in range(self.window_size, self.get_col_len()):
+            yield self.window_multiple_method(self.data, i, columns, backwards, self.window_size, self.time_column)
 
 
 def init_obj_weather_main():
