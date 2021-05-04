@@ -13,10 +13,13 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
     cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     
     for key in e_obj.nst_keys:
-        matrixes[key].xs(x)[y] = round(nst[key], 2)
+        if not nst[key] == 0:
+            matrixes[key].xs(x)[y] = round(nst[key], 2)
     
-    matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
-    matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
+    if not cir_c == 0:
+        matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
+    if not cir_b == 0:
+        matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
 
 def extract_values(colum_list, colum_dict):
     vals_to_check = []
@@ -31,7 +34,6 @@ def create_datafram_matric(distinct_values, save_index):
 
 def create_matix_path(s, base_path, e_obj):
     return f'{base_path}/{e_obj.exp_type}_{s}_h{e_obj.head_val}_w{e_obj.window_size}_matrix.csv'
-    # return f'BiksCalculations/results/{s}_matrix.csv'
 
 def init_matrixes(scores, distinct_values, base_path, e_obj):
     matrix_dict = {}
@@ -78,18 +80,18 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
     matrixes = init_matrixes(scores, distinct_values, base_path, e_obj)
 
     if use_optimizer:
-        suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list ,ds_obj)
+        suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list ,ds_obj, e_obj.support)
     else:
-        suf_dict = {}
-        nec_dict = {}
-        d_dict = {}
-
+        suf_dict = None
+        nec_dict = None
+        d_dict = None
+    
     mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj))
     res = []
-    try:
-        matrixes = Construct_Result_Table(mat_list)
-    except Exception as e:
-        print(f"\n---\nERROR: {e}\nThe program was unable to save.\n---\n\n")
+    # try:
+    matrixes = Construct_Result_Table(mat_list)
+    # except Exception as e:
+    #     print(f"\n---\nERROR: {e}\nThe program was unable to save.\n---\n\n")
 
     for s in scores:
         save_path = create_matix_path(s, base_path, e_obj)

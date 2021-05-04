@@ -150,3 +150,19 @@ class test_dict(unittest.TestCase):
         for l in List_spliter(lst,3):
             actual.append(l)
         self.assertListEqual(actual[2], expected)
+    
+    def test_trim_dict(self):
+        input_dict = {'a':10, 'b':9, 'c':11, 'd':0, 'e':-1, 'd':999}
+        expected = {'c':11, 'd':999}
+        support = 10
+        actual = trim_dict(input_dict, support)
+        
+        self.assertDictEqual(expected, actual)
+    
+    def test_trim_dict_nested(self):
+        input_dict = {'a':{'a':10, 'b':9, 'c':11}, 'd':{'a':0, 'e':-1, 'd':999}}
+        expected = {'a':{'c':11}, 'd':{'d':999}}
+        support = 10
+        actual = trim_nested_dict(input_dict, support)
+        
+        self.assertDictEqual(expected, actual)

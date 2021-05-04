@@ -1,9 +1,31 @@
 from BiksCalculations.dataset_object import *
 
-def generate_lookup_dict(columns, dst_obj):
-    # dst_obj = init_obj_test_trafic()
+
+
+def trim_dict(dict_to_trim, support):
+    keys_to_delete = []
+    for key in dict_to_trim.keys():
+        if dict_to_trim[key] <= support:
+            keys_to_delete.append(key)
+    
+    for key in keys_to_delete:
+        del dict_to_trim[key]
+
+    return dict_to_trim
+
+def trim_nested_dict(dict_to_trim, support):
+    for key in dict_to_trim:
+        dict_to_trim[key] = trim_dict(dict_to_trim[key], support)
+    return dict_to_trim
+
+def generate_lookup_dict(columns, dst_obj, support):
     suf_dict = generate_suf(dst_obj, columns)
     nec_dict, d_dict = generate_nec(dst_obj, columns)
+    
+    suf_dict = trim_nested_dict(suf_dict, support)
+    nec_dict = trim_nested_dict(nec_dict, support)
+    d_dict = trim_dict(d_dict, support)
+    
     return suf_dict, nec_dict, d_dict
 
 def generate_suf(dst_obj, columns):
