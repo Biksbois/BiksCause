@@ -129,81 +129,34 @@ class dataset():
         for i in range(self.window_size, self.get_col_len()):
             yield self.window_multiple_method(self.data, i, columns, backwards, self.window_size, self.time_column)
 
+def start_end_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
+    # return default_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column, start_end_condition_one, start_end_condition_two, start_end_min_time, start_end_current_time)
+    pass #TODO: Implement this
 
-def init_obj_weather_main():
-    window_size = 7
-    col_name = 'weather_main'
-    ds_path = "input_csv\Metro_Interstate_Traffic_Volume.csv"
+def start_end_multiple_method(data, i, columns, backwards, window_size, time_column):
+    # return default_multiple_window_method(data, i, columns, backwards, window_size, time_column, start_end_condition_one, start_end_condition_two, start_end_min_time, start_end_current_time)
+    pass #TODO: Implement this
 
-    return dataset(ds_path, col_name, window_size)
 
-# def test_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
-#     current_time = data[time_column][i]
-#     min_time = current_time - window_size
-#     effect = ""
-#     cause = []
-    
-#     col_len = len(data[cause_column])
-    
-#     if backwards:
-#         effect = data[effect_column][i]
-#         current_index = i - 1
-        
-#         while current_index >= 0 and data[time_column][current_index] >= min_time:
-#             cause.append(data[cause_column][current_index])
-#             current_index -= 1
-#     else:
-#         effect = data[effect_column][i-window_size]
-#         current_index = i - window_size + 1
-        
-#         while current_index < col_len and data[time_column][current_index] <= current_time:
-#             cause.append(data[cause_column][current_index])
-#             current_index += 1
-    
-#     return effect, cause
+def start_end_condition_one(current_index, data, time_column, min_time):
+    # return current_index >= 0 and data[time_column][current_index] >= min_time
+    pass #TODO: Implement this
 
-# def date_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
-#     current_time = translate_date(data[time_column][i])
-#     min_time = current_time - datetime.timedelta(hours=window_size) 
-#     effect = ""
-#     cause = []
-    
-#     col_len = len(data[cause_column])
-    
-#     if backwards:
-#         effect = data[effect_column][i]
-#         current_index = i - 1
-        
-#         while current_index >= 0 and calc_deltatime(translate_date(data[time_column][current_index]),min_time) <= 0:
-#             cause.append(data[cause_column][current_index])
-#             current_index -= 1
-#     else:
-#         effect = data[effect_column][i-window_size]
-#         current_index = i - window_size + 1
-        
-#         while current_index < col_len and calc_deltatime(translate_date(data[time_column][current_index]), current_time) >= 0:
-#             cause.append(data[cause_column][current_index])
-#             current_index += 1
-    
-#     return effect, cause
 
-def number_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
-    return default_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column, number_condition_one, number_condition_two, number_min_time, number_current_time)
+def start_end_condition_two(current_index, col_len, translate_date, time_column, data, current_time):
+    # return current_index < col_len and data[time_column][current_index] <= current_time
+    pass #TODO: Implement this
 
-def number_multiple_method(data, i, columns, backwards, window_size, time_column):
-    return default_multiple_window_method(data, i, columns, backwards, window_size, time_column, number_condition_one, number_condition_two, number_min_time, number_current_time)
 
-def number_condition_one(current_index, data, time_column, min_time):
-    return current_index >= 0 and data[time_column][current_index] >= min_time
+def start_end_min_time(current_time, window_size):
+    # return current_time - window_size
+    pass #TODO: Implement this
 
-def number_condition_two(current_index, col_len, translate_date, time_column, data, current_time):
-    return current_index < col_len and data[time_column][current_index] <= current_time
 
-def number_min_time(current_time, window_size):
-    return current_time - window_size
+def start_end_current_time(data, time_column, i):
+    # return data[time_column][i]
+    pass #TODO: Implement this
 
-def number_current_time(data, time_column, i):
-    return data[time_column][i]
 
 def date_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
     return default_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column, date_condition_one, date_condition_two, date_min_time, date_current_time)
@@ -257,21 +210,17 @@ def default_multiple_window_method(data, i, colums, backwards, window_size, time
     col_len = len(data[colums[0]])
     
     if backwards:
-        # effect = data[effect_column][i]
         effect = [str(data[c][i]) for c in colums]
         current_index = i - 1
         
         while window_condition_one(current_index, data, time_column, min_time):
-            # cause.append(data[cause_column][current_index])
             cause.extend([str(data[c][current_index]) for c in colums])
             current_index -= 1
     else:
         effect = [str(data[c][i-window_size]) for c in colums]
-        # effect = data[effect_column][i-window_size]
         current_index = i - window_size + 1
         
         while window_condition_two(current_index, col_len, translate_date, time_column, data, current_time):
-            # cause.append(data[cause_column][current_index])
             cause.extend([str(data[c][current_index]) for c in colums])
             
             current_index += 1
@@ -296,6 +245,12 @@ def init_obj_test_trafic(cause_column='weather_description', effect_column='weat
     
     return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val)
 
-if __name__ == '__main__':
-    obj = init_obj_test()
-    print(obj.get_col_len())
+def init_obj_test_medical(cause_column='deathdate', effect_column='race', time_column=('start', 'end'), head_val = -1, windows_size = 3, ds_path=''):
+    window_size = windows_size
+    if ds_path == '':   
+        ds_path = "output_csv\careplans.csv"
+
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    
+    return dataset(ds_path, cause_column, effect_column, window_size,start_end_method, time_column, start_end_multiple_method, head_val = head_val)
+

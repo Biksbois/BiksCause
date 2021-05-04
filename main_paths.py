@@ -15,6 +15,9 @@ def get_small_traffic():
 def get_large_traffic():
     return u'input_csv\Metro_Interstate_Traffic_Volume.csv'
 
+def get_large_medical():
+    return 'output_csv\careplans.csv'
+
 def get_trafic_time():
     return 'date_time'
 

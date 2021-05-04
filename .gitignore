@@ -130,4 +130,5 @@ dmypy.json
 .pyre/
 
 BiksCalculations/csv/temp_csv
-BiksCalculations/results
+BiksCalculations/results/cluster
+BiksCalculations/results/no_cluster
