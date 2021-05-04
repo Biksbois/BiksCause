@@ -43,6 +43,15 @@ def conv_tuple(df, colums):
         dict_num += 1
     return col_dict
 
+def conv_tuple_mutant(df, colums):
+    col_dict = {1:[]}
+    dict_num = 1
+    for index, row in df.iterrows():
+        for col in colums:
+            col_dict[1].append((row[col[0]],row[col[1]]))
+            col_dict[1].append((row[col[0]],row[col[2]]))
+    return col_dict
+
 def open_csv(path):
     df = pd.read_csv(path)
     return df
@@ -69,6 +78,12 @@ def conv_pickle_to_text(input_path, output_path):
     p_dict = pickle_to_dict(input_path)
     write_pickle(p_dict, output_path)
 
+def double_trouble_mutant_csv(input_path, output_path, col_arr, time_col):
+    df = open_csv(input_path)
+    temporal_df = update_temporal_colume(df, time_col)
+    pickle_dict = conv_tuple_mutant(df, col_arr)
+    Make_pickle_file(pickle_dict, output_path)
+
 def conv_csv_to_pickle(input_path, output_path, col_arr, time_col):
     df = open_csv(input_path)
     temporal_df = update_temporal_colume(df, time_col)
@@ -79,11 +94,18 @@ if __name__ == '__main__':
     t_weather_desc = [('date_time', 'traffic_volume_cluster'), ('date_time', 'weather_description')]
     t_weather_clust = [('date_time', 'traffic_volume_cluster'), ('date_time', 'weather_description_cluster')]
 
-    conv_csv_to_pickle('input_csv\Metro_Interstate_Traffic_Volume.csv', 'weather_desc', t_weather_desc, 7)
-    conv_csv_to_pickle('input_csv\Metro_Interstate_Traffic_Volume.csv', 'weather_clust', t_weather_clust, 7)
+    t_weather_mutant_clust = [('date_time', 'traffic_volume_cluster', 'weather_description_cluster')]
+    t_weather_mutant_desc = [('date_time', 'traffic_volume_cluster', 'weather_description')]
 
-    conv_pickle_to_text('weather_desc', 'weather_desc.txt')
-    conv_pickle_to_text('weather_clust', 'weather_clust.txt')
+    double_trouble_mutant_csv('input_csv\Metro_Interstate_Traffic_Volume.csv', 'double_trouble_clust', t_weather_mutant_clust, 7)
+    conv_pickle_to_text('double_trouble_clust', 'double_trouble_clust.txt')
+    double_trouble_mutant_csv('input_csv\Metro_Interstate_Traffic_Volume.csv', 'double_trouble_desc', t_weather_mutant_desc, 7)
+    conv_pickle_to_text('double_trouble_desc', 'double_trouble_desc.txt')
+    # conv_csv_to_pickle('input_csv\Metro_Interstate_Traffic_Volume.csv', 'weather_desc', t_weather_desc, 7)
+    # conv_csv_to_pickle('input_csv\Metro_Interstate_Traffic_Volume.csv', 'weather_clust', t_weather_clust, 7)
+
+    # conv_pickle_to_text('weather_desc', 'weather_desc.txt')
+    # conv_pickle_to_text('weather_clust', 'weather_clust.txt')
 
 # df = open_csv('input_csv\Metro_Interstate_Traffic_Volume.csv')
 
