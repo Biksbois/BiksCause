@@ -45,6 +45,8 @@ class test_cir(unittest.TestCase):
         x = 'x'
         y = 'y'
         actual = 5
+        
+        
         expected = round(cir_c_den_den(ds_obj, x, y), 4)
     
     def test_cir_c_den_nom(self):

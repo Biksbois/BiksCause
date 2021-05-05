@@ -152,11 +152,27 @@ def start_end_min_time(current_time, window_size):
     # return current_time - window_size
     pass #TODO: Implement this
 
-
 def start_end_current_time(data, time_column, i):
     # return data[time_column][i]
     pass #TODO: Implement this
 
+def number_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
+    return default_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column, number_condition_one, number_condition_two, number_min_time, number_current_time)
+
+def number_multiple_method(data, i, columns, backwards, window_size, time_column):
+    return default_multiple_window_method(data, i, columns, backwards, window_size, time_column, number_condition_one, number_condition_two, number_min_time, number_current_time)
+
+def number_condition_one(current_index, data, time_column, min_time):
+    return current_index >= 0 and data[time_column][current_index] >= min_time
+
+def number_condition_two(current_index, col_len, translate_date, time_column, data, current_time):
+    return current_index < col_len and data[time_column][current_index] <= current_time
+
+def number_min_time(current_time, window_size):
+    return current_time - window_size
+
+def number_current_time(data, time_column, i):
+    return data[time_column][i]
 
 def date_method(data, i, cause_column, effect_column, backwards, window_size, time_column):
     return default_window_method(data, i, cause_column, effect_column, backwards, window_size, time_column, date_condition_one, date_condition_two, date_min_time, date_current_time)
@@ -232,7 +248,7 @@ def init_obj_test(cause_column='label', effect_column='label', time_column='time
     if ds_path == '':
         ds_path = "BiksCalculations/csv/data.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,number_method, time_column, number_multiple_method, head_val = head_val)
 
@@ -241,7 +257,7 @@ def init_obj_test_trafic(cause_column='weather_description', effect_column='weat
     if ds_path == '':   
         ds_path = "BiksCalculations/csv/ny_trafic.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val)
 
@@ -250,7 +266,7 @@ def init_obj_test_medical(cause_column='deathdate', effect_column='race', time_c
     if ds_path == '':   
         ds_path = "output_csv\careplans.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,start_end_method, time_column, start_end_multiple_method, head_val = head_val)
 

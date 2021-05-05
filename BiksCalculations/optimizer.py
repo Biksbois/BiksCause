@@ -1,7 +1,5 @@
 from BiksCalculations.dataset_object import *
 
-
-
 def trim_dict(dict_to_trim, support):
     keys_to_delete = []
     for key in dict_to_trim.keys():

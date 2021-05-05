@@ -4,6 +4,7 @@ from BiksCalculations.dataset_object import *
 from BiksCalculations.optimizer import *
 from experiment_obj import exp_obj
 import multiprocessing
+from functools import reduce
 
 from tqdm import tqdm
 
@@ -13,13 +14,13 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
     cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     
     for key in e_obj.nst_keys:
-        if not nst[key] == 0:
-            matrixes[key].xs(x)[y] = round(nst[key], 2)
+        # if nst[key] > 0:
+        matrixes[key].xs(x)[y] = round(nst[key], 2)
     
-    if not cir_c == 0:
-        matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
-    if not cir_b == 0:
-        matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
+    # if cir_c > 0:
+    matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
+    # if cir_b > 0:
+    matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
 
 def extract_values(colum_list, colum_dict):
     vals_to_check = []
@@ -28,7 +29,7 @@ def extract_values(colum_list, colum_dict):
     return vals_to_check
 
 def create_datafram_matric(distinct_values, save_index):
-    test_data = [["" for i in range(len(distinct_values))] for i in range(len(distinct_values))]
+    test_data = [[0.0 for i in range(len(distinct_values))] for i in range(len(distinct_values))]
     data_matrix = pd.DataFrame(test_data, columns = distinct_values, index=distinct_values)
     return data_matrix
 
@@ -43,26 +44,19 @@ def init_matrixes(scores, distinct_values, base_path, e_obj):
     return matrix_dict
 
 def Construct_Result_Table(dts):
-    #It is assumed that all instances in the list will contain the same columes
-    if len(dts) != 1:
-        experiments = list(dts[0].keys())
-        colums = dts[0][experiments[0]].head()
-        result = {}
-        real_result = {}
-        for experiment in experiments:
-            result[experiment] = []
-        for i in range(len(dts)):
-            for experiment in experiments:
-                for col in colums:
-                    if dts[i][experiment][col][0] == "":
-                        dts[i][experiment] = remove_columes(dts[i][experiment], [col])
-                result[experiment].append(dts[i][experiment])
-        for experiment in experiments:   
-            real_result[experiment] = pd.concat([result[experiment][0], result[experiment][1], result[experiment][2]], ignore_index=False, axis=1)
-    else:
-        real_result = dts[0]
-    return real_result
-        
+    result = {}
+    for i in range(len(dts)):
+        for exp in dts[i].keys():
+            if not exp in result:
+                result[exp] = []
+            result[exp].append(dts[i][exp])
+    
+    for key in result.keys():
+        result[key] = reduce(lambda x, y: x.add(y, fill_value=0), result[key])
+        result[key] = result[key].replace(0.0, '')
+    
+    return result
+
 def remove_columes(df,lst):
     return df.drop(columns=lst)
 
@@ -79,6 +73,8 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
     
     matrixes = init_matrixes(scores, distinct_values, base_path, e_obj)
 
+    # print(f"MATRICES FROM INIT MATRIXES\n{matrixes}")
+    
     if use_optimizer:
         suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list ,ds_obj, e_obj.support)
     else:
@@ -87,9 +83,13 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
         d_dict = None
     
     mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj))
+    
     res = []
     # try:
     matrixes = Construct_Result_Table(mat_list)
+    
+    # print(f"MATRICES FROM Construct_Result_Table\n{matrixes}")
+    
     # except Exception as e:
     #     print(f"\n---\nERROR: {e}\nThe program was unable to save.\n---\n\n")
 

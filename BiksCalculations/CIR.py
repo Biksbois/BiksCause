@@ -5,12 +5,6 @@ def get_n(ds_obj, x, y, big_dict=None):
     if not big_dict == None and x in big_dict and y in big_dict[x]:
         return big_dict[x][y]
     elif not big_dict == None:
-        # n = ds_obj.calc_n(y, x)
-        # if not x in big_dict:
-        #     big_dict[x] = {}
-        # # print(f"n = {n}, {x} - {y}")
-        # big_dict[x][y] = n
-        # return n
         return 0
     else:
         return ds_obj.calc_n(y, x)
@@ -19,9 +13,6 @@ def get_d(ds_obj, y, d_dict=None):
     if not d_dict == None and y in d_dict:
         return d_dict[y]
     elif not d_dict == None:
-        # d = ds_obj.calc_d(y)
-        # d_dict[y] = d
-        # return d
         return 0
     else:
         return ds_obj.calc_d(y)
@@ -55,6 +46,8 @@ def calc_cir_c(ds_obj, x, y, big_dict=None, d_dict=None):
     nom = cir_nom(ds_obj, x, y, big_dict=big_dict, d_dict=d_dict)
     den = cir_c_den(ds_obj, x, y, big_dict=big_dict, d_dict=d_dict)
 
+    
+    
     if den == 0:
         return 0
     else:
