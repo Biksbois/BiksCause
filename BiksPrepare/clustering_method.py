@@ -2,7 +2,7 @@ import jenkspy as jpy
 import numpy as np
 import pandas as pd
 
-def calc_silhoutte():
+def optimize_gvf_score():
     pass
 
 # To calculate the goodness of variance (GVF), the first element which is needed, is the groups
@@ -57,11 +57,12 @@ def get_jenks(df, cl_col_name, cl_label_name, col_name, min_gvf = 0.9):
             df[cl_col_name] = apply_jenks(df, col_name, cl_label_name, nclasses)
             ds_arr = np.asarray(df[col_name])
             cl_arrs = create_cl_arrays(df, col_name, cl_col_name)
+            print(cl_arrs)
+            print(ds_arr)
             gvf_score = calc_gvf(ds_arr, cl_arrs)
         except:
             pass
         nclasses += 1 
-
     return df       
 
 # def check_length(df, col_name, min_size = 2):
@@ -86,6 +87,9 @@ def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
     df = check_df(df, cl_col_name, cl_label_name, col_name)
     jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
     jdf.to_csv(path)
+
+def evaluate_gvf(ds_arr, cl_arr):
+    return calc_gvf(ds_arr, cl_arr)
 
 if __name__ == '__main__':
     test_x_cluster = {

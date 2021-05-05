@@ -1,6 +1,8 @@
 import pandas as pd
+import numpy as np
 import csv
 import os
+import clustering_method as cm
 
 def scan_directory(path):
     csv_paths = []
@@ -31,7 +33,22 @@ def check_lower(duration, cur_lower):
 def check_upper(duration, cur_upper):
     return duration > cur_upper
 
-def find_cluster_durations(df, cl_arr, dur_col):
+def retrieve_gvf_score(df, cl_col, dur_col):
+    gvf = 0
+    df_arr = np.asarray(df[dur_col])
+    cl_arr = cm.create_cl_arrays(df, dur_col, cl_col)
+    if len(cl_arr) > 1:
+        print(len(cl_arr))
+        gvf = cm.evaluate_gvf(df_arr, cl_arr)
+    return gvf
+
+def get_gvf_all_cl(df, cl_arr, dur_col):
+    gvf = 0
+    for cl_col in cl_arr:
+        gvf = retrieve_gvf_score(df, cl_col, dur_col)
+    return gvf
+
+def cluster_data_extraction(df, cl_arr, dur_col):
     cluster_dict = {}
     count_clusters = 0
     for index, row in df.iterrows():
@@ -44,15 +61,16 @@ def find_cluster_durations(df, cl_arr, dur_col):
                 if check_upper(row[dur_col], cluster_dict[row[cl]][1]):
                     cluster_dict[row[cl]][1] = row[dur_col]
                 cluster_dict[row[cl]][2] += 1
-    return cluster_dict
+    return cluster_dict, get_gvf_all_cl(df, cl_arr, dur_col)
 
 def evaluate_clusters_in_event(df_data_arr, dur_col):
     event_dict = {}
+    gvf = 0
     for data in df_data_arr:
         if data[0] not in event_dict:
-            event_dict[data[0]] = find_cluster_durations(data[1], data[2], dur_col)
+            event_dict[data[0]] = cluster_data_extraction(data[1], data[2], dur_col)
         else:
-            event_dict[data[0]].update(find_cluster_durations(data[1], data[2], dur_col))
+            event_dict[data[0]].update(cluster_data_extraction(data[1], data[2], dur_col))
     return event_dict
 
 def convert_dict_to_string(event_dict):
@@ -62,10 +80,9 @@ def convert_dict_to_string(event_dict):
         writer.writeheader()
         for event, cluster_arr in event_dict.items():
             writer.writerow({'Event': event, 'Cluster': '', 'Interval_Start': '', 'Interval_End': '','Amount': '', 'GVF': ''})
-            for cluster, interval in cluster_arr.items():
-                print(interval)
+            for cluster, interval in cluster_arr[0].items():
                 writer.writerow({'Event': '', 'Cluster': cluster, 'Interval_Start': interval[0], 'Interval_End': interval[1],'Amount': interval[2], 'GVF': ''})
-
+            writer.writerow({'Event': '', 'Cluster': '', 'Interval_Start': '', 'Interval_End': '','Amount': '', 'GVF': cluster_arr[1]})
 def create_cluster_files(event_dict, output_path):
     text = open(output_path, 'w')
     clust_text = convert_dict_to_string(event_dict)
