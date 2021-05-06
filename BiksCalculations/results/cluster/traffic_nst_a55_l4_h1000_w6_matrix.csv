@@ -1,4 +1,4 @@
-,sky is clear_0,mist_0,overcast clouds_2,broken clouds_0,light rain_0,overcast clouds_1,few clouds_1,overcast clouds_0,light intensity drizzle_0,broken clouds_1,overcast clouds_3,moderate rain_0,scattered clouds_1,scattered clouds_0,mist_3,drizzle_0,haze_0,few clouds_2,few clouds_0,mist_1,scattered clouds_2,fog_0,mist_4,scattered clouds_3,broken clouds_2,heavy snow_0,proximity thunderstorm_0,fog_2,heavy intensity rain_0,heavy snow_1,proximity shower rain_0,snow_0,heavy intensity drizzle_0,proximity thunderstorm with rain_0,thunderstorm with light rain_0,temp_4,temp_3,temp_5,temp_2,temp_6,temp_7,traffic_volume_2,traffic_volume_0,traffic_volume_1
+,sky is clear_0,mist_0,overcast clouds_2,broken clouds_0,light rain_0,overcast clouds_1,few clouds_1,overcast clouds_0,light intensity drizzle_0,broken clouds_1,overcast clouds_3,moderate rain_0,scattered clouds_1,scattered clouds_0,mist_3,drizzle_0,haze_0,few clouds_2,few clouds_0,mist_1,scattered clouds_2,fog_0,mist_4,scattered clouds_3,broken clouds_2,heavy snow_0,proximity thunderstorm_0,heavy intensity rain_0,heavy snow_1,fog_2,heavy intensity drizzle_0,snow_0,thunderstorm with light rain_0,proximity shower rain_0,proximity thunderstorm with rain_0,temp_4,temp_3,temp_5,temp_2,temp_6,temp_7,traffic_volume_2,traffic_volume_0,traffic_volume_1
 sky is clear_0,0.85,,,0.86,,,0.72,,,,,,0.53,0.6,,,,,0.45,,,,,,,,,,,,,,,,,1.35,1.19,1.19,0.83,0.57,,1.14,1.27,0.96
 mist_0,,0.81,,,0.76,,,,0.78,,,0.52,,,,0.59,0.71,,,,,,,,,,,,,,,,,,,1.67,1.56,1.41,,,,1.48,1.85,1.39
 overcast clouds_2,,,0.78,0.92,,,,0.96,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.4,1.38,1.7,,,,2.05,0.94,1.04
@@ -26,14 +26,14 @@ scattered clouds_3,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 broken clouds_2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 heavy snow_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 proximity thunderstorm_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-fog_2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 heavy intensity rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 heavy snow_1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-proximity shower rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-snow_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+fog_2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 heavy intensity drizzle_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-proximity thunderstorm with rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+snow_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 thunderstorm with light rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+proximity shower rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+proximity thunderstorm with rain_0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 temp_4,0.82,0.61,0.8,0.59,0.55,0.89,0.75,0.57,0.48,0.76,,0.47,0.54,0.38,0.48,0.4,0.54,,0.42,0.57,,0.36,,,,,,,,,,,,,,0.92,0.99,1.28,1.09,,,1.12,0.9,0.83
 temp_3,0.86,0.72,0.8,0.67,0.81,0.6,0.58,0.68,1.06,0.5,0.55,0.55,0.61,0.39,,0.91,0.69,,0.48,,,,,,,0.3,,,,,,,,,,1.46,0.9,,0.68,,,1.1,1.14,1.02
 temp_5,1.27,0.77,0.84,0.72,0.75,0.68,0.9,0.86,0.68,,,0.53,,,,,0.57,,,0.46,,0.44,0.46,,,,0.36,,,,,,,,,1.35,,0.83,,0.84,,1.39,1.12,1.07

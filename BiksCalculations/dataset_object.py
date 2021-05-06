@@ -34,6 +34,22 @@ class dataset():
             self.pot_parent[w[-1]].extend(w[0:-1])
             self.pot_parent[w[-1]] = list(OrderedDict.fromkeys(self.pot_parent[w[-1]]))
 
+    def get_n(self, x, y, big_dict=None):
+        if not big_dict == None and x in big_dict and y in big_dict[x]:
+            return big_dict[x][y]
+        elif not big_dict == None:
+            return 0
+        else:
+            return self.calc_n(y, x)
+
+    def get_d(self, y, d_dict=None):
+        if not d_dict == None and y in d_dict:
+            return d_dict[y]
+        elif not d_dict == None:
+            return 0
+        else:
+            return self.calc_d(y)
+
     def calc_suf(self, x, y, suf_dict=None):
         if not suf_dict == None and x in suf_dict and y in suf_dict[x]:
             return suf_dict[x][y] / self.get_col_len() 
@@ -248,7 +264,7 @@ def init_obj_test(cause_column='label', effect_column='label', time_column='time
     if ds_path == '':
         ds_path = "BiksCalculations/csv/data.csv"
 
-    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,number_method, time_column, number_multiple_method, head_val = head_val)
 
@@ -257,7 +273,7 @@ def init_obj_test_trafic(cause_column='weather_description', effect_column='weat
     if ds_path == '':   
         ds_path = "BiksCalculations/csv/ny_trafic.csv"
 
-    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val)
 
@@ -266,7 +282,7 @@ def init_obj_test_medical(cause_column='deathdate', effect_column='race', time_c
     if ds_path == '':   
         ds_path = "output_csv\careplans.csv"
 
-    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,start_end_method, time_column, start_end_multiple_method, head_val = head_val)
 

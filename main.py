@@ -6,6 +6,7 @@ from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
 from BiksCalculations.dataset_object import init_obj_test_trafic
 from main_paths import *
+from BiksCalculations.find_potential_parents import *
 
 def get_userinput(cluster, experiment, large, traffic, test):
     if len(sys.argv) >= 2:
@@ -163,9 +164,9 @@ if __name__ == '__main__':
     head_val_small = 1000
     head_val_large = 50000
     
-    window_size = [6]#[6, 12, 18, 24]
-    alpha_val = [0.55] #[0.55, 0.66, 0.77]
-    lambda_val = [0.4]#[0.4, 0.5, 0.7]
+    window_size = [6, 12, 18, 24]
+    alpha_val = [0.55, 0.66, 0.77]
+    lambda_val = [0.4, 0.5, 0.7]
     
     support = 10
     
@@ -185,6 +186,8 @@ if __name__ == '__main__':
     
     medical_cluster_col = [] + medical_column_list
     medical_baseline_col = [] + medical_column_list
+    
+    # find_parents()
     
     if user_input == cluster:
         print_start(is_trafic, is_large, user_input, window_size, head_val_small, head_val_large, lambda_val, alpha_val, support)
