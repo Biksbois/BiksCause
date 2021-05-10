@@ -34,8 +34,8 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
         
         print(f"---\nThe experiments will now run for window size {w}\n---", flush=True)
         
-        do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
-        # do_calculations(ds_obj, cause_column, effect_column, result_path + "\\no_cluster", baseline_col, ds_path, e_obj, use_optimizer=use_optimizer)
+        #do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
+        do_calculations(ds_obj, cause_column, effect_column, result_path + "\\no_cluster", baseline_col, ds_path, e_obj, use_optimizer=use_optimizer)
     
     print("\nThe experiments are now successfully done, and the program will exit.")
 
@@ -164,9 +164,9 @@ if __name__ == '__main__':
     head_val_small = 1000
     head_val_large = 50000
     
-    window_size = [6, 12, 18, 24]
-    alpha_val = [0.55, 0.66, 0.77]
-    lambda_val = [0.4, 0.5, 0.7]
+    window_size = [1, 3, 6, 12, 18, 24]
+    alpha_val = [0.0,0.33,0.44,0.55, 0.66, 0.77,1,2,3,4,5]
+    lambda_val = [0.2, 0.3, 0.4, 0.5, 0.7]
     
     support = 10
     
