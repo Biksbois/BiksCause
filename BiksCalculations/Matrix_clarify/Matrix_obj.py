@@ -16,6 +16,7 @@ class result_matrix():
         self.translated_pairs = []
         self.extract_file_config(path)
         self.score = 0
+        self.initialize_lists()
         
         self.event_to_value = {
             "rain":[12.1,14,"rain"],
@@ -206,14 +207,28 @@ class result_matrix():
             "traffic_volume_1": self.event_to_value["traffic_volume_1"]
         }
         
+    def initialize_lists(self):
+        self.tolist()
+        self.sort_matrix()
+        self.get_interesting_result("traffic")
+        self.translate_causal_pairs()
+        self.interesting_sum = sum(self.get_list_Value(self.interesting_results))
         
-        
+    def extract_file_config(self, file):
+        alpha_regex,lambda_regex,header_regex,window_regex = ('_a\d+_','_l\d+_','_h\d+_','_w\d+_')
+        self.window = re.search(window_regex,file).group().replace('_','').replace('w','')
+        self.header = re.search(header_regex,file).group().replace('_','').replace('h','')
+        if('cir' not in file):
+            self.lamb = int(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
+            self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
+            
     def create_label_mapping(self, df):
         self.lookup_dict = {}
         for i, head in enumerate(self.df.columns.values.tolist()):
             self.lookup_dict[head] = i
     
-    def get_Value(self,col, idx):
+    def get_Value(self,pair):
+        col,idx = pair
         if self.lookup_dict[idx] != 0 and not math.isnan(float(self.df[col][self.lookup_dict[idx]-1])):
             return self.df[col][self.lookup_dict[idx]-1]
         return 0
@@ -221,22 +236,17 @@ class result_matrix():
     def get_list_Value(self,lst):
         return_lst = []
         for pair in lst:
-            return_lst.append(self.get_Value(pair[0],pair[1]))
+            return_lst.append(self.get_Value(pair))
         return return_lst
     
     def get_type(self):
-        return self. matrix_type
+        return self.matrix_type
     
     def get_most_causal_pair(self, rank = 0):
-        if len(self.matrix_list) == 0:
-            self.tolist()
-            self.sort_matrix()
-        elif len(self.matrix_sorted_list) == 0:
-            self.sort_matrix()
         return self.matrix_sorted_list[rank]
     
     def sort_matrix(self):
-        self.matrix_sorted_list = [(c,i) for c, i, v in self.sort_Tuple([(k,v,self.get_Value(k,v)) for k,v in self.matrix_list])]
+        self.matrix_sorted_list = [(c,i) for c, i, v in self.sort_Tuple([(k,v,self.get_Value((k,v))) for k,v in self.matrix_list])]
             
     def sort_Tuple(self,tup): 
         tup.sort(key = lambda x: x[2]) 
@@ -250,11 +260,8 @@ class result_matrix():
         return self.matrix_list
 
     def get_interesting_result(self, effect_cond = ""):
-        if len(self.matrix_sorted_list) == 0:
-            self.get_most_causal_pair()
-        
         for pair in self.matrix_sorted_list:
-            if pair[0] != pair[1] and effect_cond in pair[0] and not math.isnan(float(self.get_Value(pair[0],pair[1]))):
+            if pair[0] != pair[1] and effect_cond in pair[0] and not math.isnan(float(self.get_Value(pair))):
                 self.interesting_results.append(pair)
         self.interesting_results.reverse()
     
@@ -264,18 +271,6 @@ class result_matrix():
     def matrix_sum(self):
         return sum([self.sum_col(col) for col in self.df.columns.values.tolist()[1:]])
     
-    def extract_file_config(self, file):
-        alpha_regex = '_a\d+_'
-        lambda_regex = '_l\d+_'
-        header_regex = '_h\d+_'
-        window_regex = '_w\d+_'
-        self.window = re.search(window_regex,file).group().replace('_','').replace('w','')
-        self.header = re.search(header_regex,file).group().replace('_','').replace('h','')
-        if('cir' not in file):
-            self.lamb = int(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
-            self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
-            # return (window, header, lamb, alpha)
-        # return(window, header)
     def translate(self, event):
         return self.mapper[event]
     
@@ -283,27 +278,24 @@ class result_matrix():
         for pair in self.interesting_results:
             self.translated_pairs.append((pair[0],self.translate(pair[1])))
     
+    def calculate_exp(self,avg,value):
+        return int((avg*(1+(value/100))))
+    
+    def adjust_score(self,avg , cause_effect, exp_range):
+        if not isinstance(cause_effect, str):
+            for value in cause_effect:
+                if self.calculate_exp(avg,value) in range(exp_range[0], exp_range[1]):
+                    self.score += 1
+    
     def count_actual_causality(self, K, avg = 3259):
-        self.get_interesting_result("traffic")
-        self.translate_causal_pairs()
         used_pair = []
         for i in range(len(self.interesting_results[:K])):
-            traffic_range = self.event_to_value[self.translated_pairs[i][0]]
+            translated_effect = self.translated_pairs[i][0]
+            traffic_range = self.event_to_value[translated_effect]
             cause_effect = self.translated_pairs[i][1][:-1]
-            if not (self.translated_pairs[i][0], self.translated_pairs[i][1][-1]) in used_pair:
-                used_pair.append((self.translated_pairs[i][0], self.translated_pairs[i][1][-1]))
-                if not isinstance(cause_effect, str):
-                    for value in cause_effect:
-                        try:
-                            temp = (avg*(1+(value/100)))
-                        except Exception as e:
-                            print("ERROR")
-                            print(type(cause_effect))
-                            print(value)
-                        if int(temp) in range(traffic_range[0], traffic_range[1]):
-                            self.score += 1
-                            break
-        print(self.score)
+            if not (translated_effect, cause_effect) in used_pair:
+                used_pair.append((translated_effect, cause_effect))
+                self.adjust_score(avg, cause_effect, traffic_range)
 
 
 def get_csv_files_containing(path, score):
@@ -313,93 +305,26 @@ def get_csv_files_containing(path, score):
             files.append(file)
     return files
 
-def generate_matrix_sum_csv(matrixes):
-    mat_sum = []
-    header = ['']
-    alpha = [] 
-    for matrix in matrixes:
-        header.append(f"W = {matrix.window}_L = {matrix.lamb}")
-        alpha.append(matrix.alpha)
-    alp = sorted(list(set(alpha)))
-    test_data = [['' for i in range(len(list(set(header))))]for i in range(len(alp))]
-    data_matrix = pd.DataFrame(test_data, columns = list(set(header)), index=alp)
-    for matrix in matrixes:
-        data_matrix.xs(matrix.alpha)[f"W = {matrix.window}_L = {matrix.lamb}"] = matrix.matrix_sum()    
-    
-    for a in alpha:
-        data_matrix.xs(a)[''] = a
-    
-    data_matrix.to_csv('BiksCalculations\Sum_result\\first.csv',index=False)
+def load_matrixes(path, score):
+    matrixs_lst = []
+    files = get_csv_files_containing(path, 'cir_c')
+    for file in files:
+        matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
+    matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
+    return matrixs_lst
 
-def plot_matrixes():
-    import matplotlib.pyplot as plt
-    import numpy as np
-    # Get the data (csv file is hosted on the web)
-    url = 'BiksCalculations\Sum_result\\first.csv'
-    df = pd.read_csv(url, index_col = 0)
-    df.plot()
-    plt.show()
+def calculate_matrixes_causality(matrixs_lst,k):
+    for matrix in matrixs_lst:
+        matrix.count_actual_causality(k)
 
 
-path = 'BiksCalculations\\results\\no_cluster'
-matrixs_lst = []
-files = get_csv_files_containing(path, 'cir_c')
-for file in files:
-    matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
 
-# for yeet in matrixs_lst[0].mapper.keys():
-#     print(yeet)
-#     print(matrixs_lst[0].mapper)
-#     print(matrixs_lst[0].mapper[yeet])
+if __name__ == '__main__':
+    path = 'BiksCalculations\\results\\no_cluster'
+    matrixes = load_matrixes(path,'cir_c')
+    calculate_matrixes_causality(matrixes,20)
+    matrixs_lst.sort(key=lambda x : x.score)
 
-for matrix in matrixs_lst:
-    matrix.get_interesting_result('traffic')
-    matrix.translate_causal_pairs();
-    matrix.interesting_sum = sum(matrix.get_list_Value(matrix.interesting_results))
-
-matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
-
-for matrix in matrixs_lst:
-    matrix.count_actual_causality(20)
-matrixs_lst.sort(key=lambda x : x.score)
-print(matrixs_lst[-1].score)
-for things in matrixs_lst[-1].interesting_results[:15]:
-    print(f"{things},  {matrixs_lst[-1].get_Value(things[0],things[1])}")
-# #matrixs_lst[0].interesting_results.reverse()
-# for i in range(len(matrixs_lst[0].translated_pairs)):
-#     mat = matrixs_lst[0].translated_pairs[i]
-#     inter = matrixs_lst[0].interesting_results
-#     if mat[1] != "none":
-#         print(f"New mapping:{mat[0]}  {mat[1][-1]}, Old mapping:{inter[i]}, score:{matrixs_lst[0].get_Value(inter[i][0],inter[i][1])}")
-        
-        
-
-# for matrix in matrixs_lst:
-#     print(matrix.interesting_sum)
-
-# for matrix in matrixs_lst[10:18]:
-#     print(matrix.matrix_type)
-#     matrix.interesting_results.reverse()
-#     for pair in matrix.interesting_results[:25]:
-#         print(f"pair: {pair}, Value: {matrixs_lst[0].get_Value(pair[0],pair[1])}")
-#     print("")
-
-# print('________________________________________________')
-# print("Best matrix")
-# print(matrixs_lst[0].matrix_type)
-# matrixs_lst[0].interesting_results.reverse()
-# for pair in matrixs_lst[0].interesting_results[:25]:
-#     print(f"pair: {pair}, Value: {matrixs_lst[0].get_Value(pair[0],pair[1])}")
-
-# print('________________________________________________')
-# print("Worst matrix")
-# matrixs_lst[-1].interesting_results.reverse()
-# print(matrixs_lst[-1].matrix_type)
-# for pair in matrixs_lst[-1].interesting_results[:25]:
-#     print(f"pair: {pair}, Value: {matrixs_lst[-1].get_Value(pair[0],pair[1])}")
-# generate_matrix_sum_csv(matrixs_lst)
-# plot_matrixes()
-# rs.tolist()
-# rs.sort_matrix()
-# print(rs.matrix_sum())
-#print(rs.matrix_sorted_list[:100])
+    print(matrixs_lst[-1].score)
+    for things in matrixs_lst[-1].interesting_results[:15]:
+        print(f"{things},  {matrixs_lst[-1].get_Value(things)}")
