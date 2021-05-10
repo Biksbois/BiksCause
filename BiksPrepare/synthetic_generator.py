@@ -5,6 +5,7 @@ import os
 import random as rand
 from string import ascii_lowercase
 from copy import deepcopy
+import pandas as pd
 
 
 def label_gen(e_num:int) -> list: 
@@ -68,16 +69,34 @@ def prob_dist(e_num:int,label_lst:list,e_dict:dict) -> dict:
         repli_dict[e[0]] = deepcopy(e_dist_list)
     
     # Change Weights according to DAG
-    for e in e_dict:
-        for i, x in enumerate(repli_dict[e]):          
-            if e_dict[e][0]:
-                repli_dict[x[0]][i][1] = 10
+    for i in e_dict.keys():
+        if repli_dict[i] is not None:
+            for ind,j in enumerate(repli_dict[i]):
+                if e_dict[i][0] == j[0]:
+                    repli_dict[i][ind][1] = 10
     return repli_dict
 
+#Time Horizon
+def horizon(ts:int = 0,te:int = 1000,step:int = 60) -> list: return np.arange(ts,te,step)
 
-def poisson_dist(rate:int, size:int) -> list:
-    return random.poisson(rate, size)
 
+def yield_prob(e_num:int, w_size:int) -> list:
+    total_t = horizon()[-1]
+    prob_dict = {}
+    event_list = []
+    weights = [1,1,1,1,10]
+    labels =['a','b','c','d','e']
+    for i in range(total_t):
+        event_list.append(np.random.choice(labels,weights))
+        event_list.append(i)
+    return prob_dict
+
+def poisson_dist(rate:int, size:int) -> list: return random.poisson(rate, size)
+
+def create_csv(events:list, time:list, path:str): 
+    data_tuples = list(zip(events,time))
+    df = pd.DataFrame(data_tuples, columns=['events','time'])
+    df.to_csv(path)
 
 def run():
     pass
@@ -85,5 +104,6 @@ def run():
 if __name__ == '__main__':
     l_lst = label_gen(5)
     e_dict = cause_gen(5,l_lst)
-    print(e_dict)
-    print(prob_dist(5,l_lst, e_dict))
+    yield_prob(10,20)
+    path = "C:\\Users\\ronih\\Documents\\UNI\\project\\BiksCause\\BiksCause\\input_csv\\synthetic\\test.csv"
+    create_csv(l_lst,horizon(),path)
