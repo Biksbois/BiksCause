@@ -120,10 +120,17 @@ def get_csv_files_containing(path, score):
     return files
 
 def load_matrixes(path, score, window=None, heads=None):
+    if not window == None:
+        window = map(str,window)
+        window = ['w'+ w for w in window]
+    if not heads == None:
+        heads = map(str,heads)
+        heads = ['h'+ h for h in heads]
     matrixs_lst = []
     files = get_csv_files_containing(path, score)
     for file in files:
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
+            print(file)
             continue
         matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
@@ -135,7 +142,6 @@ def calculate_matrixes_causality(matrixs_lst,k):
 
 def get_at_k_hits(path, k, score, window=None, heads=None):
     matrixes = load_matrixes(path,score,window=window,heads=heads)
-    
     calculate_matrixes_causality(matrixes,k)
 
     matrixes.sort(key=lambda x : x.score)
@@ -147,7 +153,7 @@ if __name__ == '__main__':
     
     path = 'BiksCalculations\\results\\cluster'
 
-    print(get_at_k_hits(path,20,'cir',window=['w18']))
+    print(get_at_k_hits(path,20,'cir',window=[18,12]))
 
     # matrixes_cir_B = load_matrixes(path,'cir_b')
     # matrixes_cir_C = load_matrixes(path,'cir_c')
