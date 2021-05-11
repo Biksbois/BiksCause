@@ -6,7 +6,7 @@ from mapper import *
 
 class result_matrix():
     
-    def __init__(self, path, matrix_type = 'unspecified', mapper_cat = "traffic"):
+    def __init__(self, path,mapper_dict, matrix_type = 'unspecified', mapper_cat = "traffic"):
         self.df = pd.read_csv (path)
         self.create_label_mapping(self.df)
         self.matrix_type = matrix_type
@@ -19,7 +19,7 @@ class result_matrix():
         self.score = 0
         if mapper_cat == "traffic":
             self.mapper_obj = mappers(mapping_cat = mapper_cat)
-            self.custom_mapper = self.mapper_obj.mapper_dict["traffic_cluster"]
+            self.custom_mapper = self.mapper_obj.mapper_dict[mapper_dict]
         self.initialize_lists()
     def initialize_lists(self):
         self.tolist()
@@ -119,7 +119,7 @@ def get_csv_files_containing(path, score):
             files.append(file)
     return files
 
-def load_matrixes(path, score, window=None, heads=None):
+def load_matrixes(path, score, maps, window=None, heads=None):
     if not window == None:
         window = map(str,window)
         window = ['w'+ w for w in window]
@@ -132,7 +132,7 @@ def load_matrixes(path, score, window=None, heads=None):
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
             continue
         print(file)
-        matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
+        matrixs_lst.append(result_matrix(path+'\\'+file,maps,matrix_type = file))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
     return matrixs_lst
 
@@ -140,8 +140,8 @@ def calculate_matrixes_causality(matrixs_lst,k):
     for matrix in matrixs_lst:
         matrix.count_actual_causality(k)
 
-def get_at_k_hits(path, k, score, window=None, heads=None):
-    matrixes = load_matrixes(path,score,window=window,heads=heads)
+def get_at_k_hits(path, k, score,maps, window=None, heads=None):
+    matrixes = load_matrixes(path,score,maps,window=window,heads=heads)
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
     return matrixes[-1].score
@@ -150,8 +150,8 @@ def get_at_k_hits(path, k, score, window=None, heads=None):
 if __name__ == '__main__':
     
     path = 'BiksCalculations\\results\\cluster'
-
-    print(get_at_k_hits(path,20,'cir',window=[18,12], heads=[50000]))
+    maps = 'traffic_cluster'
+    print(get_at_k_hits(path,20,'cir', maps,window=[18,12], heads=[50000]))
 
     # matrixes_cir_B = load_matrixes(path,'cir_b')
     # matrixes_cir_C = load_matrixes(path,'cir_c')
