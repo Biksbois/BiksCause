@@ -1,10 +1,11 @@
 import pandas as pd
 import datetime
+import sys
 from collections import OrderedDict
 from BiksCalculations.time_conversion import *
 
 class dataset():
-    def __init__(self, ds_path, cause_column, effect_column, window_size, window_method,time_column, window_multiple_method, head_val = -1):
+    def __init__(self, ds_path, cause_column, effect_column, window_size, window_method,time_column, window_multiple_method, head_val = -1, hardcoded_cir_m=None):
         if head_val == -1:
             self.data = pd.read_csv(ds_path)
         else:
@@ -18,6 +19,7 @@ class dataset():
         self.effect_column = effect_column
         self.pot_parent = {}
         self.length = -1
+        self.hardcoded_cir_m = hardcoded_cir_m
         
         self.cause_dict = self.create_dict(cause_column)
         self.effect_dict = self.create_dict(effect_column)
@@ -42,6 +44,33 @@ class dataset():
         else:
             return self.calc_n(y, x)
 
+    def get_n_cir_m(self, x, key, big_dict=None):
+        if isinstance(key, list):
+            key = tuple(key)
+        
+        if not big_dict == None and x in big_dict and key in big_dict[x]:
+            return big_dict[x][key]
+        
+        if not big_dict == None:
+            # print(f"get N.\n\nx = {x} \nkey = {key}\n----\n\n")
+            return 0
+        print("ERROR in get N")
+        return 0
+    
+    def get_d_cir_m(self, x, key, d_dict=None):
+        if isinstance(key, list):
+            key = tuple(key)
+        
+        if not d_dict == None:
+            if key in d_dict:
+                return d_dict[key]
+        
+        if not d_dict == None:
+            # print(f"get D.\n\nkey = {key}\n----\n\n")
+            return 0
+        print("ERROR in get D")
+        return 0
+
     def get_d(self, y, d_dict=None):
         if not d_dict == None and y in d_dict:
             return d_dict[y]
@@ -54,29 +83,13 @@ class dataset():
         if not suf_dict == None and x in suf_dict and y in suf_dict[x]:
             return suf_dict[x][y] / self.get_col_len() 
         elif not suf_dict == None:
-            # suf = self.calc_nec_suf(x, y , False, divide=False)
-            
-            # if not x in suf_dict:
-            #     suf_dict[x] = {}
-            # print(f"SUF={suf}, {x} - {y}")
-            # suf_dict[x][y] = suf
-            # return suf / self.get_col_len() 
-            return 0
-        # print("CALC_SUF")       
+            return 0     
         return self.calc_nec_suf(x, y , False)
 
     def calc_nec(self, x, y, nec_dict=None):
         if not nec_dict == None and x in nec_dict and y in nec_dict[x]:
             return nec_dict[x][y] / self.get_col_len()
-        elif not nec_dict == None:
-            # nec = self.calc_nec_suf(x, y , True, divide=False)
-            
-            # if not x in nec_dict:
-            #     nec_dict[x] = {}
-            # print(f"NEC={nec}, {x} - {y}")
-            
-            # nec_dict[x][y] = nec
-            # return nec / self.get_col_len() 
+        elif not nec_dict == None: 
             return 0
         return self.calc_nec_suf(x, y, True)
 
@@ -84,7 +97,7 @@ class dataset():
         result = 0
         for win in self.get_window(backwards=direction):
             if win[0] == x and y in win[1]:
-                result += 1
+                result += 1     
         
         if divide:
             return result / self.get_col_len()
@@ -264,18 +277,18 @@ def init_obj_test(cause_column='label', effect_column='label', time_column='time
     if ds_path == '':
         ds_path = "BiksCalculations/csv/data.csv"
 
-    print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
+    # print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
     return dataset(ds_path, cause_column, effect_column, window_size,number_method, time_column, number_multiple_method, head_val = head_val)
 
-def init_obj_test_trafic(cause_column='weather_description', effect_column='weather_description', time_column='date_time', head_val = -1, windows_size = 3, ds_path=''):
+def init_obj_test_trafic(hardcoded_cir_m=None, cause_column='weather_description', effect_column='weather_description', time_column='date_time', head_val = -1, windows_size = 3, ds_path=''):
     window_size = windows_size
     if ds_path == '':   
         ds_path = "BiksCalculations/csv/ny_trafic.csv"
 
     print(f"---\nA dataset object has been opened in the following path:\n  {ds_path}\n---", flush=True)
     
-    return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val)
+    return dataset(ds_path, cause_column, effect_column , window_size,date_method, time_column, date_multiple_method, head_val = head_val, hardcoded_cir_m=hardcoded_cir_m)
 
 def init_obj_test_medical(cause_column='deathdate', effect_column='race', time_column=('start', 'end'), head_val = -1, windows_size = 3, ds_path=''):
     window_size = windows_size
