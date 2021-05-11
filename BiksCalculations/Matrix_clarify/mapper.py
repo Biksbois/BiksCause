@@ -158,6 +158,7 @@ class mappers():
             "light intensity shower rain":self.event_to_value["light_rain"],
             "snow":self.event_to_value["snow"],
             "light shower snow":self.event_to_value["snow"],
+            "shower snow":self.event_to_value["snow"],
             "moderate rain":self.event_to_value["rain"],
             "light rain and snow":self.event_to_value["snow"],
             "shower drizzle":self.event_to_value["light_rain"],

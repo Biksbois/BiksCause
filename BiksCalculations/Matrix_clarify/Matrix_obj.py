@@ -130,8 +130,8 @@ def load_matrixes(path, score, window=None, heads=None):
     files = get_csv_files_containing(path, score)
     for file in files:
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
-            print(file)
             continue
+        print(file)
         matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
     return matrixs_lst
