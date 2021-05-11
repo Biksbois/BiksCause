@@ -10,17 +10,19 @@ from BiksCalculations.dataset_object import init_obj_test_trafic
 from main_paths import *
 from BiksCalculations.find_potential_parents import *
 
-def get_userinput(cluster, experiment, large, traffic, test):
+def get_userinput(cluster, experiment, large, traffic, test, result):
     if len(sys.argv) >= 2:
         is_large = large in str(sys.argv[1:])
         is_trafic = not test in str(sys.argv[1:])
         
-        if cluster in str(sys.argv[1:]) and experiment in str(sys.argv[1:]) or not cluster in str(sys.argv[1:]) and not experiment in str(sys.argv[1:]):
+        if cluster in str(sys.argv[1:]) and result in str(sys.argv[1:]) and experiment in str(sys.argv[1:]) or not cluster in str(sys.argv[1:]) and not experiment in str(sys.argv[1:]) and not result in str(sys.argv[1:]):
             return is_trafic, is_large, ''
         elif cluster in str(sys.argv[1:]):
             return is_trafic, is_large, cluster
         elif experiment in str(sys.argv[1:]):
             return is_trafic, is_large, experiment
+        elif result in str(sys.argv[1:]):
+            return is_trafic, is_large, result
         else:
             return True, True, 'ERROR'
     else:
@@ -133,9 +135,9 @@ def print_start(is_trafic, is_large, exp_type, window_size, head_val_small, head
         message = head_val_small
     
     print(f"---\nThe experiment with the following input will now run:" + 
-            "\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n" + 
-            "- windowsize: {window_size}\n  - head_val = {message}\n" + 
-            "- alpha values: {alpha_val}\n  - lambda values: {lambda_val}\n  - support: {support}")
+            f"\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n" + 
+            f"- windowsize: {window_size}\n  - head_val = {message}\n" + 
+            f"- alpha values: {alpha_val}\n  - lambda values: {lambda_val}\n  - support: {support}")
     print("  - scores:")
     for s in scores:
         print(f"    - {s}")
@@ -187,6 +189,7 @@ if __name__ == '__main__':
     small = 'small'
     traffic = 'traffic'
     test = 'medical'
+    result = 'result'
     
     head_val_small = 1000
     head_val_large = 50000
@@ -197,11 +200,12 @@ if __name__ == '__main__':
     lambda_val = [0.4, 0.5, 0.7]
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
+    scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
     # scores.extend(e_obj.nst_keys)
     
     support = 10
     
-    is_trafic, is_large, user_input = get_userinput(cluster, experiment, large, traffic, test)
+    is_trafic, is_large, user_input = get_userinput(cluster, experiment, large, traffic, test, result)
     e_obj = init_exp_obj(is_large, is_trafic, traffic, test, large, small, 
                         alpha_val, lambda_val, -1, head_val_small, head_val_large, support, scores)
     
@@ -235,13 +239,15 @@ if __name__ == '__main__':
             'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
         }}
     
+    
     if user_input == cluster or user_input == '':
         call_cluster(trafic_cluster_colums, medical_cluster_columns, is_trafic, is_large)
     elif user_input == experiment or user_input == '':
         print_start(is_trafic, is_large, user_input, window_size, head_val_small, head_val_large, lambda_val, alpha_val, support, e_obj.scores)
-        # e_obj = init_exp_obj(is_large, is_trafic, traffic, test, large, small, alpha_val, lambda_val, window_size, head_val_small, head_val_large, support)
         call_experiment(trafic_cluster_col, trafic_baseline_col, medical_cluster_col, medical_baseline_col, is_trafic, is_large, e_obj, window_size, hardcoded_cir_m)
-        print_scores(scores, window_size, head_val_large if is_large else head_val_small)
+    elif user_input == result or user_input == '':
+        print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
+        print_scores(scores_short, window_size, head_val_large if is_large else head_val_small)
     else:
         print("The given input was not valid.\nThe program will now exit.")
     

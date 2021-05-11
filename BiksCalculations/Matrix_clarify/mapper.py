@@ -5,7 +5,7 @@ class mappers():
         if mapping_cat == "traffic":
             self.event_to_value = self.traffic_value_mapper()
             self.mapper_dict = {"traffic_cluster": self.get_traffic_cluster_mapping(),
-                                "traffic_nocluster": self.get_traffic_no_clustermapping()}
+                                "traffic_no_cluster": self.get_traffic_no_clustermapping()}
         if mapping_cat == "syntehetic":
             pass
     
