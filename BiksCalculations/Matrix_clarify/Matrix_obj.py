@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import re
 import math
-from mapper import *
+from BiksCalculations.Matrix_clarify.mapper import *
 
 class result_matrix():
     
@@ -130,7 +130,7 @@ def load_matrixes(path, score, window=None, heads=None):
     files = get_csv_files_containing(path, score)
     for file in files:
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
-            print(file)
+            # print(file)
             continue
         matrixs_lst.append(result_matrix(path+'\\'+file,matrix_type = file))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)

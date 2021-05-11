@@ -1,4 +1,5 @@
 import sys
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits
 import itertools
 import time
 import pandas as pd
@@ -34,21 +35,17 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
         ds_obj.window_size = w
         
         if not hardcoded_cir_m == None and w in hardcoded_cir_m:
-            print("SET AS STUFF")
+            print(f"The CIR_m parent dictionary has been updated to key '{w}'.")
             ds_obj.hardcoded_cir_m = hardcoded_cir_m[w]
         else:
             ds_obj.hardcoded_cir_m = None
         
         print(f"---\nThe experiments with clusters will now run for window size {w}\n---", flush=True)
         
-<<<<<<< HEAD
         do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
 
         print(f"---\nThe experiments without clusters will now run for window size {w}\n---", flush=True)
 
-=======
-        #do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
->>>>>>> 4031b7552df70049f2a347ffa4c56990e7d05143
         do_calculations(ds_obj, cause_column, effect_column, result_path + "\\no_cluster", baseline_col, ds_path, e_obj, use_optimizer=use_optimizer)
     
     print("\nThe experiments are now successfully done, and the program will exit.")
@@ -135,10 +132,25 @@ def print_start(is_trafic, is_large, exp_type, window_size, head_val_small, head
     else:
         message = head_val_small
     
-    print(f"---\nThe experiment with the following input will now run:\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n  - windowsize: {window_size}\n  - head_val = {message}\n  - alpha values: {alpha_val}\n  - lambda values: {lambda_val}\n  - support: {support}\n  - scores: {scores}")
+    print(f"---\nThe experiment with the following input will now run:" + 
+            "\n  - trafic: {is_trafic}\n  - large: {is_large}\n  - {exp_type}\n" + 
+            "- windowsize: {window_size}\n  - head_val = {message}\n" + 
+            "- alpha values: {alpha_val}\n  - lambda values: {lambda_val}\n  - support: {support}")
+    print("  - scores:")
+    for s in scores:
+        print(f"    - {s}")
 
 def print_scores(scores, window_size, head_val):
-    print(head_val)
+    result_path = get_result_path()
+    extensions = ['cluster', 'no_cluster']
+    k_vals = [10, 15, 20]
+    
+    for e in extensions:
+        full_path = f"{result_path}\\{e}"
+        for k in k_vals:
+            for s in scores:
+                k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(trafic_cluster_colums, medical_cluster_columns, is_trafic, is_large):
     if is_trafic:
@@ -179,16 +191,10 @@ if __name__ == '__main__':
     head_val_small = 1000
     head_val_large = 50000
     
-<<<<<<< HEAD
     window_size = [1] #, 5, 10]
     # window_size = [6, 12, 18, 24]
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
-=======
-    window_size = [1, 3, 6, 12, 18, 24]
-    alpha_val = [0.0,0.33,0.44,0.55, 0.66, 0.77,1,2,3,4,5]
-    lambda_val = [0.2, 0.3, 0.4, 0.5, 0.7]
->>>>>>> 4031b7552df70049f2a347ffa4c56990e7d05143
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
     # scores.extend(e_obj.nst_keys)
