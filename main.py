@@ -41,10 +41,14 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
         
         print(f"---\nThe experiments with clusters will now run for window size {w}\n---", flush=True)
         
+<<<<<<< HEAD
         do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
 
         print(f"---\nThe experiments without clusters will now run for window size {w}\n---", flush=True)
 
+=======
+        #do_calculations(ds_obj, cause_column, effect_column, result_path + "\\cluster", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
+>>>>>>> 4031b7552df70049f2a347ffa4c56990e7d05143
         do_calculations(ds_obj, cause_column, effect_column, result_path + "\\no_cluster", baseline_col, ds_path, e_obj, use_optimizer=use_optimizer)
     
     print("\nThe experiments are now successfully done, and the program will exit.")
@@ -175,10 +179,16 @@ if __name__ == '__main__':
     head_val_small = 1000
     head_val_large = 50000
     
+<<<<<<< HEAD
     window_size = [1] #, 5, 10]
     # window_size = [6, 12, 18, 24]
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
+=======
+    window_size = [1, 3, 6, 12, 18, 24]
+    alpha_val = [0.0,0.33,0.44,0.55, 0.66, 0.77,1,2,3,4,5]
+    lambda_val = [0.2, 0.3, 0.4, 0.5, 0.7]
+>>>>>>> 4031b7552df70049f2a347ffa4c56990e7d05143
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
     # scores.extend(e_obj.nst_keys)

@@ -95,4 +95,4 @@ def run_evaluation(input_path, output_path = 'temp.txt', dur_col = 'duration', c
     create_cluster_files(event_dict, output_path)
 
 if __name__ == '__main__':
-    run_evaluation(r'BiksCalculations\csv\temp_csv')
+    run_evaluation(r'BiksCalculations\\csv\\temp_csv')
