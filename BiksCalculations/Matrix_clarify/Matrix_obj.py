@@ -143,9 +143,7 @@ def calculate_matrixes_causality(matrixs_lst,k):
 def get_at_k_hits(path, k, score, window=None, heads=None):
     matrixes = load_matrixes(path,score,window=window,heads=heads)
     calculate_matrixes_causality(matrixes,k)
-
     matrixes.sort(key=lambda x : x.score)
-
     return matrixes[-1].score
 
 
@@ -153,7 +151,7 @@ if __name__ == '__main__':
     
     path = 'BiksCalculations\\results\\cluster'
 
-    print(get_at_k_hits(path,20,'cir',window=[18,12]))
+    print(get_at_k_hits(path,20,'cir',window=[18,12], heads=[50000]))
 
     # matrixes_cir_B = load_matrixes(path,'cir_b')
     # matrixes_cir_C = load_matrixes(path,'cir_c')

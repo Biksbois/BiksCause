@@ -1,5 +1,5 @@
 sky is clear_0 = none
-mist_0 = 
+mist_0 = dense_fog
 broken clouds_0 = none
 light rain_0 = light_rain
 broken clouds_1 = none
@@ -9,16 +9,16 @@ overcast clouds_2 = none
 overcast clouds_1 = none
 scattered clouds_0 = none
 light intensity drizzle_0 = light_rain
-haze_0 =
+haze_0 = light_fog
 light rain_1 = light_rain
 few clouds_1 = none
 light snow_0 = snow
 scattered clouds_2 = none
 scattered clouds_1 = none
-fog_0 = fog
+fog_0 =  heavy_dense_fog
 overcast clouds_3 = none
-mist_1 =
-mist_2 =
+mist_1 = dense_fog
+mist_2 = dense_fog
 broken clouds_2 = none
 drizzle_0 = light_rain
 proximity thunderstorm_0 = thunderstorm
@@ -28,7 +28,7 @@ heavy intensity rain_0 = heavy_rain
 few clouds_2 = none
 heavy snow_0 = extremely_heavy_snow
 light snow_1 = snow
-mist_3 =
+mist_3 = dense_fog
 light snow_2 = snow
 overcast clouds_4 = none
 light rain_2 = light_rain
@@ -36,10 +36,10 @@ snow_0 = snow
 light snow_3 = snow
 broken clouds_3 = none
 moderate rain_1 = rain
-mist_4 =
-haze_1 =
+mist_4 = dense_fog
+haze_1 = light_fog
 proximity shower rain_0 = heavy_rain
-mist_5 =
+mist_5 = dense_fog
 thunderstorm_0 = thunderstorm
 light snow_4 = snow
 proximity thunderstorm_1 = thunderstorm
@@ -48,56 +48,144 @@ thunderstorm with heavy rain_0 = thunderstorm
 broken clouds_4 = none
 drizzle_1 = light_rain
 heavy intensity drizzle_0 = light_rain
-thunderstorm with light rain_0
-fog_1
-haze_2
-proximity thunderstorm with rain_0
-heavy snow_3
-mist_6
-heavy snow_2
-thunderstorm with rain_0
-haze_3,0.75
-haze_7
-proximity thunderstorm_2,0.74
-heavy snow_4
-fog_2,
-smoke_0
-very heavy rain_0
-heavy intensity rain_1
-haze_4
-heavy intensity rain_2
-heavy snow_6
-thunderstorm with light drizzle_0
-proximity thunderstorm with drizzle_0
-light intensity shower rain_0
-snow_1
-haze_8
-light shower snow_0
-haze_5
-moderate rain_2
-heavy snow_5
-light rain and snow_0
-shower drizzle_0
-haze_6
-scattered clouds_4
-heavy intensity drizzle_1
-mist_7
-SQUALLS_0
-sleet_0
-thunderstorm with rain_1
-freezing rain_0
-few clouds_3
-thunderstorm with drizzle_0
-proximity thunderstorm with rain_1
-proximity shower rain_1
-heavy intensity rain_3
-light intensity drizzle_1
-drizzle_2
-proximity thunderstorm_3
-sky is clear_1
-snow_2
-shower snow_0
-light rain_3
+thunderstorm with light rain_0 = thunderstorm
+fog_1 = heavy_dense_fog
+haze_2 = light_fog
+proximity thunderstorm with rain_0 = thunderstorm
+heavy snow_3 = extremely_heavy_snow
+mist_6 = dense_fog
+heavy snow_2 = extremely_heavy_snow
+thunderstorm with rain_0 = thunderstorm
+haze_3 = light_fog
+haze_7 = light_fog
+proximity thunderstorm_2 = thunderstorm
+heavy snow_4 = extremely_heavy_snow
+fog_2 = heavy_dense_fog
+smoke_0 = none
+very heavy rain_0 = exstremely_heavy_rain
+heavy intensity rain_1 = heavy_rain
+haze_4 = light_fog
+heavy intensity rain_2 = heavy_rain
+heavy snow_6 = extremely_heavy_snow
+thunderstorm with light drizzle_0 = thunderstorm
+proximity thunderstorm with drizzle_0 = thunderstorm
+light intensity shower rain_0 = light_rain
+snow_1 = snow
+haze_8 = light_fog
+light shower snow_0 = snow
+haze_5 = light_fog
+moderate rain_2 = rain
+heavy snow_5 = extremely_heavy_snow
+light rain and snow_0 = snow
+shower drizzle_0 = light_rain
+haze_6 = light_fog
+scattered clouds_4 = none
+heavy intensity drizzle_1 = rain
+mist_7 = dense_fog
+SQUALLS_0 = none
+sleet_0 = none
+thunderstorm with rain_1 = thunderstorm
+freezing rain_0 = rain
+few clouds_3 = none
+thunderstorm with drizzle_0 = thunderstorm
+proximity thunderstorm with rain_1 = thunderstorm
+proximity shower rain_1 = rain
+heavy intensity rain_3 = heavy_rain
+light intensity drizzle_1 = light_rain 
+drizzle_2 = light_rain
+proximity thunderstorm_3 = thunderstorm
+sky is clear_1 = none
+snow_2 = snow
+shower snow_0 = snow
+light rain_3 = light_rain
+temp_6
+temp_3
+temp_5
+temp_2
+temp_4
+temp_7
+temp_1
+temp_0
+traffic_volume_2
+traffic_volume_0
+traffic_volume_1
+
+
+
+
+
+
+sky is clear
+mist
+broken clouds
+light rain
+moderate rain
+overcast clouds
+scattered clouds
+light intensity drizzle
+haze
+few clouds
+light snow
+fog
+mist
+drizzle
+proximity thunderstorm
+few clouds
+heavy intensity rain
+few clouds
+heavy snow
+proximity shower rain
+thunderstorm
+proximity thunderstorm
+thunderstorm with heavy rain
+broken clouds
+drizzle
+heavy intensity drizzle
+thunderstorm with light rain
+fog
+haze
+proximity thunderstorm with rain
+heavy snow
+mist
+heavy snow
+thunderstorm with rain
+haze
+proximity thunderstorm
+heavy snow
+very heavy rain
+heavy intensity rain
+heavy intensity rain
+heavy snow
+thunderstorm with light drizzle
+proximity thunderstorm with drizzle
+light intensity shower rain
+snow
+haze
+light shower snow
+haze
+moderate rain
+heavy snow
+light rain and snow
+shower drizzle
+haze
+scattered clouds
+heavy intensity drizzle
+mist
+SQUALLS
+sleet
+thunderstorm with rain
+freezing rain
+few clouds
+thunderstorm with drizzle
+proximity thunderstorm with rain
+proximity shower rain
+heavy intensity rain
+light intensity drizzle
+drizzle
+proximity thunderstorm
+snow
+shower snow
+light rain
 temp_6
 temp_3
 temp_5
