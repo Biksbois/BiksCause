@@ -9,6 +9,8 @@ from dataset_object import *
 from LL import calc_lambda
 from NST import *
 from CIR import *
+from BiksCalculations.optimizer import *
+
 
 _ds_path = "BiksCalculations/csv/data.csv"
 
@@ -96,3 +98,160 @@ class test_window(unittest.TestCase):
         
         self.maxDiff = None
         self.assertListEqual(expected, actual)
+    
+    def test_hardcoded_cir_m_nec(self):
+        hard_code = {'traffic_volume_2':['scattered clouds_0', 'temp_5', 'traffic_volume_1', 'temp_4'],
+                    'traffic_volume_1': ['sky is clear_0', 'temp_6', 'traffic_volume_2', 'temp_4']}
+
+        result_dict = {}
+        expected_dict = {
+            ('temp_5', 'not_temp_6'): 1, 
+            ('temp_5', 'traffic_volume_1'): 1, 
+            ('temp_5', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'temp_5'): 1, 
+            ('temp_4', 'temp_5'): 1, 
+            ('scattered clouds_0', 'temp_5'): 1, 
+            ('not_temp_6', 'traffic_volume_1'): 1, 
+            ('not_temp_6', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_temp_6'): 1, 
+            ('scattered clouds_0', 'not_temp_6'): 1, 
+            ('traffic_volume_1', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'traffic_volume_1'): 1, 
+            ('temp_4', 'traffic_volume_1'): 1, 
+            ('scattered clouds_0', 'traffic_volume_1'): 1, 
+            ('not_sky is clear_0', 'traffic_volume_2'): 2, 
+            ('temp_4', 'traffic_volume_2'): 2, 
+            ('scattered clouds_0', 'traffic_volume_2'): 2, 
+            ('not_sky is clear_0', 'temp_4'): 2, 
+            ('scattered clouds_0', 'not_sky is clear_0'): 2, 
+            ('scattered clouds_0', 'temp_4'): 2, 
+            ('not_temp_5', 'temp_6'): 1, 
+            ('not_temp_5', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_temp_5'): 1, 
+            ('scattered clouds_0', 'not_temp_5'): 1, 
+            ('temp_6', 'not_traffic_volume_1'): 1, 
+            ('temp_6', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'temp_6'): 1, 
+            ('temp_4', 'temp_6'): 1, 
+            ('scattered clouds_0', 'temp_6'): 1, 
+            ('not_traffic_volume_1', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_traffic_volume_1'): 1, 
+            ('scattered clouds_0', 'not_traffic_volume_1'): 1
+        }
+        
+        window_1 = ['traffic_volume_2', 'traffic_volume_1', 'traffic_volume_0', 'temp_5', 'temp_4', 'scattered clouds_0']
+        window_2 = ['traffic_volume_2', 'traffic_volume_2', 'traffic_volume_0', 'temp_6', 'temp_4', 'scattered clouds_0']
+        
+        count_cir_m_instances(result_dict, window_1, hard_code, d_dict = None, calc_d=None)
+        count_cir_m_instances(result_dict, window_2, hard_code, d_dict = None, calc_d=None)
+
+        self.maxDiff = None
+        
+        self.assertDictEqual(result_dict, expected_dict)
+        
+    def test_hardcoded_cir_m_d(self):
+        hard_code = {'traffic_volume_2':['scattered clouds_0', 'temp_5', 'traffic_volume_1', 'temp_4'],
+                    'traffic_volume_1': ['sky is clear_0', 'temp_6', 'traffic_volume_2', 'temp_4']}
+
+        result_dict = {}
+        # expected_dict = {
+        #     ('temp_5', 'traffic_volume_1'):1,
+        #     ('traffic_volume_1', 'traffic_volume_2'):1,
+        #     ('scattered clouds_0', 'traffic_volume_1'):1,
+        #     ('temp_4', 'traffic_volume_1'):1,
+        #     ('temp_5', 'traffic_volume_2'):1,
+        #     ('scattered clouds_0', 'temp_5'):1,
+        #     ('temp_4', 'temp_5'):1,
+        #     ('scattered clouds_0', 'traffic_volume_2'):2,
+        #     ('temp_4', 'traffic_volume_2'):2,
+        #     ('scattered clouds_0', 'temp_4'):2,
+        #     ('temp_6', 'traffic_volume_2'):1,
+        #     ('scattered clouds_0', 'temp_6'):1,
+        #     ('temp_4', 'temp_6'):1
+        # }
+        
+        expected_dict = {
+            ('temp_5', 'not_temp_6'): 1, 
+            ('temp_5', 'traffic_volume_1'): 1, 
+            ('temp_5', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'temp_5'): 1, 
+            ('temp_4', 'temp_5'): 1, 
+            ('scattered clouds_0', 'temp_5'): 1, 
+            ('not_temp_6', 'traffic_volume_1'): 1, 
+            ('not_temp_6', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_temp_6'): 1, 
+            ('scattered clouds_0', 'not_temp_6'): 1, 
+            ('traffic_volume_1', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'traffic_volume_1'): 1, 
+            ('temp_4', 'traffic_volume_1'): 1, 
+            ('scattered clouds_0', 'traffic_volume_1'): 1, 
+            ('not_sky is clear_0', 'traffic_volume_2'): 2, 
+            ('temp_4', 'traffic_volume_2'): 2, 
+            ('scattered clouds_0', 'traffic_volume_2'): 2, 
+            ('not_sky is clear_0', 'temp_4'): 2, 
+            ('scattered clouds_0', 'not_sky is clear_0'): 2, 
+            ('scattered clouds_0', 'temp_4'): 2, 
+            ('not_temp_5', 'temp_6'): 1, 
+            ('not_temp_5', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_temp_5'): 1, 
+            ('scattered clouds_0', 'not_temp_5'): 1, 
+            ('temp_6', 'not_traffic_volume_1'): 1, 
+            ('temp_6', 'traffic_volume_2'): 1, 
+            ('not_sky is clear_0', 'temp_6'): 1, 
+            ('temp_4', 'temp_6'): 1, 
+            ('scattered clouds_0', 'temp_6'): 1, 
+            ('not_traffic_volume_1', 'traffic_volume_2'): 1, 
+            ('temp_4', 'not_traffic_volume_1'): 1, 
+            ('scattered clouds_0', 'not_traffic_volume_1'): 1
+        }
+
+        
+        window_1 = ['traffic_volume_2', 'traffic_volume_1', 'traffic_volume_0', 'temp_5', 'temp_4', 'scattered clouds_0']
+        window_2 = ['traffic_volume_2', 'traffic_volume_2', 'traffic_volume_0', 'temp_6', 'temp_4', 'scattered clouds_0']
+        
+        count_cir_m_instances({}, window_1, hard_code, d_dict = result_dict, calc_d=True)
+        count_cir_m_instances({}, window_2, hard_code, d_dict = result_dict, calc_d=True)
+
+        self.maxDiff = None
+        
+        self.assertDictEqual(result_dict, expected_dict)
+    
+    def test_hardcoded_cir_m_nec_one_window(self):
+        hard_code = {'traffic_volume_2':['scattered clouds_0', 'temp_5', 'traffic_volume_1'],
+                    'traffic_volume_1': ['sky is clear_0', 'temp_6', 'traffic_volume_2']}
+
+        result_dict = {}
+        expected_dict = {
+            ('not_scattered clouds_0', 'traffic_volume_1'):1,
+            ('not_scattered clouds_0', 'traffic_volume_2'):1,
+            ('not_scattered clouds_0', 'temp_6'):1,
+            ('not_temp_5', 'traffic_volume_1'):1,
+            ('traffic_volume_1', 'traffic_volume_2'): 1,
+            ('not_sky is clear_0', 'traffic_volume_1'):1,
+            ('temp_6', 'traffic_volume_1'):1,
+            ('not_temp_5', 'traffic_volume_2'):1,
+            ('not_temp_5', 'temp_6'):1,
+            ('not_sky is clear_0', 'traffic_volume_2'):1,
+            ('temp_6', 'traffic_volume_2'):1,
+            ('not_sky is clear_0', 'temp_6'):1
+        }
+
+        window_1 = ['traffic_volume_2', 'traffic_volume_1', 'traffic_volume_0', 'temp_6']
+        
+        count_cir_m_instances(result_dict, window_1, hard_code, d_dict = None, calc_d=None)
+        
+        self.maxDiff = None
+        
+        self.assertDictEqual(result_dict, expected_dict)
+    
+    def test_derive_unique(self):
+        hard_code = {'traffic_volume_2':['scattered clouds_0', 'temp_5', 'traffic_volume_1'],
+                    'traffic_volume_1': ['sky is clear_0', 'temp_6', 'traffic_volume_1']} 
+        
+        actual = derive_unique(hard_code)
+        expected = ['sky is clear_0', 'temp_6', 'traffic_volume_1', 'scattered clouds_0', 'temp_5']
+
+        actual = sorted(actual)
+        expected = sorted(expected)
+
+        self.assertListEqual(actual, expected)

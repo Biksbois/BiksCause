@@ -1,7 +1,7 @@
 
 
 class exp_obj():
-    def __init__(self, alpha_val, lambda_val, window_size, head_val, exp_type, exp_size, support):
+    def __init__(self, alpha_val, lambda_val, window_size, head_val, exp_type, exp_size, support, scores):
         self.alpha_val = alpha_val
         self.lambda_val = lambda_val
         self.window_size = window_size
@@ -10,6 +10,9 @@ class exp_obj():
         self.exp_size = exp_size
         self.nst_keys = self.generate_nst_keys()
         self.support = support
+        self.scores = scores
+        scores.extend(self.nst_keys)
+        
     
     def parse_val(self, val):
         return str(val).replace('0.', '')

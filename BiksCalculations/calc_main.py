@@ -13,14 +13,18 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
     cir_c = calc_cir_c(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     cir_b = calc_cir_b(ds_obj, x, y, big_dict=nec_dict, d_dict=d_dict)
     
-    for key in e_obj.nst_keys:
-        # if nst[key] > 0:
-        matrixes[key].xs(x)[y] = round(nst[key], 2)
+    if x in ds_obj.hardcoded_cir_m and y in ds_obj.hardcoded_cir_m[x]:
+        cir_m_avg, cir_m_max, cir_m_min = calc_cir_m_avg_max(x, y, ds_obj.hardcoded_cir_m[x], nec_dict, d_dict, ds_obj)
+        
+        matrixes['cir_m_avg'].xs(x)[y] = round(cir_m_avg, 2)
+        matrixes['cir_m_min'].xs(x)[y] = round(cir_m_min, 2)
+        matrixes['cir_m_max'].xs(x)[y] = round(cir_m_max, 2)
     
-    # if cir_c > 0:
-    matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
-    # if cir_b > 0:
-    matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
+    # for key in e_obj.nst_keys:
+    #     matrixes[key].xs(x)[y] = round(nst[key], 2)
+    
+    # matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
+    # matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
 
 def extract_values(colum_list, colum_dict):
     vals_to_check = []
@@ -61,8 +65,9 @@ def remove_columes(df,lst):
     return df.drop(columns=lst)
 
 def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, ds_path, e_obj, use_optimizer=True):
-    scores = ['cir_c', 'cir_b']
-    scores.extend(e_obj.nst_keys)
+    # scores = ['cir_m_avg', 'cir_m_max', 'cir_m_min']
+    # scores = ['cir_c', 'cir_b', 'cir_m_avg']
+    # scores.extend(e_obj.nst_keys)
     
     colum_dict = {}
     
@@ -71,29 +76,24 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
     
     distinct_values = extract_values(colum_list, colum_dict)
     
-    matrixes = init_matrixes(scores, distinct_values, base_path, e_obj)
+    matrixes = init_matrixes(e_obj.scores, distinct_values, base_path, e_obj)
 
-    # print(f"MATRICES FROM INIT MATRIXES\n{matrixes}")
-    
     if use_optimizer:
-        suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list ,ds_obj, e_obj.support)
+        suf_dict, nec_dict, d_dict = generate_lookup_dict(colum_list,ds_obj, e_obj.support)
     else:
         suf_dict = None
         nec_dict = None
         d_dict = None
     
+    # for key in nec_dict['traffic_volume_1'].keys():
+    #     if isinstance(key, tuple):
+    #         print(f"{key} - {nec_dict['traffic_volume_1'][key]}")
+    
     mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj))
     
-    res = []
-    # try:
     matrixes = Construct_Result_Table(mat_list)
     
-    # print(f"MATRICES FROM Construct_Result_Table\n{matrixes}")
-    
-    # except Exception as e:
-    #     print(f"\n---\nERROR: {e}\nThe program was unable to save.\n---\n\n")
-
-    for s in scores:
+    for s in e_obj.scores:
         save_path = create_matix_path(s, base_path, e_obj)
         matrixes[s].to_csv(save_path, index=True, header=True)
 

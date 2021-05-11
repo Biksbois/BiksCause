@@ -1,4 +1,5 @@
 from BiksCalculations.dataset_object import *
+import itertools
 
 def trim_dict(dict_to_trim, support):
     keys_to_delete = []
@@ -56,9 +57,65 @@ def generate_nec(dst_obj, columns):
             if key not in nec_dict:
                 nec_dict[key] = {}
             count_instances(nec_dict[key], win[1], d_dict=d_dict, calc_d=calc_d)
+            
+            if not dst_obj.hardcoded_cir_m is None:
+                count_cir_m_instances(nec_dict[key], win[1], dst_obj.hardcoded_cir_m, d_dict=d_dict, calc_d=calc_d)
+            
             calc_d = False
     return nec_dict, d_dict
+
+
+def derive_unique(hard_code):
+    result = []
+    
+    for key in hard_code.keys():
+        result.extend(hard_code[key])
+    
+    return list(set(result))
+
+def derive_combinations(hard_code):
+    unique_indexes = derive_unique(hard_code)
+    
+    return list(itertools.combinations(unique_indexes, 2))
+
+def get_key(c, extension, index):
+    if index == None:
+        return (c[0], c[1])
+    if index == 1:
+        return (c[0], f"{extension}{c[1]}")
+    if index == 0:
+        return (f"{extension}{c[0]}", c[1])
+
+def handle_dicts(c, d_dict, calc_d, result_dict, extension, index=None):
+    key = get_key(c, extension, index)
+    
+    if not key in result_dict:
+        result_dict[key] = 0
+    result_dict[key] += 1
+    
+    if calc_d and not d_dict == None:
+        if not key in d_dict:
+            d_dict[key] = 0
+        d_dict[key] += 1
+
+def count_cir_m_instances(result_dict, window, hard_code, d_dict = None, calc_d=None):
+    combi = derive_combinations(hard_code)
+    extension = 'not_'
+    for c in combi:
+        c = sorted(list(c))
         
+        if c[0] in window and c[1] in window:
+            handle_dicts(c, d_dict, calc_d, result_dict, extension)
+        elif c[0] in window and not c[1] in window:
+            handle_dicts(c, d_dict, calc_d, result_dict, extension, index=1)
+        elif c[1] in window and not c[0] in window:
+            handle_dicts(c, d_dict, calc_d, result_dict, extension, index=0)
+    
+    if d_dict == None:
+        return result_dict, d_dict
+    else:
+        return result_dict
+
 def count_instances(result_dict, window, d_dict = None, calc_d=None): 
     window = list(set(window))
     for w in window:
