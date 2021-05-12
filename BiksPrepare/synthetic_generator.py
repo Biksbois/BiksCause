@@ -206,8 +206,8 @@ def create_csv(df:DataFrame,path:str):
     df.to_csv(path)
 
 def initiate_generation(output_path, events = {'a': [['a',0],['b',0.5],['c',0]],
-                                  'b': [['a',0],['b',0],['c',0.5]],
-                                  'c': [['a',0.5],['b',0],['c',0]]}, years = 1, win_size = 5):
+                                'b': [['a',0],['b',0],['c',0.5]],
+                                'c': [['a',0.5],['b',0],['c',0]]}, years = 1, win_size = 5):
     period = years * 365 * 24
     df = generate_rows(events,period,win_size)
     create_csv(df,output_path)
