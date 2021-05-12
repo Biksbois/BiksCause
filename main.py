@@ -194,7 +194,7 @@ if __name__ == '__main__':
     head_val_small = 1000
     head_val_large = 50000
     
-    window_size = [1] #, 5, 10]
+    window_size = [1, 5, 10]
     # window_size = [6, 12, 18, 24]
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
@@ -238,7 +238,6 @@ if __name__ == '__main__':
             'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
             'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
         }}
-    
     
     if user_input == cluster or user_input == '':
         call_cluster(trafic_cluster_colums, medical_cluster_columns, is_trafic, is_large)
