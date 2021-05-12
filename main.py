@@ -102,19 +102,16 @@ def call_cluster(e_obj, data_obj):
             
             run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
 
-def generate_dataset():
+def generate_dataset(years, dataset_count, window_size):
     
-    for i in range(2):
+    for i in range(dataset_count):
         events = {'a': [['a',0],['b',0.5],['c',0]],
             'b': [['a',0],['b',0],['c',0.5]],
             'c': [['a',0.5],['b',0],['c',0]]}
         
         output_path = f'output_csv//generated_data//gen_{i}.csv'
         
-        years = 1
-        win_size = 5
-        
-        initiate_generation(output_path, events = events, years = years, win_size = win_size)
+        initiate_generation(output_path, events = events, years = years, win_size = window_size)
 
 def run_experiment(arg, written_args):
     if arg in written_args or len(written_args) == 0:
@@ -128,24 +125,34 @@ def init_exp_obj(head_val, exp_type, alpha_val, lambda_val, window_size, support
 if __name__ == '__main__':
     start_time = time.time()
     
+    # Parameters for what to input when deciding size of csv
     large = 'large'
     small = 'small'
     
+    # Parameters for what dataset to use
     traffic = 'traffic'
     synthetic = 'synthetic'
     power = 'power'
     
+    # Parameters for what to run
     cluster = 'cluster'
     experiment = 'experiment'
     result = 'result'
     generate = 'generate'
     
+    # Parameters for csv size
     head_val_small = 1000
     head_val_large = 50000
     
+    # Parameters for CEAS scores
     window_size = [1, 5, 10, 6, 12, 18, 24]
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
+    
+    # Parameters for generating dataset
+    years = 1
+    dataset_count = 2
+    window_size = 5
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
     scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
@@ -162,7 +169,7 @@ if __name__ == '__main__':
         
         if run_experiment(generate, written_args):
             print("\n---\nNew datasets are being generated...\n---\n", flush=True)
-            generate_dataset()
+            generate_dataset(years, dataset_count, window_size)
         if run_experiment(cluster, written_args):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
             call_cluster(e_obj, data_obj)
