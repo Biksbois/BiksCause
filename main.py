@@ -117,8 +117,8 @@ def generate_dataset(years, dataset_count, window_size):
         
         initiate_generation(output_path, events = events, years = years, win_size = window_size)
 
-def run_experiment(arg, written_args):
-    if arg in written_args or len(written_args) == 0:
+def run_experiment(arg, written_args, run_everything):
+    if arg in written_args or run_everything in written_args:
         return True
     else:
         return False
@@ -143,6 +143,7 @@ if __name__ == '__main__':
     experiment = 'experiment'
     result = 'result'
     generate = 'generate'
+    run_everythin = 'all'
     
     # Parameters for csv size
     head_val_small = 1000
@@ -158,32 +159,38 @@ if __name__ == '__main__':
     years = 1
     gen_window_size = 5
     
+    # The scres to calculate
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
+
+    # How to group the scores when finding best result
     scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
+    
     
     support = 10
     
-    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, cluster, experiment, result, generate)
-
-
-    print(exp_type)
+    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, cluster, experiment, result, generate, run_everythin)
     
     if exp_type == '':
         print(f"\n\n---\nPlease input what dataset to run on.\nThis can be either:\n  - {traffic}\n  - {synthetic}\n  - {power}\n\n---")
+    elif len(written_args) == 0:
+        print(f"\n\n---\n\nPlease input what experiments to run.\nThis can be either:\n  - {cluster}: if you wish to create new clusters\n  - {experiment}: if you wish to run the experiments\n  - {result}: If you wish to see the results\n  - {generate}: if you wish to generate new datasets\n  - {run_everythin}: if you wish to run everything")
     else:
         e_obj = exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
         data_obj = get_datatype(exp_type)
         
-        if run_experiment(generate, written_args):
+        if run_experiment(generate, written_args, run_everythin):
             print("\n---\nNew datasets are being generated...\n---\n", flush=True)
             generate_dataset(years, dataset_count, gen_window_size)
-        if run_experiment(cluster, written_args):
+        
+        if run_experiment(cluster, written_args, run_everythin):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
             call_cluster(e_obj, data_obj)
-        if run_experiment(experiment, written_args):
+        
+        if run_experiment(experiment, written_args, run_everythin):
             print_start(exp_type, head_val, written_args, window_size, lambda_val, alpha_val, support, e_obj.scores)
             call_experiment(e_obj, data_obj, window_size)
-        if run_experiment(result, written_args):
+        
+        if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
             print_scores(scores_short, window_size, head_val_large if is_large else head_val_small)
     
