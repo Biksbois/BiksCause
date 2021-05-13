@@ -20,14 +20,14 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, pow
         else:
             head_val = head_val_small
         
+        exp_type = ''
+        
         if synthetic in sys.argv[1:]:
             exp_type = synthetic
         if power in sys.argv[1:]:
             exp_type = exp_type
         if traffic in sys.argv[1:]:
             exp_type = traffic
-        else:
-            exp_type = ''
         
         # is_traffic = not test in str(sys.argv[1:])
         
