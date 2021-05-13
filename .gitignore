@@ -137,3 +137,10 @@ BiksCalculations/results/power/cluster/*
 BiksCalculations/results/power/no_cluster/*
 BiksCalculations/results/traffic/cluster/*
 BiksCalculations/results/traffic/no_cluster/*
+
+!BiksCalculations/results/synthetic/cluster/.gitkeep
+!BiksCalculations/results/synthetic/no_cluster/.gitkeep
+!BiksCalculations/results/power/cluster/.gitkeep
+!BiksCalculations/results/power/no_cluster/.gitkeep
+!BiksCalculations/results/traffic/cluster/.gitkeep
+!BiksCalculations/results/traffic/no_cluster/.gitkeep
