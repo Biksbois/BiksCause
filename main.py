@@ -150,8 +150,8 @@ if __name__ == '__main__':
     lambda_val = [0.4, 0.5, 0.7]
     
     # Parameters for generating dataset
-    years = 1
     dataset_count = 2
+    years = 1
     window_size = 5
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor

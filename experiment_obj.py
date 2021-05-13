@@ -90,11 +90,10 @@ def get_traffic_datatype_obj():
     trafic_cluster_col_names = ['weather_description_cluster'] + trafic_column_list
     trafic_baseline_col_names = ['weather_description'] + trafic_column_list
     
-    # trafic_cluster_colums = [('traffic_volume', True), ('temp', True), ('clouds_all', True), ('weather_description', False)]
-    trafic_cluster_colums = [('weather_description', False)]
+    trafic_cluster_colums = [('traffic_volume', True), ('temp', True), ('clouds_all', True), ('weather_description', False)]
     
     cause_column, effect_column = get_cause_effect_col()
-    result_path = get_result_path()
+    result_path = f"{get_result_path()}/traffic"
     
     ds_path = [get_large_traffic()]
     time_colum = get_trafic_time()
@@ -148,11 +147,54 @@ def get_synthetic_datatype_obj():
     
     return datatype_obj(hardcoded_cir_m, cluster_col_names, baseline_col_names, cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
 
+def get_power_datatype_obj():
+    hardcoded_cir_m = {
+        1:{
+            
+        },
+        5:{
+            
+        },
+        10:{
+            
+        },
+        6:{
+            
+        },
+        12:{
+            
+        },
+        18:{
+            
+        },
+        24:{
+            
+        }}
+    
+    cluster_col_names = ['']
+    baseline_col_names = ['']
+    
+    cluster_colums = [('ExchangeGE_MWh', True)]
+    
+    cause_column = 'ExchangeGE_MWh'
+    effect_column = 'ExchangeGE_MWh'
+    
+    result_path = f"{get_result_path()}/power"
+    
+    ds_path = 'output_csv\productionconsumptionsettlement.csv'
+    
+    time_colum = 'HourUTC'
+    temp_csv_path = get_temp_csv_path()
+    
+    return datatype_obj(hardcoded_cir_m, cluster_col_names, baseline_col_names, cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
+
 
 def get_datatype(exp_type):
     if exp_type == 'traffic':
         return get_traffic_datatype_obj()
     elif exp_type == 'synthetic':
         return get_synthetic_datatype_obj()
+    elif exp_type == 'power':
+        return get_power_datatype_obj()
     else:
         print(f"---\n'{exp_type}' is not a valid experiment to run.\n---")
