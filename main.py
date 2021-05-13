@@ -86,8 +86,8 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
     for s in scores:
         print(f"    - {s}")
 
-def print_scores(scores, window_size, head_val):
-    result_path = get_result_path()
+def print_scores(scores, window_size, head_val, result_path):
+    # result_path = get_result_path()
     extensions = ['cluster', 'no_cluster']
     k_vals = [10, 15, 20]
     
@@ -192,7 +192,7 @@ if __name__ == '__main__':
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val_large if is_large else head_val_small)
+            print_scores(scores_short, window_size, head_val, data_obj.result_path)
     
     
     print("\nThe program will now exit.\n")
