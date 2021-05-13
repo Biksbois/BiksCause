@@ -6,7 +6,7 @@ from BiksCalculations.Matrix_clarify.mapper import *
 
 class result_matrix():
     
-    def __init__(self, path,mapper_dict, matrix_type = 'unspecified', mapper_cat = "traffic"):
+    def __init__(self, path,mapper_dict, matrix_type = 'unspecified', mapper_cat = "traffic", score_type = ""):
         self.df = pd.read_csv (path)
         self.create_label_mapping(self.df)
         self.matrix_type = matrix_type
@@ -15,6 +15,7 @@ class result_matrix():
         self.interesting_results = []
         self.interesting_sum = []
         self.translated_pairs = []
+        self.score_type = score_type
         self.extract_file_config(path)
         self.score = 0
         if mapper_cat == "traffic":
@@ -34,7 +35,7 @@ class result_matrix():
         self.header = re.search(header_regex,file).group().replace('_','').replace('h','')
         if('cir' not in file):
             self.lamb = int(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
-            self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
+            self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100 
             
     def create_label_mapping(self, df):
         self.lookup_dict = {}
@@ -110,6 +111,12 @@ class result_matrix():
             if not (translated_effect, cause_effect) in used_pair:
                 used_pair.append((translated_effect, cause_effect))
                 self.adjust_score(avg, cause_effect, traffic_range)
+                
+    def generate_matrix_key(self):
+        std_key = self.score_type + self.window + self.header
+        if 'nst' in self.score_type:
+            std_key += self.lamb + self.alpha
+        return std_key
 
 
 def get_csv_files_containing(path, score):
@@ -131,7 +138,7 @@ def load_matrixes(path, score, maps, window=None, heads=None):
     for file in files:
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
             continue
-        matrixs_lst.append(result_matrix(path+'\\'+file,maps,matrix_type = file))
+        matrixs_lst.append(result_matrix(path+'\\'+file,maps,matrix_type = file, score_type = score))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
     return matrixs_lst
 
@@ -145,13 +152,39 @@ def get_at_k_hits(path, k, score,maps, window=None, heads=None):
     matrixes.sort(key=lambda x : x.score)
     return matrixes[-1].score
 
+def group_same_attr_matrixes(matrixes):
+    matrix_types = {}
+    for matrix in matrixes:
+        if matrix.generate_matrix_key() not in matrix_types:
+            matrix_types[matrix.generate_matrix_key()] = []
+        matrix_types[matrix.generate_matrix_key()].append(matrix)
+    return matrix_types
+
+def comp_matrix_score(matrix_types, k):
+    results = []
+    for types in matrix_types.keys():
+        avg = avg_scores_matrix_list(matrix_types[types], k=k)
+        results.append(types,avg)
+    return results
+
+def avg_scores_matrix_list(matrixes, k = 10):
+    avg_score = 0
+    for matrix in matrixes:
+        avg_score += matrix.count_actual_causality(k)
+    return avg_score/len(matrixes)
+
+def average_score_all_matrixes(matrixes,k):
+    gm = group_same_attr_matrixes(matrixes)
+    return comp_matrix_score(gm,k)
+    
+    
+
 
 if __name__ == '__main__':
     
     path = 'BiksCalculations\\results\\cluster'
     maps = 'traffic_cluster'
     print(get_at_k_hits(path,20,'cir', maps,window=[18,12], heads=[50000]))
-
     # matrixes_cir_B = load_matrixes(path,'cir_b')
     # matrixes_cir_C = load_matrixes(path,'cir_c')
     # matrixes_nst = load_matrixes(path,'nst')
