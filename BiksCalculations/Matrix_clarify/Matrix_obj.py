@@ -17,6 +17,7 @@ class result_matrix():
         self.translated_pairs = []
         self.score_type = score_type
         self.extract_file_config(path)
+        self.key =""
         self.score = 0
         if mapper_cat == "traffic":
             self.mapper_obj = mappers(mapping_cat = mapper_cat)
@@ -113,9 +114,13 @@ class result_matrix():
                 self.adjust_score(avg, cause_effect, traffic_range)
                 
     def generate_matrix_key(self):
-        std_key = self.score_type + self.window + self.header
-        if 'nst' in self.score_type:
-            std_key += self.lamb + self.alpha
+        if self.key == "":
+            std_key = self.score_type + self.window + self.header
+            if 'nst' in self.score_type:
+                std_key += self.lamb + self.alpha
+            self.key = str
+        else:
+            std_key = self.key
         return std_key
 
 
@@ -177,7 +182,9 @@ def average_score_all_matrixes(matrixes,k):
     gm = group_same_attr_matrixes(matrixes)
     return comp_matrix_score(gm,k)
     
-    
+def run_average_expriment(path, k, score,maps, window=None, heads=None):
+    matrixes = load_matrixes(path,score,maps,window=window,heads=heads)
+    return average_score_all_matrixes(matrixes,k)
 
 
 if __name__ == '__main__':
@@ -185,24 +192,5 @@ if __name__ == '__main__':
     path = 'BiksCalculations\\results\\cluster'
     maps = 'traffic_cluster'
     print(get_at_k_hits(path,20,'cir', maps,window=[18,12], heads=[50000]))
-    # matrixes_cir_B = load_matrixes(path,'cir_b')
-    # matrixes_cir_C = load_matrixes(path,'cir_c')
-    # matrixes_nst = load_matrixes(path,'nst')
-    
-    # k = 20
-    
-    # calculate_matrixes_causality(matrixes_cir_B,k)
-    # calculate_matrixes_causality(matrixes_cir_C,k)
-    # calculate_matrixes_causality(matrixes_nst,k)
+    print(run_average_expriment(path,20,'cir', maps,window=[18,12], heads=[50000]))
 
-    # matrixes_cir_B.sort(key=lambda x : x.score)
-    # matrixes_cir_C.sort(key=lambda x : x.score)
-    # matrixes_nst.sort(key=lambda x : x.score)
-
-    # print(f"The score for the best cir_b is {matrixes_cir_B[-1].score}")
-    # print(f"The score for the best cir_c is {matrixes_cir_C[-1].score}")
-    # print(f"The score for the best nst is {matrixes_nst[-1].score}")
-
-    # print(matrixes[-1].score)
-    # for things in matrixes[-1].interesting_results[:15]:
-    #     print(f"{things},  {matrixes[-1].get_Value(things)}")
