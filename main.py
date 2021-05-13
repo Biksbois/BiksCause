@@ -11,7 +11,7 @@ from main_paths import *
 from BiksCalculations.find_potential_parents import *
 from BiksPrepare.synthetic_generator import initiate_generation
 
-def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, *argv):
+def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, *argv):
     if len(sys.argv) >= 2:
         is_large = large in str(sys.argv[1:])
         
@@ -22,8 +22,12 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, *ar
         
         if synthetic in sys.argv[1:]:
             exp_type = synthetic
-        else:
+        if power in sys.argv[1:]:
+            exp_type = exp_type
+        if traffic in sys.argv[1:]:
             exp_type = traffic
+        else:
+            exp_type = ''
         
         # is_traffic = not test in str(sys.argv[1:])
         
@@ -152,15 +156,18 @@ if __name__ == '__main__':
     # Parameters for generating dataset
     dataset_count = 2
     years = 1
-    window_size = 5
+    gen_window_size = 5
     
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
     scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
     
     support = 10
     
-    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, cluster, experiment, result, generate)
+    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, cluster, experiment, result, generate)
 
+
+    print(exp_type)
+    
     if exp_type == '':
         print(f"\n\n---\nPlease input what dataset to run on.\nThis can be either:\n  - {traffic}\n  - {synthetic}\n  - {power}\n\n---")
     else:
@@ -169,7 +176,7 @@ if __name__ == '__main__':
         
         if run_experiment(generate, written_args):
             print("\n---\nNew datasets are being generated...\n---\n", flush=True)
-            generate_dataset(years, dataset_count, window_size)
+            generate_dataset(years, dataset_count, gen_window_size)
         if run_experiment(cluster, written_args):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
             call_cluster(e_obj, data_obj)
