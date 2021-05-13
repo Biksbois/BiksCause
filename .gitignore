@@ -131,9 +131,9 @@ dmypy.json
 
 BiksCalculations/csv/temp_csv
 
-BiksCalculations/results/synthetic/cluster
-BiksCalculations/results/synthetic/no_cluster
-BiksCalculations/results/power/cluster
-BiksCalculations/results/power/no_cluster
-BiksCalculations/results/traffic/cluster
-BiksCalculations/results/traffic/no_cluster
+BiksCalculations/results/synthetic/cluster/*
+BiksCalculations/results/synthetic/no_cluster/*
+BiksCalculations/results/power/cluster/*
+BiksCalculations/results/power/no_cluster/*
+BiksCalculations/results/traffic/cluster/*
+BiksCalculations/results/traffic/no_cluster/*
