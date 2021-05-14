@@ -1,5 +1,5 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment
 import itertools
 import time
 import pandas as pd
@@ -92,11 +92,12 @@ def print_scores(scores, window_size, head_val):
     k_vals = [10, 15, 20]
     
     for e in extensions:
-        full_path = f"{result_path}\\{e}"
+        full_path = f"{result_path}\\synthetic\\{e}"
         for k in k_vals:
             for s in scores:
-                k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
+                # k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
+                # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
     for ds_path in data_obj.ds_path:
@@ -106,12 +107,28 @@ def call_cluster(e_obj, data_obj):
             
             run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
 
+def get_ground_truth():
+    # return {'a': [['a',3],['b',0.7],['c',0],['d',0.0],['e',0.0],['f',0.0]],
+    #         'b': [['a',0],['b',0.4],['c',0.6],['d',0.5],['e',0.0],['f',0.5]],
+    #         'c': [['a',0.5],['b',0],['c',0.5],['d',0.0],['e',0.0],['f',0.0]],
+    #         'd': [['a',0.0],['b',0],['c',0.2],['d',0.3],['e',0.0],['f',0.5]],
+    #         'e': [['a',0.0],['b',2],['c',0.0],['d',0.0],['e',0.3],['f',0.5]],
+    #         'f': [['a',0.2],['b',0],['c',0.0],['d',0.0],['e',0.0],['f',0.8]]
+    #         }
+    return {'a1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'a2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'a3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'b1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'b2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'b3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'c1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'c2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
+            'c3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]]}
+
 def generate_dataset(years, dataset_count, window_size):
     
     for i in range(dataset_count):
-        events = {'a': [['a',0],['b',0.5],['c',0]],
-            'b': [['a',0],['b',0],['c',0.5]],
-            'c': [['a',0.5],['b',0],['c',0]]}
+        events = get_ground_truth()
         
         output_path = f'output_csv//generated_data//gen_{i}.csv'
         
@@ -192,7 +209,7 @@ if __name__ == '__main__':
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val_large if is_large else head_val_small)
+            print_scores(scores_short, window_size, head_val)
     
     
     print("\nThe program will now exit.\n")
