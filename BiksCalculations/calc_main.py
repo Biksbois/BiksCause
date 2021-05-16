@@ -20,11 +20,11 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
         matrixes['cir_m_min'].xs(x)[y] = round(cir_m_min, 2)
         matrixes['cir_m_max'].xs(x)[y] = round(cir_m_max, 2)
     
-    # for key in e_obj.nst_keys:
-    #     matrixes[key].xs(x)[y] = round(nst[key], 2)
+    for key in e_obj.nst_keys:
+        matrixes[key].xs(x)[y] = round(nst[key], 2)
     
-    # matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
-    # matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
+    matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
+    matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
 
 def extract_values(colum_list, colum_dict):
     vals_to_check = []
@@ -38,7 +38,7 @@ def create_datafram_matric(distinct_values, save_index):
     return data_matrix
 
 def create_matix_path(s, base_path, e_obj):
-    return f'{base_path}/{e_obj.exp_type}_{s}_h{e_obj.head_val}_w{e_obj.window_size}_matrix.csv'
+    return f'{base_path}{e_obj.exp_type}_{s}_h{e_obj.head_val}_w{e_obj.window_size}_matrix.csv'
 
 def init_matrixes(scores, distinct_values, base_path, e_obj):
     matrix_dict = {}
@@ -65,9 +65,6 @@ def remove_columes(df,lst):
     return df.drop(columns=lst)
 
 def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, ds_path, e_obj, use_optimizer=True):
-    # scores = ['cir_m_avg', 'cir_m_max', 'cir_m_min']
-    # scores = ['cir_c', 'cir_b', 'cir_m_avg']
-    # scores.extend(e_obj.nst_keys)
     
     colum_dict = {}
     
@@ -84,10 +81,6 @@ def do_calculations(ds_obj, cause_column, effect_column, base_path, colum_list, 
         suf_dict = None
         nec_dict = None
         d_dict = None
-    
-    # for key in nec_dict['traffic_volume_1'].keys():
-    #     if isinstance(key, tuple):
-    #         print(f"{key} - {nec_dict['traffic_volume_1'][key]}")
     
     mat_list = list(Threading_max(colum_list, colum_dict, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj))
     
