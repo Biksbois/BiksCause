@@ -147,7 +147,7 @@ def get_synthetic_datatype_obj():
     
     return datatype_obj(hardcoded_cir_m, cluster_col_names, baseline_col_names, cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
 
-def get_power_datatype_obj():
+def get_air_datatype_obj():
     hardcoded_cir_m = {
         1:{
             
@@ -171,19 +171,23 @@ def get_power_datatype_obj():
             
         }}
     
-    cluster_col_names = ['']
-    baseline_col_names = ['']
+    # col_names = ['PM2.5_cluster', 'PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster', 'WSPM_cluster']
+    col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
     
-    cluster_colums = [('ExchangeGE_MWh', True)]
+    cluster_col_names = ['WSPM_cluster'] + col_names
+    baseline_col_names = ['WSPM'] + col_names
     
-    cause_column = 'ExchangeGE_MWh'
-    effect_column = 'ExchangeGE_MWh'
+    # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
+    cluster_colums = [('wd', False)]
     
-    result_path = f"{get_result_path()}/power"
+    cause_column = 'PM2.5'
+    effect_column = 'PM2.5'
     
-    ds_path = 'output_csv\productionconsumptionsettlement.csv'
+    result_path = f"{get_result_path()}/air"
     
-    time_colum = 'HourUTC'
+    ds_path = ['input_csv\PRSA_Data_Dongsi_20130301-20170228.csv']
+    
+    time_colum = 'time_set'
     temp_csv_path = get_temp_csv_path()
     
     return datatype_obj(hardcoded_cir_m, cluster_col_names, baseline_col_names, cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
@@ -194,7 +198,7 @@ def get_datatype(exp_type):
         return get_traffic_datatype_obj()
     elif exp_type == 'synthetic':
         return get_synthetic_datatype_obj()
-    elif exp_type == 'power':
-        return get_power_datatype_obj()
+    elif exp_type == 'air':
+        return get_air_datatype_obj()
     else:
         print(f"---\n'{exp_type}' is not a valid experiment to run.\n---")
