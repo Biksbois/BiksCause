@@ -181,7 +181,7 @@ def get_power_datatype_obj():
     
     result_path = f"{get_result_path()}/power"
     
-    ds_path = 'output_csv\productionconsumptionsettlement.csv'
+    ds_path = 'input_csv\DK1 - 2005-2010.csv'
     
     time_colum = 'HourUTC'
     temp_csv_path = get_temp_csv_path()
