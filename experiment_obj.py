@@ -171,11 +171,11 @@ def get_air_datatype_obj():
             
         }}
     
-    # col_names = ['PM2.5_cluster', 'PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster', 'WSPM_cluster']
-    col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
+    col_names = ['PM2.5_cluster', 'PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'WSPM_cluster']
+    # col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
     
-    cluster_col_names = ['WSPM_cluster'] + col_names
-    baseline_col_names = ['WSPM'] + col_names
+    cluster_col_names = ['wd_cluster'] + col_names
+    baseline_col_names = ['wd'] + col_names
     
     # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
     cluster_colums = [('wd', False)]
