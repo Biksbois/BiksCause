@@ -267,35 +267,39 @@ def process_cluster_arrays(cluster_dict:dict, num_rows:int, win_size:int):
     return clust_arr
 
 def transform_cl_to_events(c_list, cluster_dict):
-    e_list = []
+    e_list,e_cl_list = [], []
     for c in c_list:
         e_name = c[0].split("_")[0]
         num_events = cluster_dict[c[0]].size[rand.randint(0,1)]
         for r in range(num_events):
             e_list.append(e_name)
-    return e_list
+            e_cl_list.append(c[0])
+    return e_list, e_cl_list
 
 
 def create_time_serie(period):
     dt = pd.date_range(datetime.today().strftime('%Y-%m-%d'), periods=period, freq="H")
     return pd.date_range(datetime.today().strftime('%Y-%m-%d'), periods=period, freq="H")
 
-def combine_time_event(c_list, tdf):
-    return pd.DataFrame({'time_set': tdf, 'events': c_list}, columns=['time_set', 'events'])
+def combine_time_event(e_list, c_list, tdf):
+    e_df = pd.DataFrame({'time_set': tdf, 'events': e_list}, columns=['time_set', 'events'])
+    c_df = pd.DataFrame({'time_set': tdf, 'events': e_list, 'events_cluster': c_list}, columns=['time_set', 'events', 'events_cluster'])
+    return e_df, c_df
 
 def generate_rows(cluster_dict, period, win_size):
     c_list = process_cluster_arrays(cluster_dict,period,win_size)
-    e_list = transform_cl_to_events(c_list,cluster_dict)
+    e_list, e_cl_list = transform_cl_to_events(c_list,cluster_dict)
     tdf = create_time_serie(period)
-    return combine_time_event(e_list[:period], tdf)
+    return combine_time_event(e_list[:period], e_cl_list[:period], tdf)
 
 def create_csv(df:DataFrame,path:str): 
     df.to_csv(path)
 
 def initiate_generation(output_path:str, cluster_dict:dict, period_days:int, window_size:int):
     period = int(period_days * 24)
-    df = generate_rows(cluster_dict,period,window_size)
-    create_csv(df,output_path)
+    e_df, c_df = generate_rows(cluster_dict,period,window_size)
+    create_csv(e_df,output_path)
+    create_csv(c_df,'temp.csv')
 
 def run():
     pass

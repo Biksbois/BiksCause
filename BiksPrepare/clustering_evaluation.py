@@ -94,5 +94,25 @@ def run_evaluation(input_path, output_path = 'temp.txt', dur_col = 'duration', c
     event_dict = evaluate_clusters_in_event(df_data_arr, dur_col)
     create_cluster_files(event_dict, output_path)
 
+def evaluate_clust_synthetic(path_1, path_2):
+    csv_1, csv_2 = pd.read_csv(path_1), pd.read_csv(path_2)
+    mismatch = 0
+
+    for ind in range(len(csv_1)):
+        c_1 = csv_1.iloc[[ind]]['events_cluster']
+        c_2 = csv_2.iloc[[ind]]['events_cluster']
+        if c_1.item() != c_2.item():
+            print('Row: {}, Number of mismatches: {}'.format(ind, mismatch))
+            mismatch += 1
+    
+    print('Total amount of rows: {}, amount of mismatches: {}'.format(len(csv_1), mismatch))
+        # if csv_1.iloc[[ind]] != csv_2.iloc[[ind]]:
+        #     mismatch += 1
+        #     print(mismatch)
+
+
+
 if __name__ == '__main__':
-    run_evaluation(r'BiksCalculations\\csv\\temp_csv')
+    path_1 = 'output_csv\generated_data\gen_1.csv'
+    path_2 = 'temp.csv'
+    evaluate_clust_synthetic(path_1, path_2)
