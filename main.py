@@ -9,7 +9,7 @@ from BiksCalculations.calc_main import do_calculations
 from BiksCalculations.dataset_object import init_obj_test_trafic
 from main_paths import *
 from BiksCalculations.find_potential_parents import *
-from BiksPrepare.synthetic_generator import initiate_generation
+from BiksPrepare.synthetic_generator import initiate_generation, cluster_class
 
 def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, *argv):
     if len(sys.argv) >= 2:
@@ -89,13 +89,15 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
 def print_scores(scores, window_size, head_val, result_path):
     # result_path = get_result_path()
     extensions = ['cluster', 'no_cluster']
-    k_vals = [10, 15, 20]
+    k_vals = [10, 15, 20, 25, 30]
     
     for e in extensions:
-        full_path = f"{result_path}\\synthetic\\{e}"
+        full_path = f"{result_path}\\{e}"
+        print(full_path)
         for k in k_vals:
             for s in scores:
                 # k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                print(k)
                 print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
@@ -108,22 +110,21 @@ def call_cluster(e_obj, data_obj):
             run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
 
 def get_ground_truth():
-    # return {'a': [['a',3],['b',0.7],['c',0],['d',0.0],['e',0.0],['f',0.0]],
-    #         'b': [['a',0],['b',0.4],['c',0.6],['d',0.5],['e',0.0],['f',0.5]],
-    #         'c': [['a',0.5],['b',0],['c',0.5],['d',0.0],['e',0.0],['f',0.0]],
-    #         'd': [['a',0.0],['b',0],['c',0.2],['d',0.3],['e',0.0],['f',0.5]],
-    #         'e': [['a',0.0],['b',2],['c',0.0],['d',0.0],['e',0.3],['f',0.5]],
-    #         'f': [['a',0.2],['b',0],['c',0.0],['d',0.0],['e',0.0],['f',0.8]]
-    #         }
-    return {'a1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'a2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'a3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]]}
+    return {
+        'a_0': cluster_class((6,10), ['b_0'], [0.8]),
+        'a_1': cluster_class((30,36), ['b_1'], [0.8]),
+        'a_2': cluster_class((70,75), ['b_1'], [0.8]),
+        'b_0': cluster_class((3,4), ['c_0'], [0.8]),
+        'b_1': cluster_class((10,12), ['c_1'], [0.8]),
+        'b_2': cluster_class((21,23), ['c_2'], [0.8]),
+        'c_0': cluster_class((1,4), ['a_0'], [0.7]),
+        'c_1': cluster_class((15,18), ['d_0'], [0.7]),
+        'c_2': cluster_class((31,34), ['d_0'], [0.5]),
+        'd_0': cluster_class((5,12), ['e_0'], [0.7]),
+        'e_0': cluster_class((2,5), ['a_0'], [0.8]),
+        'e_1': cluster_class((20,23), ['a_1'], [0.8]),
+        'e_2': cluster_class((40,41), ['a_2'], [0.8])
+    }
 
 def generate_dataset(years, dataset_count, window_size):
     
@@ -132,7 +133,7 @@ def generate_dataset(years, dataset_count, window_size):
         
         output_path = f'output_csv//generated_data//gen_{i}.csv'
         
-        initiate_generation(output_path, events = events, years = years, win_size = window_size)
+        initiate_generation(output_path, events, years, window_size)
 
 def run_experiment(arg, written_args, run_everything):
     if arg in written_args or run_everything in written_args:
@@ -172,15 +173,15 @@ if __name__ == '__main__':
     lambda_val = [0.4, 0.5, 0.7]
     
     # Parameters for generating dataset
-    dataset_count = 2
-    years = 1
+    dataset_count = 100
+    years = 1000
     gen_window_size = 5
     
     # The scres to calculate
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
 
     # How to group the scores when finding best result
-    scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
+    scores_short = ['cir_c', 'cir_b', 'nst']
     
     
     support = 10
