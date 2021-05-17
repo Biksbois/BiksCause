@@ -178,7 +178,7 @@ def get_air_datatype_obj():
     baseline_col_names = ['WSPM'] + col_names
     
     # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
-    cluster_colums = [('WSPM', True)]
+    cluster_colums = [('wd', False)]
     
     cause_column = 'PM2.5'
     effect_column = 'PM2.5'
