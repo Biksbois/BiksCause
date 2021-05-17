@@ -25,7 +25,7 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, pow
         if synthetic in sys.argv[1:]:
             exp_type = synthetic
         if power in sys.argv[1:]:
-            exp_type = exp_type
+            exp_type = power
         if traffic in sys.argv[1:]:
             exp_type = traffic
         
@@ -86,10 +86,8 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
     for s in scores:
         print(f"    - {s}")
 
-def print_scores(scores, window_size, head_val, result_path):
-    # result_path = get_result_path()
-    extensions = ['cluster', 'no_cluster']
-    k_vals = [10, 15, 20]
+def print_scores(scores, window_size, head_val, result_path, k_vals, extensions):
+    # extensions = ['cluster', 'no_cluster']
     
     for e in extensions:
         full_path = f"{result_path}\\synthetic\\{e}"
@@ -153,7 +151,7 @@ if __name__ == '__main__':
     # Parameters for what dataset to use
     traffic = 'traffic'
     synthetic = 'synthetic'
-    power = 'power'
+    power = 'air'
     
     # Parameters for what to run
     cluster = 'cluster'
@@ -170,6 +168,10 @@ if __name__ == '__main__':
     window_size = [1, 5, 10, 6, 12, 18, 24]
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
+    
+    k_vals = [10, 15, 20, 25]
+    extensions = ['cluster', 'no_cluster']
+    
     
     # Parameters for generating dataset
     dataset_count = 2
@@ -209,7 +211,7 @@ if __name__ == '__main__':
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val, data_obj.result_path)
+            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
     
     
     print("\nThe program will now exit.\n")
