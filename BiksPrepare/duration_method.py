@@ -59,7 +59,7 @@ def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name, j_e
     
     for j in range(start, len(csv_file[c_start])):
         if i >= int(csv_file[c_start][j]) and i <= int(csv_file[c_end][j]):
-            cluster_name = csv_file[cluster_name][j].replace('.csv', '')
+            cluster_name = str(csv_file[cluster_name][j]).replace('.csv', '')
             return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name, j - 1 if j - 1 > 0 and is_cluster_numbers else 0
     
     print(f"j_start = {j_start}\npath = {csv_path}\ni={i}\nj={j}")

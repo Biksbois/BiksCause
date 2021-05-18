@@ -20,6 +20,6 @@ def initialize_datetime_conversion(input_path:str,output_path:str):
     convert_to_csv(t_df, output_path)
 
 if __name__ == '__main__':
-    input_path = 'input_csv\BeijingPM20100101_20151231.csv'
-    output_path = 'output_csv\Beijing.csv'
+    input_path = '..\input_csv\PRSA_Data_Dongsi_20130301-20170228.csv'
+    output_path = '..\input_csv\PRSA_Data_Dongsi_20130301-20170228.csv'
     initialize_datetime_conversion(input_path,output_path)

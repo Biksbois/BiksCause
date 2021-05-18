@@ -1,15 +1,16 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results
 import itertools
 import time
 import pandas as pd
+import datetime
 from experiment_obj import *
 from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
 from BiksCalculations.dataset_object import init_obj_test_trafic
 from main_paths import *
 from BiksCalculations.find_potential_parents import *
-from BiksPrepare.synthetic_generator import initiate_generation
+from BiksPrepare.synthetic_generator import initiate_generation, cluster_class
 
 def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, *argv):
     if len(sys.argv) >= 2:
@@ -25,7 +26,7 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, pow
         if synthetic in sys.argv[1:]:
             exp_type = synthetic
         if power in sys.argv[1:]:
-            exp_type = exp_type
+            exp_type = power
         if traffic in sys.argv[1:]:
             exp_type = traffic
         
@@ -59,10 +60,29 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
     
     print("\nThe experiments are now successfully done, and the program will exit.")
 
-def call_experiment(e_obj, data_obj, window_size):
+
+def get_exp_type(ds_pat):
+    if 'summer' in ds_pat:
+        return f'{power}_summer'
+    if 'winter' in ds_pat:
+        return f'{power}_winter'
+    if 'fall' in ds_pat:
+        return f'{power}_fall'
+    if 'spring' in ds_pat:
+        return f'{power}_spring'
+    else:
+        print(f"ERROR: no season was in {ds_pat}")
+        return f'{power}'
+
+def call_experiment(e_obj, data_obj, window_size, exp_type):
     for p in range(len(data_obj.ds_path)):
         ds_obj = init_obj_test_trafic(cause_column=data_obj.cause_column, effect_column=data_obj.effect_column, 
                                     ds_path=data_obj.ds_path[p], windows_size=window_size, head_val=e_obj.head_val, time_column=data_obj.time_colum)
+        
+        if exp_type == power:
+            e_obj.exp_type = get_exp_type(data_obj.ds_path[p])
+        
+        # print(f"new path is now: {e_obj.exp_type}")
         
         run_experiments(ds_obj, data_obj.cause_column, data_obj.effect_column, data_obj.ds_path[p], 
                         data_obj.result_path, data_obj.cluster_col_names, data_obj.baseline_col_names, 
@@ -86,17 +106,18 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
     for s in scores:
         print(f"    - {s}")
 
-def print_scores(scores, window_size, head_val, result_path):
-    # result_path = get_result_path()
-    extensions = ['cluster', 'no_cluster']
-    k_vals = [10, 15, 20]
+def print_scores(scores, window_size, head_val, result_path, k_vals, extensions):
+    # extensions = ['cluster', 'no_cluster']
     
     for e in extensions:
-        full_path = f"{result_path}\\synthetic\\{e}"
+        full_path = f"{result_path}\\{e}"
+        print(full_path)
         for k in k_vals:
             for s in scores:
-                # k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
+                #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                print(k)
+                air_experiment_results(full_path, k, s, get_ground_truth())
+                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
@@ -108,31 +129,70 @@ def call_cluster(e_obj, data_obj):
             run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
 
 def get_ground_truth():
-    # return {'a': [['a',3],['b',0.7],['c',0],['d',0.0],['e',0.0],['f',0.0]],
-    #         'b': [['a',0],['b',0.4],['c',0.6],['d',0.5],['e',0.0],['f',0.5]],
-    #         'c': [['a',0.5],['b',0],['c',0.5],['d',0.0],['e',0.0],['f',0.0]],
-    #         'd': [['a',0.0],['b',0],['c',0.2],['d',0.3],['e',0.0],['f',0.5]],
-    #         'e': [['a',0.0],['b',2],['c',0.0],['d',0.0],['e',0.3],['f',0.5]],
-    #         'f': [['a',0.2],['b',0],['c',0.0],['d',0.0],['e',0.0],['f',0.8]]
-    #         }
-    return {'a1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'a2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'a3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'b3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c1': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c2': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]],
-            'c3': [['a1',0.0],['a2',0.0],['a3',0.0],['b1',0.7],['b2',0.7],['b3',0.7],['c1',0.0],['c3',0.0],['c2',0.0]]}
+    return {
+        'a_0': cluster_class((6,10), ['b_0'], [0.8]),
+        'a_1': cluster_class((30,36), ['b_1'], [0.8]),
+        'a_2': cluster_class((70,75), ['b_1'], [0.8]),
+        'b_0': cluster_class((3,4), ['c_0'], [0.8]),
+        'b_1': cluster_class((10,12), ['c_1'], [0.8]),
+        'b_2': cluster_class((21,23), ['c_2'], [0.8]),
+        'c_0': cluster_class((1,4), ['a_0'], [0.7]),
+        'c_1': cluster_class((15,18), ['d_0'], [0.7]),
+        'c_2': cluster_class((31,34), ['d_0'], [0.5]),
+        'd_0': cluster_class((5,12), ['e_0'], [0.7]),
+        'e_0': cluster_class((2,5), ['a_0'], [0.8]),
+        'e_1': cluster_class((20,23), ['a_1'], [0.8]),
+        'e_2': cluster_class((40,41), ['a_2'], [0.8])
+    }
 
-def generate_dataset(years, dataset_count, window_size):
-    
-    for i in range(dataset_count):
-        events = get_ground_truth()
+def get_current_season(dongsi_seasons, m):
+    for s in dongsi_seasons:
+        if m in s[1]:
+            return s[0]
+
+def generate_dataset(years, dataset_count, window_size, exp_type):
+    if exp_type == synthetic:
+        for i in range(dataset_count):
+            events = get_ground_truth()
+            
+            output_path = f'output_csv//generated_data//gen_{i}.csv'
+            
+            initiate_generation(output_path, events, years, window_size)
+    if exp_type == power:
+        dongsi_seasons = [('spring', [3,4,5]), ('summer', [6,7,8]), ('fall', [9,10,11]), ('winter', [12,1,2])]
+        dongsi_dict = {x[0]:([], f"input_csv\PRSA_Data_Dongsi_{x[0]}.csv") for x in dongsi_seasons}
+        pd_dict = {x[0]:pd.read_csv(dongsi_dict[x[0]][1]) for x in dongsi_seasons}
         
-        output_path = f'output_csv//generated_data//gen_{i}.csv'
+        ds_path = 'input_csv\PRSA_Data_Dongsi_20130301-20170228.csv'
+        df = pd.read_csv(ds_path)
+        val_list = df['time_set'].tolist()
+        current_season = ''
+        start = 0
+        end = 0
         
-        initiate_generation(output_path, events = events, years = years, win_size = window_size)
+        for i in range(len(val_list)):
+            date_time_obj = datetime.datetime.strptime(val_list[i], '%Y-%m-%d %H:%M:%S')
+            m = date_time_obj.month
+            
+            temp_season = get_current_season(dongsi_seasons, m)
+            
+            if current_season == '':
+                current_season = temp_season
+                start = i
+            
+            elif not temp_season == current_season:
+                end = i - 1
+                dongsi_dict[current_season][0].append([start, end])
+                current_season = ''
+        
+        for key in dongsi_dict.keys():
+            for r in dongsi_dict[key][0]:
+                print(type(pd_dict[key]))
+                pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
+        
+        for key in pd_dict.keys():
+            print(pd_dict[key])
+            pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
     if arg in written_args or run_everything in written_args:
@@ -143,6 +203,11 @@ def run_experiment(arg, written_args, run_everything):
 def init_exp_obj(head_val, exp_type, alpha_val, lambda_val, window_size, support, scores):
     return exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
 
+# Parameters for what dataset to use
+traffic = 'traffic'
+synthetic = 'synthetic'
+power = 'air'
+
 if __name__ == '__main__':
     start_time = time.time()
     
@@ -150,10 +215,6 @@ if __name__ == '__main__':
     large = 'large'
     small = 'small'
     
-    # Parameters for what dataset to use
-    traffic = 'traffic'
-    synthetic = 'synthetic'
-    power = 'power'
     
     # Parameters for what to run
     cluster = 'cluster'
@@ -163,7 +224,7 @@ if __name__ == '__main__':
     run_everythin = 'all'
     
     # Parameters for csv size
-    head_val_small = 1000
+    head_val_small = 5
     head_val_large = 50000
     
     # Parameters for CEAS scores
@@ -171,16 +232,19 @@ if __name__ == '__main__':
     alpha_val = [0.55, 0.66, 0.77]
     lambda_val = [0.4, 0.5, 0.7]
     
+    k_vals = [10, 15, 20, 25]
+    extensions = ['cluster', 'no_cluster']
+    
     # Parameters for generating dataset
-    dataset_count = 2
-    years = 1
+    dataset_count = 100
+    years = 1000
     gen_window_size = 5
     
     # The scres to calculate
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
 
     # How to group the scores when finding best result
-    scores_short = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min', 'nst']
+    scores_short = ['cir_c', 'cir_b', 'nst']
     
     
     support = 10
@@ -197,7 +261,7 @@ if __name__ == '__main__':
         
         if run_experiment(generate, written_args, run_everythin):
             print("\n---\nNew datasets are being generated...\n---\n", flush=True)
-            generate_dataset(years, dataset_count, gen_window_size)
+            generate_dataset(years, dataset_count, gen_window_size, exp_type)
         
         if run_experiment(cluster, written_args, run_everythin):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
@@ -205,11 +269,11 @@ if __name__ == '__main__':
         
         if run_experiment(experiment, written_args, run_everythin):
             print_start(exp_type, head_val, written_args, window_size, lambda_val, alpha_val, support, e_obj.scores)
-            call_experiment(e_obj, data_obj, window_size)
+            call_experiment(e_obj, data_obj, window_size, exp_type)
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val, data_obj.result_path)
+            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
     
     
     print("\nThe program will now exit.\n")

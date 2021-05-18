@@ -1,0 +1,5 @@
+trafficvolume0 & thunderstorm with light drizzle & $(3259*(1+(-8.3/100)))) = 2988 \in [269, 1880]$\\
+trafficvolume0 & fog & $(3259*(1+(-12.5/100)))) = 2851 \in [269, 1880]$\\
+trafficvolume2 & proximity thunderstorm with drizzle & $(3259*(1+(-8.3/100)))) = 2988 \in [4131, 7100]$\\
+trafficvolume0 & trafficvolume2 & $(3259*(1+(4131/100)))) = 137888 \in [269, 1880]$\\
+\rowcolor{lightgray} trafficvolume1 & light shower snow & $(3259*(1+(-37.9/100)))) = 2023 \in [1881, 4130]$\\

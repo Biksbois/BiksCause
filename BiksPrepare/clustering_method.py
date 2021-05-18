@@ -135,5 +135,3 @@ if __name__ == '__main__':
     test_x_df = pd.DataFrame(test_x_cluster)
     jdf = get_jenks(test_x_df, 'cl_test', 'cl', 'x')
     print("Cluster: \n{} \n{}.".format(test_x_df['x'],test_x_df['cl_test']))
-    
-
