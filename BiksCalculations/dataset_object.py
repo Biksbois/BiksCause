@@ -23,11 +23,7 @@ class dataset():
         self.hardcoded_cir_m = hardcoded_cir_m
         
         self.cause_dict = {} #self.create_dict(cause_column)
-<<<<<<< HEAD
         self.effect_dict = {} #self.create_dict(effect_column)
-=======
-        self.effect_dict = {}#self.create_dict(effect_column)
->>>>>>> fdbfd02e5679d5573df0b5902acef1e7bfdd3e48
         
         # self.create_dict(cause_column, effect_column)
         # self.identify_pot_parents()

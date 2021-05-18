@@ -39,7 +39,7 @@ class result_matrix():
             self.get_interesting_result("traffic")
             self.interesting_sum = sum(self.get_list_Value(self.interesting_results))
             self.translate_causal_pairs()
-        if 'china' in self.matrix_type:
+        if 'air' in self.matrix_type:
             seasons = ['winter','summer','spring','fall']
             for season in seasons:
                 if season in self.matrix_type:
@@ -54,15 +54,16 @@ class result_matrix():
             self.lamb = int(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
             self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
 
-    def create_label_mapping(self, df):
+    def create_label_mapping(self,df):
         self.lookup_dict = {}
         for i, head in enumerate(self.df.columns.values.tolist()):
             self.lookup_dict[head] = i
 
     def get_Value(self,pair):
         col,idx = pair
-        if self.lookup_dict[idx] != 0 and not math.isnan(float(self.df[col][self.lookup_dict[idx]-1])):
-            return self.df[col][self.lookup_dict[idx]-1]
+        if idx in self.lookup_dict.keys():
+            if self.lookup_dict[idx] != 0 and not math.isnan(float(self.df[col][self.lookup_dict[idx]-1])):
+                return self.df[col][self.lookup_dict[idx]-1]
         return 0
 
     def get_list_Value(self,lst):
@@ -284,15 +285,19 @@ def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
     
     matrixes = load_matrixes(path,score,k=k,window=window,heads=heads)
     for matrix in matrixes:
+        print(matrix.matrix_type)
         matrix.get_interesting_result(effect_cond="PM10")
-    msr= merge_season_results(matrixes)#assumed sorted, but probably is not
-    print(msr[:k])
+    msr= merge_season_results(matrixes,k)#assumed sorted, but probably is not
+    for m in msr:
+        print(m)
 
-def merge_season_results(matrixes):
+def merge_season_results(matrixes,k):
     res = []
     for matrix in matrixes:
-        causal = is_causal()
-        res.append(((matrix.season,(x),matrix.get_Value(x),causal) for x in matrix.interesting_results))
+        for x in matrix.interesting_results[:k]:
+            causal = is_causal()
+            print(matrix.season)
+            res.append((matrix.season,x,matrix.get_Value(x),causal))
     return res
 
 def is_causal():
