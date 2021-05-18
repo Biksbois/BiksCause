@@ -177,15 +177,20 @@ def get_air_datatype_obj():
     cluster_col_names = ['wd_cluster'] + col_names
     baseline_col_names = ['wd'] + col_names
     
-    # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
-    cluster_colums = [('wd', False)]
+    cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
+    # cluster_colums = [('wd', False)]
     
     cause_column = 'PM2.5'
     effect_column = 'PM2.5'
     
     result_path = f"{get_result_path()}/air"
     
-    ds_path = ['input_csv\PRSA_Data_Dongsi_20130301-20170228.csv']
+    ds_path = ['input_csv\PRSA_Data_Dongsi_spring.csv',
+            'input_csv\PRSA_Data_Dongsi_summer.csv', 
+            'input_csv\PRSA_Data_Dongsi_fall.csv', 
+            'input_csv\PRSA_Data_Dongsi_winter.csv']
+    
+    
     
     time_colum = 'time_set'
     temp_csv_path = get_temp_csv_path()

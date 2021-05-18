@@ -3,6 +3,7 @@ from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_averag
 import itertools
 import time
 import pandas as pd
+import datetime
 from experiment_obj import *
 from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
@@ -59,10 +60,29 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
     
     print("\nThe experiments are now successfully done, and the program will exit.")
 
-def call_experiment(e_obj, data_obj, window_size):
+
+def get_exp_type(ds_pat):
+    if 'summer' in ds_pat:
+        return f'{power}_summer'
+    if 'winter' in ds_pat:
+        return f'{power}_winter'
+    if 'fall' in ds_pat:
+        return f'{power}_fall'
+    if 'spring' in ds_pat:
+        return f'{power}_spring'
+    else:
+        print(f"ERROR: no season was in {ds_pat}")
+        return f'{power}'
+
+def call_experiment(e_obj, data_obj, window_size, exp_type):
     for p in range(len(data_obj.ds_path)):
         ds_obj = init_obj_test_trafic(cause_column=data_obj.cause_column, effect_column=data_obj.effect_column, 
                                     ds_path=data_obj.ds_path[p], windows_size=window_size, head_val=e_obj.head_val, time_column=data_obj.time_colum)
+        
+        if exp_type == power:
+            e_obj.exp_type = get_exp_type(data_obj.ds_path[p])
+        
+        # print(f"new path is now: {e_obj.exp_type}")
         
         run_experiments(ds_obj, data_obj.cause_column, data_obj.effect_column, data_obj.ds_path[p], 
                         data_obj.result_path, data_obj.cluster_col_names, data_obj.baseline_col_names, 
@@ -124,14 +144,54 @@ def get_ground_truth():
         'e_2': cluster_class((40,41), ['a_2'], [0.8])
     }
 
-def generate_dataset(years, dataset_count, window_size):
-    
-    for i in range(dataset_count):
-        events = get_ground_truth()
+def get_current_season(dongsi_seasons, m):
+    for s in dongsi_seasons:
+        if m in s[1]:
+            return s[0]
+
+def generate_dataset(years, dataset_count, window_size, exp_type):
+    if exp_type == synthetic:
+        for i in range(dataset_count):
+            events = get_ground_truth()
+            
+            output_path = f'output_csv//generated_data//gen_{i}.csv'
+            
+            initiate_generation(output_path, events, years, window_size)
+    if exp_type == power:
+        dongsi_seasons = [('spring', [3,4,5]), ('summer', [6,7,8]), ('fall', [9,10,11]), ('winter', [12,1,2])]
+        dongsi_dict = {x[0]:([], f"input_csv\PRSA_Data_Dongsi_{x[0]}.csv") for x in dongsi_seasons}
+        pd_dict = {x[0]:pd.read_csv(dongsi_dict[x[0]][1]) for x in dongsi_seasons}
         
-        output_path = f'output_csv//generated_data//gen_{i}.csv'
+        ds_path = 'input_csv\PRSA_Data_Dongsi_20130301-20170228.csv'
+        df = pd.read_csv(ds_path)
+        val_list = df['time_set'].tolist()
+        current_season = ''
+        start = 0
+        end = 0
         
-        initiate_generation(output_path, events, years, window_size)
+        for i in range(len(val_list)):
+            date_time_obj = datetime.datetime.strptime(val_list[i], '%Y-%m-%d %H:%M:%S')
+            m = date_time_obj.month
+            
+            temp_season = get_current_season(dongsi_seasons, m)
+            
+            if current_season == '':
+                current_season = temp_season
+                start = i
+            
+            elif not temp_season == current_season:
+                end = i - 1
+                dongsi_dict[current_season][0].append([start, end])
+                current_season = ''
+        
+        for key in dongsi_dict.keys():
+            for r in dongsi_dict[key][0]:
+                print(type(pd_dict[key]))
+                pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
+        
+        for key in pd_dict.keys():
+            print(pd_dict[key])
+            pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
     if arg in written_args or run_everything in written_args:
@@ -142,6 +202,11 @@ def run_experiment(arg, written_args, run_everything):
 def init_exp_obj(head_val, exp_type, alpha_val, lambda_val, window_size, support, scores):
     return exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
 
+# Parameters for what dataset to use
+traffic = 'traffic'
+synthetic = 'synthetic'
+power = 'air'
+
 if __name__ == '__main__':
     start_time = time.time()
     
@@ -149,10 +214,6 @@ if __name__ == '__main__':
     large = 'large'
     small = 'small'
     
-    # Parameters for what dataset to use
-    traffic = 'traffic'
-    synthetic = 'synthetic'
-    power = 'air'
     
     # Parameters for what to run
     cluster = 'cluster'
@@ -162,7 +223,7 @@ if __name__ == '__main__':
     run_everythin = 'all'
     
     # Parameters for csv size
-    head_val_small = 1000
+    head_val_small = 5
     head_val_large = 50000
     
     # Parameters for CEAS scores
@@ -172,7 +233,6 @@ if __name__ == '__main__':
     
     k_vals = [10, 15, 20, 25]
     extensions = ['cluster', 'no_cluster']
-    
     
     # Parameters for generating dataset
     dataset_count = 100
@@ -200,7 +260,7 @@ if __name__ == '__main__':
         
         if run_experiment(generate, written_args, run_everythin):
             print("\n---\nNew datasets are being generated...\n---\n", flush=True)
-            generate_dataset(years, dataset_count, gen_window_size)
+            generate_dataset(years, dataset_count, gen_window_size, exp_type)
         
         if run_experiment(cluster, written_args, run_everythin):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
@@ -208,7 +268,7 @@ if __name__ == '__main__':
         
         if run_experiment(experiment, written_args, run_everythin):
             print_start(exp_type, head_val, written_args, window_size, lambda_val, alpha_val, support, e_obj.scores)
-            call_experiment(e_obj, data_obj, window_size)
+            call_experiment(e_obj, data_obj, window_size, exp_type)
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
