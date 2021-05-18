@@ -1,3 +1,4 @@
+from BiksPrepare.duration_method import extract_start_end
 import pandas as pd
 import datetime
 import sys
@@ -22,7 +23,11 @@ class dataset():
         self.hardcoded_cir_m = hardcoded_cir_m
         
         self.cause_dict = {} #self.create_dict(cause_column)
+<<<<<<< HEAD
         self.effect_dict = {} #self.create_dict(effect_column)
+=======
+        self.effect_dict = {}#self.create_dict(effect_column)
+>>>>>>> fdbfd02e5679d5573df0b5902acef1e7bfdd3e48
         
         # self.create_dict(cause_column, effect_column)
         # self.identify_pot_parents()
@@ -127,8 +132,13 @@ class dataset():
     
     def keyval_to_dict(self, key, values):
         d = {}
+        
         for i in range(len(key)):
-            d[key[i]] = values[i]
+            try:
+                d[key[i]] = values[i]
+            except Exception as e:
+                print(f"This is the value were the fuck happends: {i}") 
+                print(key)
         return d
     
     def calc_d(self, u):

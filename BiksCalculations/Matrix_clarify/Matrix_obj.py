@@ -8,7 +8,6 @@ from BiksPrepare.synthetic_generator import cluster_class
 
 
 class result_matrix():
-
     def __init__(self, path, mapper_dict, k = 0, matrix_type = 'unspecified', mapper_cat = "", score_type = ""):
         self.df = pd.read_csv (path)
         self.create_label_mapping(self.df)
@@ -21,11 +20,11 @@ class result_matrix():
         self.translated_pairs = []
         self.score_type = score_type
         self.extract_file_config(path)
-        self.k = k;
+        self.k = k
         self.key =""
         self.score = 0
-        if mapper_cat == "traffic":
-            self.mapper_obj = mappers(mapping_cat = mapper_cat)
+        if 'traffic' in self.matrix_type:
+            self.mapper_obj = mappers(mapping_cat = "traffic")
             self.custom_mapper = self.mapper_obj.mapper_dict[mapper_dict]
         self.initialize_lists()
         
@@ -40,6 +39,12 @@ class result_matrix():
             self.get_interesting_result("traffic")
             self.interesting_sum = sum(self.get_list_Value(self.interesting_results))
             self.translate_causal_pairs()
+        if 'china' in self.matrix_type:
+            seasons = ['winter','summer','spring','fall']
+            for season in seasons:
+                if season in self.matrix_type:
+                    self.season = season
+                    break;
 
     def extract_file_config(self, file):
         alpha_regex,lambda_regex,header_regex,window_regex = ('_a\d+_','_l\d+_','_h\d+_','_w\d+_')
@@ -172,7 +177,31 @@ class result_matrix():
         else:
             std_key = self.key
         return std_key+'_k'+str(self.k)+'_'+self.cluster_stat
-
+            
+    def get_calc_ac(self,K,avg = 3259):
+        used_pair = []
+        strings = []
+        for i in range(len(self.interesting_results[:K])):
+            translated_effect = self.translated_pairs[i][0]
+            traffic_range = self.mapper_obj.event_to_value[translated_effect]
+            cause_effect = self.translated_pairs[i][1][:-1]
+            if not (translated_effect, cause_effect) in used_pair:
+                used_pair.append((translated_effect, cause_effect))
+                strings.append(self.get_calc_string(avg, cause_effect, traffic_range,self.interesting_results[i]))
+        return strings
+    
+    def get_calc_string(self,avg,cause_effect,traffic_range,pair):
+        results = []
+        if not isinstance(cause_effect, str):
+            for value in cause_effect:
+                res = avg*(1+(value/100))
+                if (int(res) in range(traffic_range[0], traffic_range[1])):
+                    results.append(f"\\rowcolor{{lightgray}} {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100)))) = {int(res)} \\in {traffic_range}$\\\\")
+                else:
+                    results.append(f"{pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100)))) = {int(res)} \\in {traffic_range}$\\\\")
+                    
+        return results
+        
 def get_csv_files_containing(path, score):
     files = []
     for file in os.listdir(path):
@@ -201,11 +230,21 @@ def calculate_matrixes_causality(matrixs_lst,k):
         matrix.count_actual_causality(k)
 
 def get_at_k_hits(path, k, score,maps, window=None, heads=None):
-    matrixes = load_matrixes(path,score,maps,window=window,heads=heads)
+    matrixes = load_matrixes(path,score,maps = maps,window=window,heads=heads)
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
-    return matrixes[-1].score
+    calcs = matrixes[-1].get_calc_ac(10)
+    save_in_text(calcs,matrixes[-1].generate_matrix_key())
+    return matrixes[-1].score    
 
+def save_in_text(lst, name):
+    textfile = open(f"BiksCalculations\Calculations_for_roni\{name}.txt", "w")
+    print(lst)
+    for element in lst:
+        if(len(element) != 0):
+            textfile.write(element[0] + "\n")
+    textfile.close()
+    
 def group_same_attr_matrixes(matrixes):
     matrix_types = {}
     for matrix in matrixes:
@@ -242,10 +281,22 @@ def run_average_expriment(path, k, score,groundtruth, window=None, heads=None):
     return avg_scores[-1]
 
 def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
+    
     matrixes = load_matrixes(path,score,k=k,window=window,heads=heads)
     for matrix in matrixes:
-        print(matrix.matrix_sorted_list)
+        matrix.get_interesting_result(effect_cond="PM10")
+    msr= merge_season_results(matrixes)#assumed sorted, but probably is not
+    print(msr[:k])
 
+def merge_season_results(matrixes):
+    res = []
+    for matrix in matrixes:
+        causal = is_causal()
+        res.append(((matrix.season,(x),matrix.get_Value(x),causal) for x in matrix.interesting_results))
+    return res
+
+def is_causal():
+    return 1
 
 def save_matrix_results(matrix_result):    
     with open(f'BiksCalculations\synthetic_avg_results\{matrix_result[0]}', 'w') as f:

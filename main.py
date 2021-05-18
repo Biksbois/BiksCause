@@ -1,5 +1,5 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results
 import itertools
 import time
 import pandas as pd
@@ -114,9 +114,9 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         print(full_path)
         for k in k_vals:
             for s in scores:
-                # k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                print(k)
-                print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
+                k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                #print(air_experiment_results(full_path, k, s, get_ground_truth()))
+                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
