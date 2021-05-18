@@ -210,6 +210,8 @@ def get_prob_from_cl_dict(cluster_dict, prev_clust):
         prob_val = [0 for x in range(len(cluster_dict))]
         even_num = 0
         for ind, cause in enumerate(cluster_dict[p_cl[0]].cause):
+            if cause == '':
+                break
             prob_index = list(cluster_dict.keys()).index(cause)
             even_num += cluster_dict[p_cl[0]].prob[ind]
             prob_val[prob_index] = (cluster_dict[p_cl[0]].prob[ind])
@@ -306,10 +308,17 @@ def run():
 
 if __name__ == '__main__':
     input_dict = {
-        'a_0': cluster_class((2,4), ['b_0'], [0.8]),
-        'a_1': cluster_class((7,8), ['b_1'], [0.8]),
-        'b_0': cluster_class((3,4), ['a_1'], [0.8]),
-        'b_1': cluster_class((8,9), ['a_0'], [0.8])
+        'a_0': cluster_class((6,10), ['b_0'], [0.8]),
+        'a_1': cluster_class((30,36), ['b_1'], [0.8]),
+        'a_2': cluster_class((70,75), ['b_1'], [0.8]),
+        'b_0': cluster_class((3,4), ['c_0'], [0.8]),
+        'b_1': cluster_class((10,12), ['c_1'], [0.8]),
+        'b_2': cluster_class((21,23), ['c_2'], [0.8]),
+        'c_0': cluster_class((1,4), ['e_0'], [0.4]),
+        'c_1': cluster_class((15,18), ['d_0'], [0.3,0.4]),
+        'c_2': cluster_class((31,34), ['d_0'], [0.2,0.5]),
+        'd_0': cluster_class((5,12), ['e_0'], [0.3]),
+        'e_0': cluster_class((2,5), [''], [0])
     }
 
     initiate_generation('test.csv',input_dict,365,1)
