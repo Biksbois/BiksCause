@@ -115,8 +115,9 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         for k in k_vals:
             for s in scores:
                 #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                print(k)
-                #air_experiment_results(full_path, k, s, get_ground_truth())
+                # print(f'The Value of k dontes a new eperiment:{k}')
+                # print(s)
+                # air_experiment_results(full_path, k, s, get_ground_truth())
                 print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
@@ -136,10 +137,10 @@ def get_ground_truth():
         'b_0': cluster_class((3,4), ['c_0'], [0.8]),
         'b_1': cluster_class((10,12), ['c_1'], [0.8]),
         'b_2': cluster_class((21,23), ['c_2'], [0.8]),
-        'c_0': cluster_class((1,4), ['e_0'], [0.4]),
-        'c_1': cluster_class((15,18), ['d_0'], [0.3,0.4]),
-        'c_2': cluster_class((31,34), ['d_0'], [0.2,0.5]),
-        'd_0': cluster_class((5,12), ['e_0'], [0.3]),
+        'c_0': cluster_class((1,4), ['e_0'], [0.8]),
+        'c_1': cluster_class((15,18), ['d_0'], [0.8]),
+        'c_2': cluster_class((31,34), ['d_0'], [0.8]),
+        'd_0': cluster_class((5,12), ['e_0'], [0.8]),
         'e_0': cluster_class((2,5), [''], [0])
     }
 
