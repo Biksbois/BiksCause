@@ -106,7 +106,7 @@ def evaluate_gvf(ds_arr, cl_arr):
 
 if __name__ == '__main__':
     test_x_cluster = {
-        'x': [2, 43, 50, 43, 46]
+        'x': [1, 2, 7, 8]
     }
 
     x_cluster = {

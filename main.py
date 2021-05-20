@@ -11,6 +11,7 @@ from BiksCalculations.dataset_object import init_obj_test_trafic
 from main_paths import *
 from BiksCalculations.find_potential_parents import *
 from BiksPrepare.synthetic_generator import initiate_generation, cluster_class
+from BiksPrepare.clustering_evaluation import evaluate_clust_synthetic
 
 def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, *argv):
     if len(sys.argv) >= 2:
@@ -121,26 +122,31 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
-    for ds_path in data_obj.ds_path:
+    
+    for ind, ds_path in enumerate(data_obj.ds_path):
         for c in data_obj.cluster_colums:
             is_number = c[1]
             col_name = c[0]
-            
+            output_path_evaluate = f'output_csv//test_data//gen_{ind}_test.csv'
             run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
+            evaluate_clust_synthetic(ds_path, output_path_evaluate)
 
 def get_ground_truth():
     return {
-        'a_0': cluster_class((6,10), ['b_0'], [0.8]),
-        'a_1': cluster_class((30,36), ['b_1'], [0.8]),
-        'a_2': cluster_class((70,75), ['b_1'], [0.8]),
-        'b_0': cluster_class((3,4), ['c_0'], [0.8]),
-        'b_1': cluster_class((10,12), ['c_1'], [0.8]),
-        'b_2': cluster_class((21,23), ['c_2'], [0.8]),
-        'c_0': cluster_class((1,4), ['e_0'], [0.4]),
-        'c_1': cluster_class((15,18), ['d_0'], [0.3,0.4]),
-        'c_2': cluster_class((31,34), ['d_0'], [0.2,0.5]),
-        'd_0': cluster_class((5,12), ['e_0'], [0.3]),
-        'e_0': cluster_class((2,5), [''], [0])
+        'a_0': cluster_class((1,2), ['b_0'], [0.8]),
+        'a_1': cluster_class((7,8), ['b_1'], [0.8]),
+        'b_0': cluster_class((1,2), ['c_0'], [0.8]),
+        'b_1': cluster_class((7,8), ['c_1'], [0.8]),
+        'c_0': cluster_class((1,2), ['d_1'], [0.8]),
+        'c_1': cluster_class((7,8), ['d_0'], [0.8]),
+        'd_0': cluster_class((1,2), ['e_1'], [0.8]),
+        'd_1': cluster_class((7,8), ['g_0'], [0.8]),
+        'e_0': cluster_class((1,2), ['f_0'], [0.8]),
+        'e_1': cluster_class((7,8), ['f_1'], [0.8]),
+        'f_0': cluster_class((1,2), ['g_0'], [0.8]),
+        'f_1': cluster_class((7,8), ['h_0'], [0.8]),
+        'g_0': cluster_class((1,2), ['h_0'], [0.8]),
+        'h_0': cluster_class((1,2), [''], [0]),
     }
 
 def get_current_season(dongsi_seasons, m):
@@ -154,8 +160,9 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
             events = get_ground_truth()
             
             output_path = f'output_csv//generated_data//gen_{i}.csv'
+            output_path_evaluate = f'output_csv//test_data//gen_{i}_test.csv'
             
-            initiate_generation(output_path, events, years, window_size)
+            initiate_generation(output_path, output_path_evaluate, events, years, window_size)
     if exp_type == power:
         dongsi_seasons = [('spring', [3,4,5]), ('summer', [6,7,8]), ('fall', [9,10,11]), ('winter', [12,1,2])]
         dongsi_dict = {x[0]:([], f"input_csv\PRSA_Data_Dongsi_{x[0]}.csv") for x in dongsi_seasons}
@@ -234,8 +241,8 @@ if __name__ == '__main__':
     extensions = ['cluster', 'no_cluster']
     
     # Parameters for generating dataset
-    dataset_count = 100
-    years = 1000
+    dataset_count = 10
+    years = 365
     gen_window_size = 5
     
     # The scres to calculate

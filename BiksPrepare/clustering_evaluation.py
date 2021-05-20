@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import csv
 import os
-import clustering_method as cm
 
 def scan_directory(path):
     csv_paths = []
@@ -102,7 +101,7 @@ def evaluate_clust_synthetic(path_1, path_2):
         c_1 = csv_1.iloc[[ind]]['events_cluster']
         c_2 = csv_2.iloc[[ind]]['events_cluster']
         if c_1.item() != c_2.item():
-            print('Row: {}, Number of mismatches: {}'.format(ind, mismatch))
+            #print('Row: {}, Number of mismatches: {}'.format(ind, mismatch))
             mismatch += 1
     
     print('Total amount of rows: {}, amount of mismatches: {}'.format(len(csv_1), mismatch))
@@ -113,6 +112,6 @@ def evaluate_clust_synthetic(path_1, path_2):
 
 
 if __name__ == '__main__':
-    path_1 = 'output_csv\generated_data\gen_1.csv'
+    path_1 = 'output_csv\generated_data\gen_0.csv'
     path_2 = 'temp.csv'
     evaluate_clust_synthetic(path_1, path_2)
