@@ -224,7 +224,6 @@ def get_prob_from_cl_dict(cluster_dict, prev_clust):
         prob_arr.append(prob_val)
     return prob_arr
 
-
 def calc_prob_arr(cluster_dict,prev_clust, base_prob):
     cl_prob_arr = get_prob_from_cl_dict(cluster_dict,prev_clust)
     m_p_arr = get_mean_from_prob(cl_prob_arr)
@@ -240,6 +239,8 @@ def cycle_clust(prev_clust, n_clust, win_size):
         prev_clust.append(n_clust)
     return prev_clust
 
+hm = ''
+
 def calculate_next_cluster(cluster_dict,prob_arr,prev_event):
     vals = []
     if prev_event: 
@@ -247,10 +248,12 @@ def calculate_next_cluster(cluster_dict,prob_arr,prev_event):
         for v in vals:
             ind = list(cluster_dict.keys()).index(v)
             prob_arr[ind] = 0
-
+    
+    test = rand.choices(list(cluster_dict.keys()),prob_arr)
+    if prev_event == test:
+        print('sometings fishy')
     return rand.choices(list(cluster_dict.keys()),prob_arr)
     
-
 def calc_ini_prob(size:int):
     return np.full(size, 1/size)
 
@@ -272,7 +275,8 @@ def transform_cl_to_events(c_list, cluster_dict):
     e_list,e_cl_list = [], []
     for c in c_list:
         e_name = c[0].split("_")[0]
-        num_events = cluster_dict[c[0]].size[rand.randint(0,1)]
+        num_events = rand.randint(cluster_dict[c[0]].size[0],cluster_dict[c[0]].size[1])
+        
         for r in range(num_events):
             e_list.append(e_name)
             e_cl_list.append(c[0])
@@ -297,32 +301,34 @@ def generate_rows(cluster_dict, period, win_size):
 def create_csv(df:DataFrame,path:str): 
     df.to_csv(path)
 
-def initiate_generation(output_path:str, cluster_dict:dict, period_days:int, window_size:int):
+def initiate_generation(output_path:str, output_path_test:str, cluster_dict:dict, period_days:int, window_size:int):
     period = int(period_days * 24)
     e_df, c_df = generate_rows(cluster_dict,period,window_size)
     create_csv(e_df,output_path)
-    create_csv(c_df,'temp.csv')
+    create_csv(c_df,output_path_test)
 
 def run():
     pass
 
 if __name__ == '__main__':
     input_dict = {
-        'a_0': cluster_class((6,10), ['b_0'], [0.8]),
-        'a_1': cluster_class((30,36), ['b_1'], [0.8]),
-        'a_2': cluster_class((70,75), ['b_1'], [0.8]),
-        'b_0': cluster_class((3,4), ['c_0'], [0.8]),
-        'b_1': cluster_class((10,12), ['c_1'], [0.8]),
-        'b_2': cluster_class((21,23), ['c_2'], [0.8]),
-        'c_0': cluster_class((1,4), ['e_0'], [0.4]),
-        'c_1': cluster_class((15,18), ['d_0'], [0.3,0.4]),
-        'c_2': cluster_class((31,34), ['d_0'], [0.2,0.5]),
-        'd_0': cluster_class((5,12), ['e_0'], [0.3]),
-        'e_0': cluster_class((2,5), [''], [0])
+        'a_0': cluster_class((1,2), ['b_0'], [0.8]),
+        'a_1': cluster_class((7,8), ['b_1'], [0.8]),
+        'b_0': cluster_class((1,2), ['c_0'], [0.8]),
+        'b_1': cluster_class((7,8), ['c_1'], [0.8]),
+        'c_0': cluster_class((1,2), ['d_1'], [0.8]),
+        'c_1': cluster_class((7,8), ['d_0'], [0.8]),
+        'd_0': cluster_class((1,2), ['e_1'], [0.8]),
+        'd_1': cluster_class((7,8), ['g_0'], [0.8]),
+        'e_0': cluster_class((1,2), ['f_0'], [0.8]),
+        'e_1': cluster_class((7,8), ['f_0'], [0.8]),
+        'f_0': cluster_class((1,2), ['g_0'], [0.8]),
+        'f_1': cluster_class((7,8), ['h_0'], [0.8]),
+        'g_0': cluster_class((1,2), ['h_0'], [0.8]),
+        'h_0': cluster_class((1,2), [''], [0]),
     }
-
+    
     initiate_generation('test.csv',input_dict,365,1)
-
     # events = {'a': [['a',0],['b',0.5],['c',0]],
     #           'b': [['a',0],['b',0],['c',0.5]],
     #           'c': [['a',0.5],['b',0],['c',0]]}

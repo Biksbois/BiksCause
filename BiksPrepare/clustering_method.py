@@ -65,6 +65,14 @@ def get_jenks(df, cl_col_name, cl_label_name, col_name, min_gvf = 0.9):
         nclasses += 1 
     return df       
 
+def get_specific_jenks(df, cl_col_name, cl_label_name, col_name, nclasses):
+    try:
+        df[cl_col_name] = apply_jenks(df, col_name, cl_label_name, nclasses)
+    except:
+        print('Error in the amount of clusters specified')
+    return df
+
+
 # def check_length(df, col_name, min_size = 2):
 #     if df.groupby([col_name]).sum() > min_size:
 #         return true
@@ -82,7 +90,12 @@ def check_df(df, cl_col_name, cl_label_name, col_name):
     if check_difference(df, col_name):
         df = add_to_clust(df, cl_col_name, cl_label_name, col_name)
     return df
-    
+
+def create_specific_cluster(df, path, col_name, cl_col_name, cl_label_name, cluster_amount):
+    jdf = get_specific_jenks(df, cl_col_name, cl_label_name, col_name, cluster_amount)
+    jdf.to_csv(path)
+
+
 def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
     df = check_df(df, cl_col_name, cl_label_name, col_name)
     jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
@@ -93,7 +106,7 @@ def evaluate_gvf(ds_arr, cl_arr):
 
 if __name__ == '__main__':
     test_x_cluster = {
-        'x': [2, 43, 50, 43, 46]
+        'x': [1, 2, 7, 8]
     }
 
     x_cluster = {
@@ -134,4 +147,5 @@ if __name__ == '__main__':
 
     test_x_df = pd.DataFrame(test_x_cluster)
     jdf = get_jenks(test_x_df, 'cl_test', 'cl', 'x')
+    spcfjdf = create_specific_cluster(test_x_df, 'test.csv', 'x', 'cl_test', 'cl', 2)
     print("Cluster: \n{} \n{}.".format(test_x_df['x'],test_x_df['cl_test']))
