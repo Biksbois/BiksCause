@@ -123,7 +123,6 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
-    
     for ind, ds_path in enumerate(data_obj.ds_path):
         for c in data_obj.cluster_colums:
             is_number = c[1]
@@ -193,11 +192,11 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
         
         for key in dongsi_dict.keys():
             for r in dongsi_dict[key][0]:
-                print(type(pd_dict[key]))
+                # print(type(pd_dict[key]))
                 pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
         
         for key in pd_dict.keys():
-            print(pd_dict[key])
+            # print(pd_dict[key])
             pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
