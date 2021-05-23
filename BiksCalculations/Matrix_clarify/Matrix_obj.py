@@ -295,7 +295,7 @@ def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
     return count_air_cause(result_matrixes)
 
 def get_seasons_average():
-    
+    pass
 
 def count_air_cause(matrixes):
     res=0

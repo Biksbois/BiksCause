@@ -44,7 +44,7 @@ def apply_jenks(df, col_name, cl_label_name, cl_num):
 
 def get_jenks(df, cl_col_name, cl_label_name, col_name, min_gvf = 0.9):
     gvf_score = 0
-    nclasses = 2    
+    nclasses = 3  
 
     # df[cl_col_name] = apply_jenks(df, col_name, 2)
     # ds_arr = np.asarray(df[col_name])
