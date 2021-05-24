@@ -1,5 +1,5 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results ,refactored_air_experiment
 import itertools
 import time
 import pandas as pd
@@ -118,7 +118,8 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
                 #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
                 # print(f'The Value of k dontes a new eperiment:{k}')
                 # print(s)
-                air_experiment_results(full_path, k, s, get_ground_truth())
+                #air_experiment_results(full_path, k, s, get_ground_truth())
+                refactored_air_experiment(full_path, k, s, get_ground_truth())
                 #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 

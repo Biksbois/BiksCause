@@ -298,31 +298,69 @@ def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
 def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
     matrixes = load_matrixes(path,score,k=k,window=window,heads=heads)
     grouped_matrixes = group_matrixes(matrixes)
-    grouped_result_matrixes = calculate_group_causality(grouped_matrixes)
-    
-def calculate_group_causality(groups):
-    for key in groups.keys():
-        groups[key] = calcualte_matrix_causalty(groups[key])
+    grouped_result_matrixes = calculate_group_causality(grouped_matrixes,k)
+    result_list = merge_result_matrixes(grouped_result_matrixes)
+    print(count_causal_in_k(result_list,k))
 
-def calcualte_matrix_causalty(matrix, k):
-    season = matrix.season
-    for element in matrix.interesting_results[:k]
-        if is_air_causal(season, element):
-            matrix.comprehension_list.append(element)#add tuple containing truth and season, and pair
+def count_causal_in_k(lst, k):
+    print(lst[1][0])
+    for element in lst[0][1][:k]:
+        if element[0][1]:
+            print(element)
+        
+
+def merge_result_matrixes(groups):
+    Matrix_results = []
+    for key in groups.keys():
+        Matrix_results.append((key,merge_lists(groups[key])))
+    return Matrix_results
+            
+def merge_lists(group):
+    res = []
+    for member in group:
+        for element in member.comprehension_list:
+            res.append((element,member.get_Value(element[0]),member.season))
+    res = sorted(res, key=lambda x: x[1])
+    res.reverse()
+    return res
+
+def calculate_group_causality(groups,k):
+    for key in groups.keys():
+        groups[key] = calcualte_matrix_causalty(groups[key],k)
+    return groups
+
+def calcualte_matrix_causalty(matrix_group, k):
+    return_matrixes = []
+    for matrix in matrix_group:
+        season = matrix.season
+        print(season)
+        #matrix.interesting_results.reverse()
+        # for m in matrix.interesting_results:
+        #     print(matrix.get_Value(m))
+        for element in matrix.interesting_results[:k]:
+            if is_air_causal(season, element):
+                matrix.comprehension_list.append((element,True))#add tuple containing truth and season, and pair
+            else:
+                matrix.comprehension_list.append((element,False))
+        return_matrixes.append(matrix)
+    return return_matrixes
             
 def is_air_causal(season, pair):
     avg_PM10 = get_season_avg(season)
     coefficient = get_season_coefficient(season,pair[1])
     PM = get_PM_range(pair[0])
     if int(avg_PM10*(1+coefficient)) in PM:
-        pass
+        return True
+    else:
+        return False
     
 def get_PM_range(PM):
     PM_mapping = {
-        'PM10_0': range(1,2),
-        'PM10_1': range(1,2),
-        'PM10_2': range(1,2)
+        'PM10_0': range(6,103),
+        'PM10_1': range(105,250),
+        'PM10_2': range(261,304)
     }
+    return PM_mapping[PM]
     
 def group_matrixes(matrixes):
     hyper_dict = {}
@@ -353,14 +391,14 @@ def get_season_coefficient(season, weather):
             'DEWP':0.53,
             'WSPM':-0.45,
             },
-        'spring:':  {
+        'spring':  {
             'TEMP':0.45,
             'PRES':-0.45,
             'DEWP':0.13,
             'WSPM':-0.18,
             }
     }
-    return season_weather_dict[season][weather]
+    return season_weather_dict[season][remove_cluster_notation(remove_cluster_notation(weather))]
     
     
 
