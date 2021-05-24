@@ -228,7 +228,7 @@ if __name__ == '__main__':
     extensions = ['cluster', 'no_cluster']
     
     # Parameters for generating dataset
-    dataset_count = 3
+    dataset_count = 100
     years = 1000
     gen_window_size = 5
     
