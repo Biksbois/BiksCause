@@ -1,7 +1,7 @@
 # BiksCause
 
-This Git is based on the Batchlor project *'Inferring causal relationships from temporal events'* about how the notion of duration can be used to find causality.
-This peoject is made by Roni Horo, Mads H. Kusk, Jeppe J. Holt and Bjarke S. Baltzersen, all currently studying Computer Science at Aalborg University.
+This Git contains the code from the paper *'Inferring causal relationships from temporal events'*.
+Authors: Roni Horo, Mads H. Kusk, Jeppe J. Holt and Bjarke S. Baltzersen, all currently studying Computer Science at Aalborg University.
 
 When executiong this program, certain dependecies are required, and can be found in the `requirements.txt` file, but can also be seen here. They are as follows:
 
