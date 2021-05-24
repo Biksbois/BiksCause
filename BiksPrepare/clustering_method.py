@@ -1,5 +1,7 @@
+from copy import deepcopy
 import jenkspy as jpy
 import numpy as np
+from numpy.lib.shape_base import split
 import pandas as pd
 
 def optimize_gvf_score():
@@ -44,7 +46,7 @@ def apply_jenks(df, col_name, cl_label_name, cl_num):
 
 def get_jenks(df, cl_col_name, cl_label_name, col_name, min_gvf = 0.9):
     gvf_score = 0
-    nclasses = 3  
+    nclasses = 2  
 
     # df[cl_col_name] = apply_jenks(df, col_name, 2)
     # ds_arr = np.asarray(df[col_name])
@@ -95,18 +97,78 @@ def create_specific_cluster(df, path, col_name, cl_col_name, cl_label_name, clus
     jdf = get_specific_jenks(df, cl_col_name, cl_label_name, col_name, cluster_amount)
     jdf.to_csv(path)
 
+def split_arr_arbitary(df_arr, cl_arr, full_arr, clusters, min_score = 0.9):
+    prev = ''
+    gvf = 0
+    if clusters-1 != 0:
+        for index in range(len(df_arr)):
+            if not df_arr[index] == prev and len(df_arr[:index]) != 0:
+                cl_arr[clusters-1] = df_arr[:index]
+                t_arr = split_arr_arbitary(df_arr[index:], cl_arr, full_arr, clusters-1)
+                if t_arr[1] > min_score:
+                    return t_arr
+            prev = df_arr[index]
+    else: 
+        cl_arr[clusters-1] = df_arr
+        gvf = calc_gvf(full_arr, cl_arr)
+        if min_score < gvf:
+            return cl_arr, gvf
+    return 0, 0
+    
+def itterate_array(df_arr, n_clusters, min_score = 0.9):
+    gvf = 0
+    df_obj = ()
+    cl_arr = [0] * n_clusters
+    full_arr = deepcopy(df_arr)
+    while len(list(set(df_arr))) >= n_clusters and gvf < min_score:
+        df_arr = deepcopy(df_arr)
+        cl_arr = deepcopy([0] * n_clusters)
+        full_arr = deepcopy(df_arr)
+        df_obj = split_arr_arbitary(df_arr, cl_arr, full_arr, n_clusters, min_score)
+        gvf = df_obj[1]
+        n_clusters += 1
+    return df_obj[0], n_clusters
 
-def create_cluster(df, path, col_name, cl_col_name, cl_label_name):
-    df = check_df(df, cl_col_name, cl_label_name, col_name)
-    jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
+
+def attach_labels(cl_arr,labels):
+    cl_arr = list(reversed(cl_arr))
+    cl_dict = {}
+    for ind in range(len(cl_arr)):
+        cl_dict[labels[ind]] = cl_arr[ind]
+    return cl_dict
+
+def add_values_to_df(df,label_dict, col_name, cl_col_name):
+    for key in label_dict:
+        for value in label_dict[key]:
+            df.loc[df[col_name] == value, cl_col_name] = key
+    return df
+    
+def add_clusters(df, cl_tupple, col_name, cl_col_name, cl_label_name):
+    labels = create_labels(cl_label_name,cl_tupple[1])
+    label_dict = attach_labels(cl_tupple[0],labels)
+    return add_values_to_df(df, label_dict, col_name, cl_col_name)
+
+def improved_jenks(df, path, col_name, cl_col_name, cl_label_name, cl_num):
+    df_arr = np.sort(np.asarray(df[col_name]))
+    cl_tupple = itterate_array(df_arr, cl_num)
+    jdf = add_clusters(df, cl_tupple, col_name, cl_col_name, cl_label_name)
     jdf.to_csv(path)
+
+def create_cluster(df, path, col_name, cl_col_name, cl_label_name, cl_num = 2):
+    improved_jenks(df, path, col_name, cl_col_name, cl_label_name, cl_num)
+
+    # df = check_df(df, cl_col_name, cl_label_name, col_name)
+    # jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
+    # jdf.to_csv(path)
 
 def evaluate_gvf(ds_arr, cl_arr):
     return calc_gvf(ds_arr, cl_arr)
 
 if __name__ == '__main__':
     test_x_cluster = {
-        'x': [1, 2, 7, 8]
+        'x': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+ 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+ 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
     }
 
     x_cluster = {
@@ -121,31 +183,6 @@ if __name__ == '__main__':
         'z': [38, 47, 52, 24, 59, 6, 15]
     }
 
-    x_df = pd.DataFrame(x_cluster)
-    y_df = pd.DataFrame(y_cluster)
-    z_df = pd.DataFrame(z_cluster)
-
-    x_df['x_cl'] = apply_jenks(x_df, 'x', 'x_cl', 3)
-    y_df['y_cl'] = apply_jenks(y_df, 'y', 'y_cl', 3)
-    z_df['z_cl'] = apply_jenks(z_df, 'z', 'z_cl', 3)
-
-    x_ds_arr = np.asarray(x_df['x'])
-    y_ds_arr = np.asarray(y_df['y'])
-    z_ds_arr = np.asarray(z_df['z'])
-
-    x_cl_arr = create_cl_arrays(x_df, 'x', 'x_cl')
-    y_cl_arr = create_cl_arrays(y_df, 'y', 'y_cl')
-    z_cl_arr = create_cl_arrays(z_df, 'z', 'z_cl')
-
-    x_gvf = calc_gvf(x_ds_arr, x_cl_arr)
-    y_gvf = calc_gvf(y_ds_arr, y_cl_arr)
-    z_gvf = calc_gvf(z_ds_arr, z_cl_arr)
-
-    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(x_df['x'],x_df['x_cl'],x_gvf))
-    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(y_df['y'],y_df['y_cl'],y_gvf))
-    print("X_Cluster: \n{} \n{}, the GVF score equals {}.".format(z_df['z'],z_df['z_cl'],z_gvf))
-
     test_x_df = pd.DataFrame(test_x_cluster)
-    jdf = get_jenks(test_x_df, 'cl_test', 'cl', 'x')
-    spcfjdf = create_specific_cluster(test_x_df, 'test.csv', 'x', 'cl_test', 'cl', 2)
-    print("Cluster: \n{} \n{}.".format(test_x_df['x'],test_x_df['cl_test']))
+
+    ijenks = create_cluster(test_x_df, 'test.csv', 'x', 'cl_test', 'cl', 2)

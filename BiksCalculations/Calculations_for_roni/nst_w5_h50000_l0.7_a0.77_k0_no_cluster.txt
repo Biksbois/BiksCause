@@ -1,6 +1,0 @@
-\rowcolor{lightgray} trafficvolume1 & thunderstorm with light rain & $(3259*(1+(-8.3/100)))) = 2988 \in [1881, 4130]$\\
-trafficvolume0 & heavy intensity drizzle & $(3259*(1+(12.1/100)))) = 3653 \in [269, 1880]$\\
-trafficvolume0 & proximity thunderstorm with rain & $(3259*(1+(-8.3/100)))) = 2988 \in [269, 1880]$\\
-trafficvolume2 & proximity shower rain & $(3259*(1+(12.1/100)))) = 3653 \in [4131, 7100]$\\
-trafficvolume2 & thunderstorm with light rain & $(3259*(1+(-8.3/100)))) = 2988 \in [4131, 7100]$\\
-\rowcolor{lightgray} trafficvolume1 & heavy intensity drizzle & $(3259*(1+(12.1/100)))) = 3653 \in [1881, 4130]$\\
