@@ -59,7 +59,6 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
     
     print("\nThe experiments are now successfully done, and the program will exit.")
 
-
 def get_exp_type(ds_pat):
     if 'summer' in ds_pat:
         return f'{power}_summer'
@@ -85,15 +84,6 @@ def call_experiment(e_obj, data_obj, window_size, exp_type):
                         data_obj.result_path, data_obj.cluster_col_names, data_obj.baseline_col_names, 
                         e_obj, window_size, p, hardcoded_cir_m=data_obj.hardcoded_cir_m)
 
-def test_cluster():
-    pass
-
-def print_not_implemented(message):
-    print(f"\n\n---{message}, this feature has not been implemented yet.\n---\n")
-
-def large_medical_experiment(cluster_col, baseline_col, e_obj, window_size):
-    pass
-
 def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val, support, scores):
     print(f"---\nThe experiment with the following input will now run:" + 
             f"\n  - type: {exp_name}\n  - size: {head_val}\n  - {exp_type}\n" + 
@@ -109,23 +99,26 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         print(full_path)
         for k in k_vals:
             for s in scores:
-                #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                # print(f'The Value of k dontes a new eperiment:{k}')
-                # print(s)
-                #air_experiment_results(full_path, k, s, get_ground_truth())
                 refactored_air_experiment(full_path, k, s, get_ground_truth())
-                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
-                # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
+
+def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
+    is_number = c[1]
+    col_name = c[0]
+    
+    run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
+    
+    if e_obj.exp_type == synthetic:
+        output_path_evaluate = f'output_csv//test_data//gen_{ind}_test.csv'
+        evaluate_clust_synthetic(ds_path, output_path_evaluate)
 
 def call_cluster(e_obj, data_obj):
-    for ind, ds_path in enumerate(data_obj.ds_path):
-        print(ds_path)
-        for c in data_obj.cluster_colums:
-            is_number = c[1]
-            col_name = c[0]
-            output_path_evaluate = f'output_csv//test_data//gen_{ind}_test.csv'
-            run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
-            evaluate_clust_synthetic(ds_path, output_path_evaluate)
+    if len(data_obj.ds_path) == 0:
+        print("\n\n---\WARNING: No clusters could be generated, as there is not paths to generate from.\n---\n\n")
+    else:    
+        for ind, ds_path in enumerate(data_obj.ds_path):
+            for c in data_obj.cluster_colums:
+                cluster_one_file(c, ds_path, data_obj, e_obj, ind)
+
 
 def get_ground_truth():
     return {
@@ -215,7 +208,6 @@ if __name__ == '__main__':
     large = 'large'
     small = 'small'
     
-    
     # Parameters for what to run
     cluster = 'cluster'
     experiment = 'experiment'
@@ -236,7 +228,7 @@ if __name__ == '__main__':
     extensions = ['cluster', 'no_cluster']
     
     # Parameters for generating dataset
-    dataset_count = 100
+    dataset_count = 3
     years = 1000
     gen_window_size = 5
     
@@ -245,7 +237,6 @@ if __name__ == '__main__':
 
     # How to group the scores when finding best result
     scores_short = ['cir_c', 'cir_b', 'nst']
-    
     
     support = 10
     
