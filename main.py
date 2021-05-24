@@ -31,8 +31,6 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, pow
         if traffic in sys.argv[1:]:
             exp_type = traffic
         
-        # is_traffic = not test in str(sys.argv[1:])
-        
         written_args = [x for x in sys.argv[1:] if x in argv]
         
         return exp_type, head_val, written_args
@@ -61,7 +59,6 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
     
     print("\nThe experiments are now successfully done, and the program will exit.")
 
-
 def get_exp_type(ds_pat):
     if 'summer' in ds_pat:
         return f'{power}_summer'
@@ -83,20 +80,9 @@ def call_experiment(e_obj, data_obj, window_size, exp_type):
         if exp_type == power:
             e_obj.exp_type = get_exp_type(data_obj.ds_path[p])
         
-        # print(f"new path is now: {e_obj.exp_type}")
-        
         run_experiments(ds_obj, data_obj.cause_column, data_obj.effect_column, data_obj.ds_path[p], 
                         data_obj.result_path, data_obj.cluster_col_names, data_obj.baseline_col_names, 
                         e_obj, window_size, p, hardcoded_cir_m=data_obj.hardcoded_cir_m)
-
-def test_cluster():
-    pass
-
-def print_not_implemented(message):
-    print(f"\n\n---{message}, this feature has not been implemented yet.\n---\n")
-
-def large_medical_experiment(cluster_col, baseline_col, e_obj, window_size):
-    pass
 
 def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val, support, scores):
     print(f"---\nThe experiment with the following input will now run:" + 
@@ -108,31 +94,31 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
         print(f"    - {s}")
 
 def print_scores(scores, window_size, head_val, result_path, k_vals, extensions):
-    # extensions = ['cluster', 'no_cluster']
-    
     for e in extensions:
         full_path = f"{result_path}\\{e}"
         print(full_path)
         for k in k_vals:
             for s in scores:
-                if 'cir_m' in s:
-                    print(get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val]))
-                # print(f'The Value of k dontes a new eperiment:{k}')
-                # print(s)
-                #generate_air_tables()
-                #exit()
-                #refactored_air_experiment(full_path, k, s, get_ground_truth())
-                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
-                # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
+                refactored_air_experiment(full_path, k, s, get_ground_truth())
+
+def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
+    is_number = c[1]
+    col_name = c[0]
+    
+    run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
+    
+    if e_obj.exp_type == synthetic:
+        output_path_evaluate = f'output_csv//test_data//gen_{ind}_test.csv'
+        evaluate_clust_synthetic(ds_path, output_path_evaluate)
 
 def call_cluster(e_obj, data_obj):
-    for ind, ds_path in enumerate(data_obj.ds_path):
-        for c in data_obj.cluster_colums:
-            is_number = c[1]
-            col_name = c[0]
-            output_path_evaluate = f'output_csv//test_data//gen_{ind}_test.csv'
-            run_cluster(ds_path, col_name, is_number, data_obj.time_colum, data_obj.temp_csv_path)
-            evaluate_clust_synthetic(ds_path, output_path_evaluate)
+    if len(data_obj.ds_path) == 0:
+        print("\n\n---\WARNING: No clusters could be generated, as there is not paths to generate from.\n---\n\n")
+    else:    
+        for ind, ds_path in enumerate(data_obj.ds_path):
+            for c in data_obj.cluster_colums:
+                cluster_one_file(c, ds_path, data_obj, e_obj, ind)
+
 
 def get_ground_truth():
     return {
@@ -166,6 +152,7 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
             output_path_evaluate = f'output_csv//test_data//gen_{i}_test.csv'
             
             initiate_generation(output_path, output_path_evaluate, events, years, window_size)
+    
     if exp_type == power:
         dongsi_seasons = [('spring', [3,4,5]), ('summer', [6,7,8]), ('fall', [9,10,11]), ('winter', [12,1,2])]
         dongsi_dict = {x[0]:([], f"input_csv\PRSA_Data_Dongsi_{x[0]}.csv") for x in dongsi_seasons}
@@ -195,11 +182,9 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
         
         for key in dongsi_dict.keys():
             for r in dongsi_dict[key][0]:
-                # print(type(pd_dict[key]))
                 pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
         
         for key in pd_dict.keys():
-            # print(pd_dict[key])
             pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
@@ -223,7 +208,6 @@ if __name__ == '__main__':
     large = 'large'
     small = 'small'
     
-    
     # Parameters for what to run
     cluster = 'cluster'
     experiment = 'experiment'
@@ -232,7 +216,7 @@ if __name__ == '__main__':
     run_everythin = 'all'
     
     # Parameters for csv size
-    head_val_small = 5
+    head_val_small = 1000
     head_val_large = 50000
     
     # Parameters for CEAS scores
@@ -244,7 +228,7 @@ if __name__ == '__main__':
     extensions = ['cluster', 'no_cluster']
     
     # Parameters for generating dataset
-    dataset_count = 100
+    dataset_count = 3
     years = 1000
     gen_window_size = 5
     
@@ -253,7 +237,6 @@ if __name__ == '__main__':
 
     # How to group the scores when finding best result
     scores_short = ['cir_c', 'cir_b', 'nst', 'cir_m_avg', 'cir_m_max', 'cir_m_min']
-    
     
     support = 10
     
@@ -273,6 +256,7 @@ if __name__ == '__main__':
         
         if run_experiment(cluster, written_args, run_everythin):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
+            data_obj = get_datatype(exp_type)
             call_cluster(e_obj, data_obj)
         
         if run_experiment(experiment, written_args, run_everythin):
@@ -282,7 +266,6 @@ if __name__ == '__main__':
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
             print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
-    
     
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))
