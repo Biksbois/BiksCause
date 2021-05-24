@@ -1,5 +1,5 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results ,refactored_air_experiment
 import itertools
 import time
 import pandas as pd
@@ -116,13 +116,14 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         for k in k_vals:
             for s in scores:
                 #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                print(k)
+                # print(f'The Value of k dontes a new eperiment:{k}')
+                # print(s)
                 #air_experiment_results(full_path, k, s, get_ground_truth())
-                print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
+                refactored_air_experiment(full_path, k, s, get_ground_truth())
+                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
-    
     for ind, ds_path in enumerate(data_obj.ds_path):
         for c in data_obj.cluster_colums:
             is_number = c[1]
@@ -192,11 +193,11 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
         
         for key in dongsi_dict.keys():
             for r in dongsi_dict[key][0]:
-                print(type(pd_dict[key]))
+                # print(type(pd_dict[key]))
                 pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
         
         for key in pd_dict.keys():
-            print(pd_dict[key])
+            # print(pd_dict[key])
             pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
@@ -241,8 +242,8 @@ if __name__ == '__main__':
     extensions = ['cluster', 'no_cluster']
     
     # Parameters for generating dataset
-    dataset_count = 10
-    years = 365
+    dataset_count = 100
+    years = 1000
     gen_window_size = 5
     
     # The scres to calculate

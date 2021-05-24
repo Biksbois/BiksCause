@@ -171,26 +171,27 @@ def get_air_datatype_obj():
             
         }}
     
-    col_names = ['PM2.5_cluster', 'PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'WSPM_cluster']
+    col_names = ['PM10_cluster']
     # col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
     
-    cluster_col_names = ['wd_cluster'] + col_names
-    baseline_col_names = ['wd'] + col_names
+    cluster_col_names = ['TEMP_cluster_cluster', 'PRES_cluster_cluster', 'DEWP_cluster_cluster', 'WSPM_cluster_cluster'] + col_names
+    baseline_col_names = ['TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'WSPM_cluster'] + col_names
     
-    cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
-    # cluster_colums = [('wd', False)]
+    # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
+    # cluster_colums = [('TEMP_cluster', False), ('PRES_cluster', False), ('DEWP_cluster', False),('RAIN_cluster', False),('WSPM_cluster', False)]
+    cluster_colums = [('PM10_cluster', False)]#, ('TEMP_cluster', False)]#, ('PRES_cluster', False), ('DEWP_cluster', False),('RAIN_cluster', False),('WSPM_cluster', False)]
     
     cause_column = 'PM2.5'
     effect_column = 'PM2.5'
     
     result_path = f"{get_result_path()}/air"
     
-    ds_path = ['input_csv\PRSA_Data_Dongsi_spring.csv',
-            'input_csv\PRSA_Data_Dongsi_summer.csv', 
-            'input_csv\PRSA_Data_Dongsi_fall.csv', 
-            'input_csv\PRSA_Data_Dongsi_winter.csv']
+    # ds_path = ['input_csv\PRSA_Data_Dongsi_spring.csv',
+    #         'input_csv\PRSA_Data_Dongsi_summer.csv', 
+    #         'input_csv\PRSA_Data_Dongsi_fall.csv', 
+    #         'input_csv\PRSA_Data_Dongsi_winter.csv']
     
-    
+    ds_path = ['input_csv\PRSA_Data_Dongsi_20130301-20170228.csv']
     
     time_colum = 'time_set'
     temp_csv_path = get_temp_csv_path()

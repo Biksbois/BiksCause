@@ -130,7 +130,7 @@ class dataset():
         d = {}
         
         for i in range(len(key)):
-            try:
+            try:                                
                 d[key[i]] = values[i]
             except Exception as e:
                 print(f"This is the value were the fuck happends: {i}") 

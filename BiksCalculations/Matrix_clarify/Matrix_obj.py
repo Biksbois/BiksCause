@@ -18,6 +18,7 @@ class result_matrix():
         self.interesting_results = []
         self.interesting_sum = []
         self.translated_pairs = []
+        self.comprehension_list = []
         self.score_type = score_type
         self.extract_file_config(path)
         self.k = k
@@ -150,10 +151,9 @@ class result_matrix():
     
     def Count_causal_pair_from_groundtruth(self, groundtruth, k=10):
         counter = 0
+        self.matrix_sorted_list.reverse()
         found = self.matrix_sorted_list[:k]
         truths = self.Convert_ground_truth(groundtruth)
-        #print(f"There are {len(truths)} ground truths")
-
         if self.cluster_stat == "no_cluster":
             found = list(set(self.translate_to_non_cluster(found)))
             truths = list(set(self.translate_to_non_cluster(truths)))
@@ -161,13 +161,6 @@ class result_matrix():
             if truth in found:
                 counter += 1
         self.score = counter
-
-        # print(self.matrix_sorted_list[:1])
-        # print("___________________")
-        # print(f"{self.matrix_type}")
-        # print(f"result: {counter}")
-        # print(f"groundtruths: {truths}")
-        # print(f"found: {found}")
         
     def generate_matrix_key(self):
         if self.key == "":
@@ -234,13 +227,12 @@ def get_at_k_hits(path, k, score,maps, window=None, heads=None):
     matrixes = load_matrixes(path,score,maps = maps,window=window,heads=heads)
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
-    calcs = matrixes[-1].get_calc_ac(10)
+    calcs = matrixes[-1].get_calc_ac(k)
     save_in_text(calcs,matrixes[-1].generate_matrix_key())
     return matrixes[-1].score    
 
 def save_in_text(lst, name):
     textfile = open(f"BiksCalculations\Calculations_for_roni\{name}.txt", "w")
-    print(lst)
     for element in lst:
         if(len(element) != 0):
             textfile.write(element[0] + "\n")
@@ -258,7 +250,7 @@ def comp_matrix_score(matrix_types, k, groundtruth):
     results = []
     for types in matrix_types.keys():
         avg,scores = avg_scores_matrix_list(matrix_types[types],groundtruth, k=k)
-        results.append((types,avg, scores))
+        results.append((types, avg, scores))
     return results
 
 def avg_scores_matrix_list(matrixes, groundtruth, k = 10):
@@ -282,33 +274,218 @@ def run_average_expriment(path, k, score,groundtruth, window=None, heads=None):
     return avg_scores[-1]
 
 def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
-    
+    hyper_dict = {}
+    merged_matrixes = []
+    result_matrixes = []
     matrixes = load_matrixes(path,score,k=k,window=window,heads=heads)
     for matrix in matrixes:
-        print(matrix.matrix_type)
+        if matrix.generate_matrix_key() not in hyper_dict.keys():
+            hyper_dict[matrix.generate_matrix_key()] = []
         matrix.get_interesting_result(effect_cond="PM10")
-    msr= merge_season_results(matrixes,k)#assumed sorted, but probably is not
-    for m in msr:
-        print(m)
+        hyper_dict[matrix.generate_matrix_key()].append(matrix) 
+    for key in hyper_dict.keys():
+        merged_matrixes.append(merge_season_results(hyper_dict[key],k,key))
+    for matrix in merged_matrixes:
+        result_matrixes.append(sorted(matrix, key=lambda x: x[2]))
+    for m in result_matrixes:
+        m.reverse()
+        #print(m[:k])
+        #print(count_air_cause(m[:k]))
+    print(get_seasons_average())
+    exit()
+    return count_air_cause(result_matrixes)
 
-def merge_season_results(matrixes,k):
+def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
+    matrixes = load_matrixes(path,score,k=k,window=window,heads=heads)
+    grouped_matrixes = group_matrixes(matrixes)
+    grouped_result_matrixes = calculate_group_causality(grouped_matrixes,k)
+    result_list = merge_result_matrixes(grouped_result_matrixes)
+    print(count_causal_in_k(result_list,k))
+
+def count_causal_in_k(lst, k):
+    print(lst[1][0])
+    for element in lst[0][1][:k]:
+        if element[0][1]:
+            print(element)
+        
+
+def merge_result_matrixes(groups):
+    Matrix_results = []
+    for key in groups.keys():
+        Matrix_results.append((key,merge_lists(groups[key])))
+    return Matrix_results
+            
+def merge_lists(group):
     res = []
-    for matrix in matrixes:
-        for x in matrix.interesting_results[:k]:
-            causal = is_causal()
-            print(matrix.season)
-            res.append((matrix.season,x,matrix.get_Value(x),causal))
+    for member in group:
+        for element in member.comprehension_list:
+            res.append((element,member.get_Value(element[0]),member.season))
+    res = sorted(res, key=lambda x: x[1])
+    res.reverse()
     return res
 
-def is_causal():
-    return 1
+def calculate_group_causality(groups,k):
+    for key in groups.keys():
+        groups[key] = calcualte_matrix_causalty(groups[key],k)
+    return groups
 
-def save_matrix_results(matrix_result):    
-    with open(f'BiksCalculations\synthetic_avg_results\{matrix_result[0]}', 'w') as f:
+def calcualte_matrix_causalty(matrix_group, k):
+    return_matrixes = []
+    for matrix in matrix_group:
+        season = matrix.season
+        print(season)
+        #matrix.interesting_results.reverse()
+        # for m in matrix.interesting_results:
+        #     print(matrix.get_Value(m))
+        for element in matrix.interesting_results[:k]:
+            if is_air_causal(season, element):
+                matrix.comprehension_list.append((element,True))#add tuple containing truth and season, and pair
+            else:
+                matrix.comprehension_list.append((element,False))
+        return_matrixes.append(matrix)
+    return return_matrixes
+            
+def is_air_causal(season, pair):
+    avg_PM10 = get_season_avg(season)
+    coefficient = get_season_coefficient(season,pair[1])
+    PM = get_PM_range(pair[0])
+    if int(avg_PM10*(1+coefficient)) in PM:
+        return True
+    else:
+        return False
+    
+def get_PM_range(PM):
+    PM_mapping = {
+        'PM10_0': range(6,103),
+        'PM10_1': range(105,250),
+        'PM10_2': range(261,304)
+    }
+    return PM_mapping[PM]
+    
+def group_matrixes(matrixes):
+    hyper_dict = {}
+    for matrix in matrixes:
+        if matrix.generate_matrix_key() not in hyper_dict.keys():
+            hyper_dict[matrix.generate_matrix_key()] = []
+        matrix.get_interesting_result(effect_cond="PM10")
+        hyper_dict[matrix.generate_matrix_key()].append(matrix) 
+    return hyper_dict
+
+def get_season_coefficient(season, weather):
+    season_weather_dict = {
+        'summer': {
+            'TEMP':0.40,
+            'PRES':-0.05,
+            'DEWP':0.04,
+            'WSPM':-0.11,
+            },
+        'winter':  {
+            'TEMP':0.30,
+            'PRES':-0.45,
+            'DEWP':0.50,
+            'WSPM':-0.33,
+            },
+        'fall':  {
+            'TEMP':0.38,
+            'PRES':-0.40,
+            'DEWP':0.53,
+            'WSPM':-0.45,
+            },
+        'spring':  {
+            'TEMP':0.45,
+            'PRES':-0.45,
+            'DEWP':0.13,
+            'WSPM':-0.18,
+            }
+    }
+    return season_weather_dict[season][remove_cluster_notation(remove_cluster_notation(weather))]
+    
+    
+
+def get_seasons_average():
+    results = {}
+    seasons = ['summer','winter','fall','spring']
+    for season in seasons:
+        results[season] = get_season_avg(season)
+    return results
+    
+def get_season_avg(season):
+    path = f"input_csv\PRSA_Data_Dongsi_{season}.csv"
+    panda = pd.read_csv(path)
+    average = panda['PM10'].mean()
+    return average
+
+def count_air_cause(matrixes):
+    res=0
+    for element in matrixes:
+        if element[3] == 1:
+            res += 1
+    return res
+    
+    
+
+def merge_season_results(matrixes,k,key):
+    res = []
+    for matrix in matrixes:
+        used_pair = []
+        for x in matrix.interesting_results[:k]:
+            if not x in used_pair:
+                used_pair.append(x)
+                causal = is_causal(matrix.season,x,matrix.cluster_stat)
+                res.append((matrix.season,x,matrix.get_Value(x),causal,key))
+    return res
+
+def is_causal(season, pair, cluster_stat):
+    PM10_level = pair[0]
+    cause = pair[1]
+    if cluster_stat == 'cluster':
+        if 'PM10' not in cause:
+            cause=remove_cluster_notation(cause)
+    if  cause in causal_air_dic()[PM10_level].keys():
+        return 1
+    else:
+        return 0
+    
+def remove_cluster_notation(cause):
+    cause_lst = cause.split('_')
+    cause = ''
+    for string in cause_lst[:-1]:
+        cause += string +'_'
+    return cause[:-1]
+    
+
+def causal_air_dic():
+    return {
+        'PM10_0':{
+            'PRES_1':True,
+            'WSPM_1':True
+            },
+        'PM10_1':{
+            'TEMP_1': True,
+            'DEWP_1':True
+        }
+    }
+
+def save_matrix_results(matrix_result): 
+    with open(f'BiksCalculations\synthetic_avg_results\{matrix_result[0]}.txt', 'w') as f:
         write = csv.writer(f)
         
         write.writerow(matrix_result[2])
-
+        
+# def air_table_strings(matrix_result,k):
+#     #('fall', ('PM10_0', 'WSPM_1_1'), 13.15, 1, 'cir_c_w10_h50000_k10_cluster')
+#     result_strings = []
+#     for matrix in matrix_result:
+#         for m in matrix:
+#             string = ''
+#             if m[3] == 1:
+#                 string = '\\rowcolor{{lightgray}}'
+#             string += m[0] +'& '
+#             string += f'{m[1][0].replace("_","")} & {m[1][1].replace("_","")}\n'
+#             result_strings.append(string)
+#         print(str(result_strings))
+#         exit()
+#     return ""
 
 if __name__ == '__main__':
 
