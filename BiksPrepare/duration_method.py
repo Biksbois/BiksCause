@@ -62,7 +62,7 @@ def extract_start_end(colum, temp_csv_path, i, c_start, c_end, cluster_name, j_e
             cluster_name = str(csv_file[cluster_name][j]).replace('.csv', '')
             return int(csv_file[c_start][j]), int(csv_file[c_end][j]), cluster_name, j - 1 if j - 1 > 0 and is_cluster_numbers else 0
     
-    print(f"j_start = {j_start}\npath = {csv_path}\ni={i}\nj={j}")
+    print(f"c_start = {c_start}\npath = {csv_path}\ni={i}\nj={j}")
     print("\n\n--- ERROR in 'extract_start_end' ---\n\n")
     return '-ERROR-', '-ERROR-', '-ERROR-', '-ERROR-'
 
@@ -72,12 +72,11 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
     duration = 0
     csv_name = ""
     current_row = ''
-
+    
     empty_folder(temp_csv_path)
-
+    
     if is_cluster_numbers:
         for i in trange(len(data[colum])):
-        # for i in range(len(data[colum])):
             start = i
             end = i + 1
             current_row = data[colum][i]
@@ -85,7 +84,6 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
         add_new_line(temp_csv_path, csv_if_number, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
     else:
         for i in trange(len(data[colum])):
-        # for i in range(len(data[colum])):
             if current_row != data[colum][i] and current_row != '':
                 add_new_line(temp_csv_path, current_row, i, start, time_colum, c_start, c_end, c_duration, data, is_cluster_numbers, colum)
                 current_row = ''
@@ -98,7 +96,6 @@ def count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path,
 def create_clusters(c_duration, temp_csv_path, data):
     
     for f in trange(len(os.listdir(temp_csv_path))):
-    # for file in os.listdir(temp_csv_path):
         file = os.listdir(temp_csv_path)[f]
         temp_path = f"{temp_csv_path}/{file}"
         temp_data = pd.read_csv(temp_path)
@@ -111,7 +108,6 @@ def add_clusters(c_start, c_end, ds_path, colum, cluster_name, new_colum_name, t
     new_data = []
     j_end = 0
     for i in trange(len(data[colum])):
-    # for i in range(len(data[colum])):
         if i >= end:
             csv_to_test = csv_if_number if is_cluster_numbers else data[colum][i] 
             start, end, cluster, j_end = extract_start_end(csv_to_test, temp_csv_path, i, c_start, c_end, cluster_name, j_end, is_cluster_numbers)
@@ -119,6 +115,11 @@ def add_clusters(c_start, c_end, ds_path, colum, cluster_name, new_colum_name, t
 
     data[new_colum_name] = new_data
     data.to_csv(ds_path, index=False, header=True)
+
+def ensure_col_exists(colum, data, ds_path):
+    if not colum in data:
+        print(f"\n\n---\nERROR: The csv: '{ds_path}'\nDid not contain the column {colum} (duration_method.generate_clusters)")
+        exit()
 
 def generate_clusters(ds_path, colum, is_cluster_numbers, time_colum, temp_csv_path, cluster_name = 'cluster'):
     print(f"---\nClusters are about to be generated in file \"{ds_path}\"\n---", flush=True)
@@ -131,6 +132,9 @@ def generate_clusters(ds_path, colum, is_cluster_numbers, time_colum, temp_csv_p
     new_colum_name = colum + "_cluster"
     
     csv_if_number = colum
+    
+    ensure_col_exists(colum, data, ds_path)
+    ensure_col_exists(time_colum, data, ds_path)
     
     count_clusters(c_start, c_end, c_duration, colum, time_colum, temp_csv_path, data, is_cluster_numbers, csv_if_number)
     print("Step 1/3 - Cluster have successfully been counted.", flush=True)
