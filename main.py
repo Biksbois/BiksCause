@@ -31,8 +31,6 @@ def get_userinput(head_val_small, head_val_large, large, traffic, synthetic, pow
         if traffic in sys.argv[1:]:
             exp_type = traffic
         
-        # is_traffic = not test in str(sys.argv[1:])
-        
         written_args = [x for x in sys.argv[1:] if x in argv]
         
         return exp_type, head_val, written_args
@@ -83,8 +81,6 @@ def call_experiment(e_obj, data_obj, window_size, exp_type):
         if exp_type == power:
             e_obj.exp_type = get_exp_type(data_obj.ds_path[p])
         
-        # print(f"new path is now: {e_obj.exp_type}")
-        
         run_experiments(ds_obj, data_obj.cause_column, data_obj.effect_column, data_obj.ds_path[p], 
                         data_obj.result_path, data_obj.cluster_col_names, data_obj.baseline_col_names, 
                         e_obj, window_size, p, hardcoded_cir_m=data_obj.hardcoded_cir_m)
@@ -108,22 +104,16 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
         print(f"    - {s}")
 
 def print_scores(scores, window_size, head_val, result_path, k_vals, extensions):
-    # extensions = ['cluster', 'no_cluster']
-    
     for e in extensions:
         full_path = f"{result_path}\\{e}"
         print(full_path)
         for k in k_vals:
             for s in scores:
-                #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
-                # print(f'The Value of k dontes a new eperiment:{k}')
-                # print(s)
                 air_experiment_results(full_path, k, s, get_ground_truth())
-                #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
-                # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
 def call_cluster(e_obj, data_obj):
     for ind, ds_path in enumerate(data_obj.ds_path):
+        print(ds_path)
         for c in data_obj.cluster_colums:
             is_number = c[1]
             col_name = c[0]
@@ -163,6 +153,7 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
             output_path_evaluate = f'output_csv//test_data//gen_{i}_test.csv'
             
             initiate_generation(output_path, output_path_evaluate, events, years, window_size)
+    
     if exp_type == power:
         dongsi_seasons = [('spring', [3,4,5]), ('summer', [6,7,8]), ('fall', [9,10,11]), ('winter', [12,1,2])]
         dongsi_dict = {x[0]:([], f"input_csv\PRSA_Data_Dongsi_{x[0]}.csv") for x in dongsi_seasons}
@@ -192,11 +183,9 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
         
         for key in dongsi_dict.keys():
             for r in dongsi_dict[key][0]:
-                # print(type(pd_dict[key]))
                 pd_dict[key] = pd.concat([pd_dict[key], df[r[0]:r[1]]], ignore_index=True)
         
         for key in pd_dict.keys():
-            # print(pd_dict[key])
             pd_dict[key].to_csv(dongsi_dict[key][1])
 
 def run_experiment(arg, written_args, run_everything):
@@ -229,7 +218,7 @@ if __name__ == '__main__':
     run_everythin = 'all'
     
     # Parameters for csv size
-    head_val_small = 5
+    head_val_small = 1000
     head_val_large = 50000
     
     # Parameters for CEAS scores
@@ -270,6 +259,7 @@ if __name__ == '__main__':
         
         if run_experiment(cluster, written_args, run_everythin):
             print(f"\n---\nClusters are being generated for {e_obj.exp_type}\n---\n", flush=True)
+            data_obj = get_datatype(exp_type)
             call_cluster(e_obj, data_obj)
         
         if run_experiment(experiment, written_args, run_everythin):
@@ -279,7 +269,6 @@ if __name__ == '__main__':
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
             print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
-    
     
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))
