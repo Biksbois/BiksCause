@@ -38,6 +38,8 @@ class result_matrix():
         self.sort_matrix()
         if 'traffic' in self.matrix_type:
             self.get_interesting_result("traffic")
+            print(self.matrix_sorted_list)
+            #print(len(self.interesting_results))
             self.interesting_sum = sum(self.get_list_Value(self.interesting_results))
             self.translate_causal_pairs()
         if 'air' in self.matrix_type:
@@ -119,18 +121,19 @@ class result_matrix():
     def adjust_score(self,avg , cause_effect, exp_range):
         if not isinstance(cause_effect, str):
             for value in cause_effect:
+                print(value)
                 if self.calculate_exp(avg,value) in range(exp_range[0], exp_range[1]):
                     self.score += 1
 
     def count_actual_causality(self, K, avg = 3259):
-        used_pair = []
+        #used_pair = []
         for i in range(len(self.interesting_results[:K])):
             translated_effect = self.translated_pairs[i][0]
             traffic_range = self.mapper_obj.event_to_value[translated_effect]
             cause_effect = self.translated_pairs[i][1][:-1]
-            if not (translated_effect, cause_effect) in used_pair:
-                used_pair.append((translated_effect, cause_effect))
-                self.adjust_score(avg, cause_effect, traffic_range)
+            # if not (translated_effect, cause_effect) in used_pair:
+            #     used_pair.append((translated_effect, cause_effect))
+            self.adjust_score(avg, cause_effect, traffic_range)
 
     def remove_cluster_def(self, string):
         regex = re.compile('[^a-zA-Z]')
@@ -173,27 +176,33 @@ class result_matrix():
         return std_key+'_k'+str(self.k)+'_'+self.cluster_stat
             
     def get_calc_ac(self,K,avg = 3259):
-        used_pair = []
+        # used_pair = []
         strings = []
+        #print(len(self.))
         for i in range(len(self.interesting_results[:K])):
             translated_effect = self.translated_pairs[i][0]
             traffic_range = self.mapper_obj.event_to_value[translated_effect]
             cause_effect = self.translated_pairs[i][1][:-1]
-            if not (translated_effect, cause_effect) in used_pair:
-                used_pair.append((translated_effect, cause_effect))
-                strings.append(self.get_calc_string(avg, cause_effect, traffic_range,self.interesting_results[i]))
+            strings.append(self.get_calc_string(avg, cause_effect, traffic_range,self.interesting_results[i],i))
+            for s in strings:
+                print(s)
+                if len(s) == 0:
+                    print(cause_effect)
+                    exit()
         return strings
     
-    def get_calc_string(self,avg,cause_effect,traffic_range,pair):
+    def get_calc_string(self,avg,cause_effect,traffic_range,pair,count):
         results = []
         if not isinstance(cause_effect, str):
+            count +=1
             for value in cause_effect:
                 res = avg*(1+(value/100))
                 if (int(res) in range(traffic_range[0], traffic_range[1])):
-                    results.append(f"\\rowcolor{{lightgray}} {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100)))) = {int(res)} \\in {traffic_range}$\\\\")
+                    results.append(f"\\rowcolor{{lightgray}} {count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
                 else:
-                    results.append(f"{pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100)))) = {int(res)} \\in {traffic_range}$\\\\")
-                    
+                    results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
+        else:
+            results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+(-1))) = {0} \\in {traffic_range}$\\\\")
         return results
         
 def get_csv_files_containing(path, score):
@@ -224,7 +233,7 @@ def calculate_matrixes_causality(matrixs_lst,k):
         matrix.count_actual_causality(k)
 
 def get_at_k_hits(path, k, score,maps, window=None, heads=None):
-    matrixes = load_matrixes(path,score,maps = maps,window=window,heads=heads)
+    matrixes = load_matrixes(path,score,k=k,maps = maps,window=window,heads=heads)
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
     calcs = matrixes[-1].get_calc_ac(k)
@@ -300,7 +309,40 @@ def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
     grouped_matrixes = group_matrixes(matrixes)
     grouped_result_matrixes = calculate_group_causality(grouped_matrixes,k)
     result_list = merge_result_matrixes(grouped_result_matrixes)
-    print(count_causal_in_k(result_list,k))
+    most_causal_list = select_most_causal(result_list,k)
+    print_top_k(most_causal_list,k)
+
+def print_top_k(lst,k):
+    with open(f'BiksCalculations\\air_results\{lst[0]}.txt', 'w') as f:
+        write = csv.writer(f)
+        # usedpairs = []
+        for entry in lst[1][:k]:
+            # pair = (entry[0][0][0],split_on_underscore(entry[0][0][1]),entry[2])
+            # if pair not in usedpairs:
+            print(entry)
+            write.writerow(entry)
+                # usedpairs.append(pair)
+
+def select_most_causal(reslut_lst,k):
+    counts = []
+    #usedpairs = []
+    for lst in reslut_lst:
+        count = 0
+        for entry in lst[1][:k]:
+            # pair = (entry[0][0][0],split_on_underscore(entry[0][0][1]),entry[2])
+            # if pair not in usedpairs:
+            #     usedpairs.append(pair)
+            if entry[0][1]:
+                count += 1
+        #usedpairs = []
+        print(count)
+        counts.append(count)
+    return reslut_lst[explicit(counts)]
+
+def explicit(l):
+    max_val = max(l)
+    max_idx = l.index(max_val)
+    return max_idx
 
 def count_causal_in_k(lst, k):
     print(lst[1][0])
@@ -333,7 +375,6 @@ def calcualte_matrix_causalty(matrix_group, k):
     return_matrixes = []
     for matrix in matrix_group:
         season = matrix.season
-        print(season)
         #matrix.interesting_results.reverse()
         # for m in matrix.interesting_results:
         #     print(matrix.get_Value(m))
@@ -356,9 +397,9 @@ def is_air_causal(season, pair):
     
 def get_PM_range(PM):
     PM_mapping = {
-        'PM10_0': range(6,103),
-        'PM10_1': range(105,250),
-        'PM10_2': range(261,304)
+        'PM10_0': range(1,104),
+        'PM10_1': range(105,260),
+        'PM10_2': range(261,500)
     }
     return PM_mapping[PM]
     
@@ -398,7 +439,10 @@ def get_season_coefficient(season, weather):
             'WSPM':-0.18,
             }
     }
-    return season_weather_dict[season][remove_cluster_notation(remove_cluster_notation(weather))]
+    if split_on_underscore(weather) in season_weather_dict[season]: 
+        return season_weather_dict[season][split_on_underscore(weather)]
+    else:
+        return -1
     
     
 
@@ -453,6 +497,10 @@ def remove_cluster_notation(cause):
         cause += string +'_'
     return cause[:-1]
     
+def split_on_underscore(cause):
+    cause_lst = cause.split('_')
+    return cause_lst[0]
+
 
 def causal_air_dic():
     return {
@@ -471,21 +519,45 @@ def save_matrix_results(matrix_result):
         write = csv.writer(f)
         
         write.writerow(matrix_result[2])
-        
-# def air_table_strings(matrix_result,k):
-#     #('fall', ('PM10_0', 'WSPM_1_1'), 13.15, 1, 'cir_c_w10_h50000_k10_cluster')
-#     result_strings = []
-#     for matrix in matrix_result:
-#         for m in matrix:
-#             string = ''
-#             if m[3] == 1:
-#                 string = '\\rowcolor{{lightgray}}'
-#             string += m[0] +'& '
-#             string += f'{m[1][0].replace("_","")} & {m[1][1].replace("_","")}\n'
-#             result_strings.append(string)
-#         print(str(result_strings))
-#         exit()
-#     return ""
+
+def generate_air_tables():
+    basepath = 'BiksCalculations\\air_results'
+    paths = find_air_results(basepath)
+    files = load_files_air(paths,basepath)
+    for entry in files:
+        print(entry)
+        print('______________________________')
+        generate_air_table(entry)
+
+def generate_air_table(string):
+    lst = string[0].split('  ')
+    print(string[1])
+    for s in lst:
+        print(s)
+
+def generate_table_line(line):
+    res = ''
+    if 'True' in line:
+        pass
+    else:
+        pass
+
+def load_files_air(lst,basepath):
+    air_files = []
+    
+    for path in lst:
+        file = open(basepath+'\\'+path)
+        line = file.read().replace("\n", " ")
+        file.close()
+        air_files.append((line,path))
+    return air_files
+
+def find_air_results(path):
+    files = []
+    for file in os.listdir(path):
+        if file.endswith(".txt"):
+            files.append(file)
+    return files
 
 if __name__ == '__main__':
 

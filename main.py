@@ -1,5 +1,5 @@
 import sys
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, air_experiment_results ,refactored_air_experiment
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
 import itertools
 import time
 import pandas as pd
@@ -115,11 +115,13 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         print(full_path)
         for k in k_vals:
             for s in scores:
-                #k_hit = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                if 'cir_m' in s:
+                    print(get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val]))
                 # print(f'The Value of k dontes a new eperiment:{k}')
                 # print(s)
-                #air_experiment_results(full_path, k, s, get_ground_truth())
-                refactored_air_experiment(full_path, k, s, get_ground_truth())
+                #generate_air_tables()
+                #exit()
+                #refactored_air_experiment(full_path, k, s, get_ground_truth())
                 #print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))
                 # print(f"---\nScore: {s}\n  - k@hit = {k_hit}\n  - k = {k}\n  - mode = {e}")
 
@@ -134,19 +136,19 @@ def call_cluster(e_obj, data_obj):
 
 def get_ground_truth():
     return {
-        'a_0': cluster_class((1,2), ['b_0'], [0.8]),
-        'a_1': cluster_class((7,8), ['b_1'], [0.8]),
-        'b_0': cluster_class((1,2), ['c_0'], [0.8]),
-        'b_1': cluster_class((7,8), ['c_1'], [0.8]),
-        'c_0': cluster_class((1,2), ['d_1'], [0.8]),
-        'c_1': cluster_class((7,8), ['d_0'], [0.8]),
-        'd_0': cluster_class((1,2), ['e_1'], [0.8]),
-        'd_1': cluster_class((7,8), ['g_0'], [0.8]),
-        'e_0': cluster_class((1,2), ['f_0'], [0.8]),
-        'e_1': cluster_class((7,8), ['f_1'], [0.8]),
-        'f_0': cluster_class((1,2), ['g_0'], [0.8]),
-        'f_1': cluster_class((7,8), ['h_0'], [0.8]),
-        'g_0': cluster_class((1,2), ['h_0'], [0.8]),
+        'a_0': cluster_class((1,2), ['b_0'], [0.6]),
+        'a_1': cluster_class((7,8), ['b_1'], [0.6]),
+        'b_0': cluster_class((1,2), ['c_0'], [0.6]),
+        'b_1': cluster_class((7,8), ['c_1'], [0.6]),
+        'c_0': cluster_class((1,2), ['d_1'], [0.6]),
+        'c_1': cluster_class((7,8), ['d_0'], [0.6]),
+        'd_0': cluster_class((1,2), ['e_1'], [0.6]),
+        'd_1': cluster_class((7,8), ['g_0'], [0.6]),
+        'e_0': cluster_class((1,2), ['f_0'], [0.6]),
+        'e_1': cluster_class((7,8), ['f_1'], [0.6]),
+        'f_0': cluster_class((1,2), ['g_0'], [0.6]),
+        'f_1': cluster_class((7,8), ['h_0'], [0.6]),
+            'g_0': cluster_class((1,2), ['h_0'], [0.6]),
         'h_0': cluster_class((1,2), [''], [0]),
     }
 
@@ -250,7 +252,7 @@ if __name__ == '__main__':
     scores = ['cir_c', 'cir_b', 'cir_m_avg', 'cir_m_max', 'cir_m_min'] # More keys are added in the constructor
 
     # How to group the scores when finding best result
-    scores_short = ['cir_c', 'cir_b', 'nst']
+    scores_short = ['cir_c', 'cir_b', 'nst', 'cir_m_avg', 'cir_m_max', 'cir_m_min']
     
     
     support = 10

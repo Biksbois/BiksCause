@@ -1,0 +1,10 @@
+"(('PM10_0', 'DEWP_0_0'), True)",3.52,summer
+"(('PM10_0', 'PRES_1_2'), True)",3.37,spring
+"(('PM10_0', 'DEWP_0_0'), False)",3.26,winter
+"(('PM10_1', 'DEWP_1_0'), True)",3.13,winter
+"(('PM10_0', 'DEWP_1_1'), False)",2.92,spring
+"(('PM10_0', 'WSPM_1_2'), True)",2.6,summer
+"(('PM10_0', 'PRES_0_0'), True)",2.55,summer
+"(('PM10_0', 'WSPM_1_3'), True)",2.46,fall
+"(('PM10_0', 'WSPM_1_3'), True)",2.4,spring
+"(('PM10_1', 'DEWP_0_0'), True)",2.33,winter
