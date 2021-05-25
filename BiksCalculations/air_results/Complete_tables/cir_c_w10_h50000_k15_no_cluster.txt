@@ -1,0 +1,23 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{PM10 Concentration} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+1 & PM10\_1 & WSPM\_0 & \footnotesize $(111*(1+(-0.45))) = 61 \in range(105, 260)$\\
+2 & PM10\_1 & WSPM\_0 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(105, 260)$\\
+3 & PM10\_2 & WSPM\_0 & \footnotesize $(111*(1+(-0.45))) = 61 \in range(261, 500)$\\
+4 & PM10\_2 & WSPM\_0 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(261, 500)$\\
+5 & PM10\_2 & WSPM\_0 & \footnotesize $(124*(1+(-0.18))) = 102 \in range(261, 500)$\\
+6 & PM10\_0 & TEMP\_1 & \footnotesize $(82*(1+(0.4))) = 115 \in range(1, 104)$\\
+7 & PM10\_2 & PRES\_0 & \footnotesize $(124*(1+(-0.45))) = 68 \in range(261, 500)$\\
+\rowcolor{lightgray} 8 & PM10\_0 & PRES\_0 & \footnotesize $(82*(1+(-0.05))) = 78 \in range(1, 104)$\\
+\rowcolor{lightgray} 9 & PM10\_0 & WSPM\_1 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(1, 104)$\\
+10 & PM10\_2 & TEMP\_0 & \footnotesize $(111*(1+(0.38))) = 154 \in range(261, 500)$\\
+\rowcolor{lightgray} 11 & PM10\_0 & PRES\_1 & \footnotesize $(112*(1+(-0.45))) = 62 \in range(1, 104)$\\
+\rowcolor{lightgray} 12 & PM10\_0 & WSPM\_1 & \footnotesize $(111*(1+(-0.45))) = 61 \in range(1, 104)$\\
+13 & PM10\_2 & PRES\_0 & \footnotesize $(112*(1+(-0.45))) = 62 \in range(261, 500)$\\
+\rowcolor{lightgray} 14 & PM10\_1 & DEWP\_1 & \footnotesize $(111*(1+(0.53))) = 170 \in range(105, 260)$\\
+\rowcolor{lightgray} 15 & PM10\_0 & WSPM\_1 & \footnotesize $(124*(1+(-0.18))) = 102 \in range(1, 104)$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{c}$ with window size = 10}
+\end{table}

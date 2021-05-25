@@ -1,0 +1,18 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+\rowcolor{lightgray} 1 & trafficvolume1 & heavy intensity drizzle0 & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [1881, 4130]$\\
+2 & trafficvolume1 & broken clouds4 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+3 & trafficvolume0 & broken clouds4 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+4 & trafficvolume0 & heavy intensity drizzle0 & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+5 & trafficvolume2 & broken clouds4 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+6 & trafficvolume2 & heavy intensity drizzle0 & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+\rowcolor{lightgray} 7 & trafficvolume1 & thunderstorm with light rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+8 & trafficvolume2 & thunderstorm with light rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [4131, 7100]$\\
+9 & trafficvolume0 & thunderstorm with light rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [269, 1880]$\\
+\rowcolor{lightgray} 10 & trafficvolume1 & proximity thunderstorm with rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{b_c}$ with window size = 10}
+\end{table}

@@ -1,0 +1,15 @@
+\rowcolor{lightgray} 1 & trafficvolume1 & proximity shower rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+2 & trafficvolume2 & heavy intensity rain & \footnotesize $(3259*(1+(-3.4/100))) = 3148 \in [4131, 7100]$\\
+3 & trafficvolume0 & thunderstorm with light rain & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+\rowcolor{lightgray} 4 & trafficvolume1 & heavy intensity rain & \footnotesize $(3259*(1+(-3.4/100))) = 3148 \in [1881, 4130]$\\
+5 & trafficvolume0 & heavy intensity rain & \footnotesize $(3259*(1+(-3.4/100))) = 3148 \in [269, 1880]$\\
+6 & trafficvolume0 & snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [269, 1880]$\\
+\rowcolor{lightgray} 7 & trafficvolume1 & thunderstorm & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [1881, 4130]$\\
+8 & trafficvolume2 & moderate rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [4131, 7100]$\\
+9 & trafficvolume0 & moderate rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [269, 1880]$\\
+\rowcolor{lightgray} 10 & trafficvolume1 & moderate rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+\rowcolor{lightgray} 11 & trafficvolume1 & proximity thunderstorm & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+\rowcolor{lightgray} 12 & trafficvolume1 & snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+13 & trafficvolume0 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+14 & trafficvolume0 & thunderstorm with heavy rain & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+15 & trafficvolume0 & thunderstorm & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\

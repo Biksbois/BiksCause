@@ -33,13 +33,12 @@ class result_matrix():
         if "no_cluster" in path:
             return "no_cluster"
         return "cluster"
+    
     def initialize_lists(self):
         self.tolist()
         self.sort_matrix()
         if 'traffic' in self.matrix_type:
             self.get_interesting_result("traffic")
-            print(self.matrix_sorted_list)
-            #print(len(self.interesting_results))
             self.interesting_sum = sum(self.get_list_Value(self.interesting_results))
             self.translate_causal_pairs()
         if 'air' in self.matrix_type:
@@ -66,7 +65,7 @@ class result_matrix():
         col,idx = pair
         if idx in self.lookup_dict.keys():
             if self.lookup_dict[idx] != 0 and not math.isnan(float(self.df[col][self.lookup_dict[idx]-1])):
-                return self.df[col][self.lookup_dict[idx]-1]
+                return self.df[idx][self.lookup_dict[col]-1]
         return 0
 
     def get_list_Value(self,lst):
@@ -92,13 +91,13 @@ class result_matrix():
         if len(self.matrix_list) == 0:
             for col in self.df.columns.values.tolist()[1:]:
                 for idx in self.df.columns.values.tolist()[1:]:
-                    if self.get_Value((col,idx)) != 0:
-                        self.matrix_list.append((col,idx))
+                    if self.check_values(col,idx):
+                        self.matrix_list.append((idx,col))#swap
         return self.matrix_list
 
     def get_interesting_result(self, effect_cond = ""):
         for pair in self.matrix_sorted_list:
-            if pair[0] != pair[1] and effect_cond in pair[0] and not math.isnan(float(self.get_Value(pair))):
+            if self.remove_cluster_def(pair[0]) != self.remove_cluster_def(pair[1]) and effect_cond in pair[0] and not math.isnan(float(self.get_Value(pair))):
                 self.interesting_results.append(pair)
         self.interesting_results.reverse()
 
@@ -118,6 +117,7 @@ class result_matrix():
     def calculate_exp(self,avg,value):
         return int((avg*(1+(value/100))))
 
+
     def adjust_score(self,avg , cause_effect, exp_range):
         if not isinstance(cause_effect, str):
             for value in cause_effect:
@@ -126,13 +126,10 @@ class result_matrix():
                     self.score += 1
 
     def count_actual_causality(self, K, avg = 3259):
-        #used_pair = []
         for i in range(len(self.interesting_results[:K])):
             translated_effect = self.translated_pairs[i][0]
             traffic_range = self.mapper_obj.event_to_value[translated_effect]
             cause_effect = self.translated_pairs[i][1][:-1]
-            # if not (translated_effect, cause_effect) in used_pair:
-            #     used_pair.append((translated_effect, cause_effect))
             self.adjust_score(avg, cause_effect, traffic_range)
 
     def remove_cluster_def(self, string):
@@ -174,6 +171,12 @@ class result_matrix():
         else:
             std_key = self.key
         return std_key+'_k'+str(self.k)+'_'+self.cluster_stat
+    
+    def check_values(self,col,idx):
+        if 'traffic' in self.matrix_type:
+            return self.get_Value((col,idx)) != 0
+        else:
+            return self.get_Value((idx,col)) != 0
             
     def get_calc_ac(self,K,avg = 3259):
         # used_pair = []
@@ -193,12 +196,12 @@ class result_matrix():
             for value in cause_effect:
                 res = avg*(1+(value/100))
                 if (int(res) in range(traffic_range[0], traffic_range[1])):
-                    results.append(f"\\rowcolor{{lightgray}} {count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
+                    results.append(f"\\rowcolor{{lightgray}} {count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & \\footnotesize $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
                 else:
-                    results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
+                    results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & \\footnotesize $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
         else:
             count +=1
-            results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+(-1))) = {0} \\in {traffic_range}$\\\\")
+            results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & \\footnotesize $({avg}*(1+(-1))) = {0} \\in {traffic_range}$\\\\")
         return results
         
 def get_csv_files_containing(path, score):
@@ -230,9 +233,7 @@ def calculate_matrixes_causality(matrixs_lst,k):
         matrix.count_actual_causality(k)
 
 def get_at_k_hits(path, k, score,maps, window=None, heads=None):
-    print(path)
     matrixes = load_matrixes(path,score,k=k,maps = maps,window=window,heads=heads)
-    print(len(matrixes))
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
     calcs = matrixes[-1].get_calc_ac(k)
@@ -297,8 +298,6 @@ def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
         result_matrixes.append(sorted(matrix, key=lambda x: x[2]))
     for m in result_matrixes:
         m.reverse()
-        #print(m[:k])
-        #print(count_air_cause(m[:k]))
     print(get_seasons_average())
     exit()
     return count_air_cause(result_matrixes)
@@ -309,12 +308,13 @@ def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
     grouped_result_matrixes = calculate_group_causality(grouped_matrixes,k)
     result_list = merge_result_matrixes(grouped_result_matrixes)
     most_causal_list = select_most_causal(result_list,k)
+    
     print_top_k(most_causal_list,k)
 
 def print_top_k(lst,k):
     with open(f'BiksCalculations\\air_results\{lst[0]}.txt', 'w') as f:
         write = csv.writer(f)
-        # usedpairs = []
+
         for entry in lst[1][:k]:
             # pair = (entry[0][0][0],split_on_underscore(entry[0][0][1]),entry[2])
             # if pair not in usedpairs:
@@ -529,19 +529,24 @@ def generate_air_tables():
 
 def generate_air_table(string):
     lst = string[0].split('  ')
+    lines = []
     print(string[1])
+    textfile = open(f"BiksCalculations\\air_results\Tablefiles\{string[1]}", "w")
     for i,s in enumerate(lst):
         if not len(s)<1:
-            print(calc_air_table_str(extract_aspects_air(s),i+1))
+            textfile.write(calc_air_table_str(extract_aspects_air(s),i+1) + "\n")
+    textfile.close()
 
 def calc_air_table_str(info,count):
     avg = get_season_avg(info[1])
     value = get_season_coefficient(info[1], info[0][1])
     res = avg*(1+value)
+    cause = info[0][0].replace('_', '\\_')
+    effect = info[0][1].replace('_', '\\_')
     if info[2] == 'True':
-        return(f"\\rowcolor{{lightgray}} {count} & {info[0][0]} & {info[0][1]} & $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
+        return(f"\\rowcolor{{lightgray}} {count} & {cause} & {effect} & \\footnotesize $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
     else:
-        return(f"{count} & {info[0][0]} & {info[0][1]} & $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
+        return(f"{count} & {cause} & {effect} & \\footnotesize $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
         
     
 def extract_aspects_air(line):
@@ -582,8 +587,83 @@ def find_air_results(path):
             files.append(file)
     return files
 
-if __name__ == '__main__':
+def create_complete_air_tables():
+    path = 'BiksCalculations\\air_results\Tablefiles'
+    files = find_air_results(path)
+    infos = []
+    for file in files:
+        infos.append((extract_info_air(file),file))
+    return infos
 
+def create_complete_traffic_tables():
+    path = 'BiksCalculations\Calculations_for_roni'
+    files = find_air_results(path)
+    infos = []
+    for file in files:
+        infos.append((extract_info_air(file),file))
+    return infos
+
+def generate_caption(info):
+    if 'cir' in info[0][-1]:
+        ye=''
+        if info[0][-2] == 'c':
+            ye = '_'+info[0][-2]
+        
+        sun_script = info[0][-1][-1]+ye
+        caption = f"${info[0][-1][:-1]}{{{sun_script}}}$ with window size = {info[0][0]}"
+    else:
+        if not info[0][-2] == 'c':
+            sun_script = 'e'
+        else:
+            sun_script = 'c'    
+        caption = f"$NST_{{{sun_script}}}$ with window size = {info[0][0]}, $\\alpha$ = {info[0][2]} and $\\lambda$ = {info[0][1]}"
+    return caption
+
+def extract_info_air(file):
+    alpha_regex,lambda_regex,k_regex,window_regex = ('_a(\d+|\d+.\d)_','_l(\d+|\d+.\d)_','_k\d+_','_w\d+_')
+    window = re.search(window_regex,file).group().replace('_','').replace('w','')
+    k = re.search(k_regex,file).group().replace('_','').replace('k','') 
+    is_cluster =""
+    if not 'no_cluster' in file:
+        is_cluster = "c"
+    if('cir' not in file):
+        lamb = re.search(lambda_regex,file).group().replace('_','').replace('l','')
+        alpha = re.search(alpha_regex,file).group().replace('_','').replace('a','')
+        return (window,lamb,alpha,k,is_cluster,file[:3])
+    return (window, k, is_cluster, file[:5])
+
+def load_table_air_data(path):
+    basepath ='BiksCalculations\\air_results\Tablefiles'
+    file = open(basepath+'\\'+path)
+    line = file.read()
+    file.close()
+    return line
+
+def load_table_traffic_data(path):
+    basepath ='BiksCalculations\Calculations_for_roni'
+    file = open(basepath+'\\'+path)
+    line = file.read()
+    file.close()
+    return line
+
+def Create_table_wrapper(path, effect_colum, cause_colum,exp):
+    if exp == 'air':
+        infos = create_complete_air_tables()
+    else:
+        infos = create_complete_traffic_tables()
+    tables = []
+    for info in infos:
+        start_table =f"\\begin{{table}}[H]\n\\begin{{tabular}}{{ll|p{{.35\\textwidth}}|l}}\n\\# & \\textbf{{{effect_colum}}} & \\textbf{{{cause_colum}}}  & \\textbf{{Calculation}}\\\\\n\\hline\n"
+        if exp == 'air':
+            table_data = load_table_air_data(info[-1])
+        else:
+            table_data = load_table_traffic_data(info[-1])
+            print(table_data)
+        end_table = f"\\hline\n\\end{{tabular}}\n\\caption{{Showing results from {generate_caption(info)}}}\n\\end{{table}}"
+        table = start_table+table_data+end_table#tables.append(start_table+table_data+end_table)
+        with open(f'{path}{info[-1]}', 'w') as f:
+            f.write(table)
+if __name__ == '__main__':
     path = 'BiksCalculations\\results\\synthetic\\cluster'
     maps = 'traffic_cluster'
     # print(get_at_k_hits(path,20,'cir', maps,window=[18,12], heads=[50000]))

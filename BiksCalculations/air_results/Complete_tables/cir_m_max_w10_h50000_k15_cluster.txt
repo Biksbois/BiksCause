@@ -1,0 +1,8 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{PM10 Concentration} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{m_c}$ with window size = 10}
+\end{table}
