@@ -154,12 +154,13 @@ def improved_jenks(df, path, col_name, cl_col_name, cl_label_name, cl_num):
     jdf = add_clusters(df, cl_tupple, col_name, cl_col_name, cl_label_name)
     jdf.to_csv(path)
 
-def create_cluster(df, path, col_name, cl_col_name, cl_label_name, cl_num = 2):
-    improved_jenks(df, path, col_name, cl_col_name, cl_label_name, cl_num)
-
-    # df = check_df(df, cl_col_name, cl_label_name, col_name)
-    # jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
-    # jdf.to_csv(path)
+def create_cluster(df, path, col_name, cl_col_name, cl_label_name, cl_num = 2, jenkspy = False):
+    if jenkspy == False:
+        improved_jenks(df, path, col_name, cl_col_name, cl_label_name, cl_num)
+    else:
+        df = check_df(df, cl_col_name, cl_label_name, col_name)
+        jdf = get_jenks(df, cl_col_name, cl_label_name, col_name)
+        jdf.to_csv(path)
 
 def evaluate_gvf(ds_arr, cl_arr):
     return calc_gvf(ds_arr, cl_arr)
