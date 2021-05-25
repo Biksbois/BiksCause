@@ -1,0 +1,4 @@
+jenkspy==0.2.0
+tqdm==4.60.0
+pandas==1.2.3
+numpy==1.19.5
