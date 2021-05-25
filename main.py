@@ -99,7 +99,8 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions)
         print(full_path)
         for k in k_vals:
             for s in scores:
-                refactored_air_experiment(full_path, k, s, get_ground_truth())
+                #refactored_air_experiment(full_path, k, s, get_ground_truth())
+                run_average_expriment(full_path, k, s, get_ground_truth())
 
 def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
     is_number = c[1]
@@ -221,7 +222,7 @@ if __name__ == '__main__':
     
     # Parameters for CEAS scores
     window_size = [1, 5, 10, 6, 12, 18, 24]
-    alpha_val = [0.55, 0.66, 0.77]
+    alpha_val = [0, 1.0, 5.0]
     lambda_val = [0.4, 0.5, 0.7]
     
     k_vals = [10, 15, 20, 25]
