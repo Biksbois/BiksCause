@@ -221,9 +221,9 @@ if __name__ == '__main__':
     head_val_large = 50000
     
     # Parameters for CEAS scores
-    window_size = [1, 5, 10, 6, 12, 18, 24]
-    alpha_val = [0, 1.0, 5.0]
-    lambda_val = [0.4, 0.5, 0.7]
+    window_size = [1, 5, 10, 12, 18, 24]
+    alpha_val = [0.5, 1.0]
+    lambda_val = [0, 0.25, 0.5, 0.75, 1]
     
     k_vals = [10, 15, 20, 25]
     extensions = ['cluster', 'no_cluster']
