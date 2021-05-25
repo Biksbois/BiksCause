@@ -131,16 +131,16 @@ dmypy.json
 
 BiksCalculations/csv/temp_csv
 
-BiksCalculations/results/synthetic/cluster/*
-BiksCalculations/results/synthetic/no_cluster/*
-# BiksCalculations/results/air/cluster/*
-# BiksCalculations/results/air/no_cluster/*
+# BiksCalculations/results/synthetic/cluster/*
+# BiksCalculations/results/synthetic/no_cluster/*
+BiksCalculations/results/air/cluster/*
+BiksCalculations/results/air/no_cluster/*
 BiksCalculations/results/traffic/cluster/*
 BiksCalculations/results/traffic/no_cluster/*
 
-!BiksCalculations/results/synthetic/cluster/.gitkeep
-!BiksCalculations/results/synthetic/no_cluster/.gitkeep
-# !BiksCalculations/results/air/cluster/.gitkeep
-# !BiksCalculations/results/air/no_cluster/.gitkeep
+# !BiksCalculations/results/synthetic/cluster/.gitkeep
+# !BiksCalculations/results/synthetic/no_cluster/.gitkeep
+!BiksCalculations/results/air/cluster/.gitkeep
+!BiksCalculations/results/air/no_cluster/.gitkeep
 !BiksCalculations/results/traffic/cluster/.gitkeep
 !BiksCalculations/results/traffic/no_cluster/.gitkeep
