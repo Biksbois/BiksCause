@@ -93,14 +93,21 @@ def print_start(exp_name, head_val, exp_type, window_size, lambda_val, alpha_val
     for s in scores:
         print(f"    - {s}")
 
-def print_scores(scores, window_size, head_val, result_path, k_vals, extensions):
+def print_scores(scores, window_size, head_val, result_path, k_vals, extensions, exp_type):
     for e in extensions:
         full_path = f"{result_path}\\{e}"
         print(full_path)
         for k in k_vals:
             for s in scores:
-                #refactored_air_experiment(full_path, k, s, get_ground_truth())
-                run_average_expriment(full_path, k, s, get_ground_truth())
+                if exp_type == power:
+                    #generate_air_tables()
+                    #exit()
+                    refactored_air_experiment(full_path, k, s, get_ground_truth())
+                    
+                if exp_type == traffic:
+                    get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                if exp_type == synthetic:
+                    run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val])                    
 
 def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
     is_number = c[1]
@@ -135,7 +142,7 @@ def get_ground_truth():
         'e_1': cluster_class((7,8), ['f_1'], [0.6]),
         'f_0': cluster_class((1,2), ['g_0'], [0.6]),
         'f_1': cluster_class((7,8), ['h_0'], [0.6]),
-            'g_0': cluster_class((1,2), ['h_0'], [0.6]),
+        'g_0': cluster_class((1,2), ['h_0'], [0.6]),
         'h_0': cluster_class((1,2), [''], [0]),
     }
 
@@ -221,9 +228,9 @@ if __name__ == '__main__':
     head_val_large = 50000
     
     # Parameters for CEAS scores
-    window_size = [1, 5, 10, 6, 12, 18, 24]
-    alpha_val = [0, 1.0, 5.0]
-    lambda_val = [0.4, 0.5, 0.7]
+    window_size = [1, 5, 10, 12, 18, 24]
+    alpha_val = [0,0.5,1.0,2.0,5.0]
+    lambda_val = [0, 0.25, 0.50, 0.75, 1.0]
     
     k_vals = [10, 15, 20, 25]
     extensions = ['cluster', 'no_cluster']
@@ -266,7 +273,7 @@ if __name__ == '__main__':
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
+            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions, exp_type)
     
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))

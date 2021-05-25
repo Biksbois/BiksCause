@@ -50,12 +50,12 @@ class result_matrix():
                     break;
 
     def extract_file_config(self, file):
-        alpha_regex,lambda_regex,header_regex,window_regex = ('_a\d+_','_l\d+_','_h\d+_','_w\d+_')
+        alpha_regex,lambda_regex,header_regex,window_regex = ('_a(\d+|\d+.\d)_','_l(\d+|\d+.\d)_','_h\d+_','_w\d+_')
         self.window = re.search(window_regex,file).group().replace('_','').replace('w','')
         self.header = re.search(header_regex,file).group().replace('_','').replace('h','')
         if('cir' not in file):
-            self.lamb = int(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
-            self.alpha = int(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
+            self.lamb = int(float(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10)
+            self.alpha = int(float(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100)
 
     def create_label_mapping(self,df):
         self.lookup_dict = {}
@@ -184,11 +184,6 @@ class result_matrix():
             traffic_range = self.mapper_obj.event_to_value[translated_effect]
             cause_effect = self.translated_pairs[i][1][:-1]
             strings.append(self.get_calc_string(avg, cause_effect, traffic_range,self.interesting_results[i],i))
-            for s in strings:
-                print(s)
-                if len(s) == 0:
-                    print(cause_effect)
-                    exit()
         return strings
     
     def get_calc_string(self,avg,cause_effect,traffic_range,pair,count):
@@ -202,6 +197,7 @@ class result_matrix():
                 else:
                     results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+({value}/100))) = {int(res)} \\in {traffic_range}$\\\\")
         else:
+            count +=1
             results.append(f"{count} & {pair[0].replace('_', '')} & {pair[1].replace('_', '')} & $({avg}*(1+(-1))) = {0} \\in {traffic_range}$\\\\")
         return results
         
@@ -224,6 +220,7 @@ def load_matrixes(path, score, k=0, maps = "", window=None, heads=None):
     for file in files:
         if (not window == None and not any(x in file for x in window)) or (not heads == None and not any(x in file for x in heads)):
             continue
+            
         matrixs_lst.append(result_matrix(path+'\\'+file,maps,k=k,matrix_type = file, score_type = score))
     matrixs_lst.sort(key=lambda x: x.interesting_sum, reverse=True)
     return matrixs_lst
@@ -233,7 +230,9 @@ def calculate_matrixes_causality(matrixs_lst,k):
         matrix.count_actual_causality(k)
 
 def get_at_k_hits(path, k, score,maps, window=None, heads=None):
+    print(path)
     matrixes = load_matrixes(path,score,k=k,maps = maps,window=window,heads=heads)
+    print(len(matrixes))
     calculate_matrixes_causality(matrixes,k)
     matrixes.sort(key=lambda x : x.score)
     calcs = matrixes[-1].get_calc_ac(k)
@@ -525,15 +524,39 @@ def generate_air_tables():
     paths = find_air_results(basepath)
     files = load_files_air(paths,basepath)
     for entry in files:
-        print(entry)
         print('______________________________')
         generate_air_table(entry)
 
 def generate_air_table(string):
     lst = string[0].split('  ')
     print(string[1])
-    for s in lst:
-        print(s)
+    for i,s in enumerate(lst):
+        if not len(s)<1:
+            print(calc_air_table_str(extract_aspects_air(s),i+1))
+
+def calc_air_table_str(info,count):
+    avg = get_season_avg(info[1])
+    value = get_season_coefficient(info[1], info[0][1])
+    res = avg*(1+value)
+    if info[2] == 'True':
+        return(f"\\rowcolor{{lightgray}} {count} & {info[0][0]} & {info[0][1]} & $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
+    else:
+        return(f"{count} & {info[0][0]} & {info[0][1]} & $({int(avg)}*(1+({value}))) = {int(res)} \\in {get_PM_range(info[0][0])}$\\\\")
+        
+    
+def extract_aspects_air(line):
+    caused_regex = "'.+',"
+    causal_regex = ", '.+'"
+    season_regex = "\w+$"
+    is_true_regex = "(True|False)"
+    caused = re.findall(caused_regex, line)[0]
+    causal = re.findall(causal_regex, line)[0]
+    season = re.findall(season_regex, line)[0]
+    is_true = re.findall(is_true_regex, line)[0]
+    caused = caused[1:-2]
+    causal = causal[3:-1]
+    pair = (caused,causal)
+    return (pair,season,is_true)
 
 def generate_table_line(line):
     res = ''
