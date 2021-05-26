@@ -49,15 +49,21 @@ def run_experiments(ds_obj, cause_column, effect_column, ds_path, result_path, c
         e_obj.window_size = w
         ds_obj.window_size = w
         
-        if not hardcoded_cir_m == None and w in hardcoded_cir_m:
+        if not hardcoded_cir_m == None and 'cluster' in hardcoded_cir_m and w in hardcoded_cir_m['cluster']:
             print(f"The CIR_m parent dictionary has been updated to key '{w}'.")
-            ds_obj.hardcoded_cir_m = hardcoded_cir_m[w]
+            ds_obj.hardcoded_cir_m = hardcoded_cir_m['cluster'][w]
         else:
             ds_obj.hardcoded_cir_m = None
         
         print(f"---\nThe experiments with clusters will now run for window size {w}\n---", flush=True)
         do_calculations(ds_obj, cause_column, effect_column, f"{result_path}/cluster/{index}_", cluster_col, ds_path, e_obj, use_optimizer=use_optimizer)
 
+        if not hardcoded_cir_m == None and 'no_cluster' in hardcoded_cir_m and w in hardcoded_cir_m['no_cluster']:
+            print(f"The CIR_m parent dictionary has been updated to key '{w}'.")
+            ds_obj.hardcoded_cir_m = hardcoded_cir_m['no_cluster'][w]
+        else:
+            ds_obj.hardcoded_cir_m = None
+        
         print(f"---\nThe experiments without clusters will now run for window size {w}\n---", flush=True)
         do_calculations(ds_obj, cause_column, effect_column, f"{result_path}/no_cluster/{index}_", baseline_col, ds_path, e_obj, use_optimizer=use_optimizer)
     

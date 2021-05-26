@@ -9,10 +9,10 @@ class exp_obj():
         self.head_val = head_val
         self.exp_type = exp_type
         self.exp_size = exp_size
-        self.nst_keys = self.generate_nst_keys()
+        self.nst_keys = []#self.generate_nst_keys()
         self.support = support
         self.scores = scores
-        scores.extend(self.nst_keys)
+        # scores.extend(self.nst_keys)
         
     
     def parse_val(self, val):
@@ -57,33 +57,40 @@ class datatype_obj():
 
 def get_traffic_datatype_obj():
     hardcoded_cir_m = {
-        1:{
-            'traffic_volume_0': ['heavy intensity rain_0', 'mist_0', 'moderate rain_0', 'traffic_volume_0', 'traffic_volume_2'],
-            'traffic_volume_1': ['mist_0', 'moderate rain_0', 'traffic_volume_1', 'light rain_0'],
-            'traffic_volume_2': ['moderate rain_0', 'light rain_0', 'heavy intensity rain_0', 'traffic_volume_1', 'traffic_volume_2']
+        'cluster':{
+            1:{
+                'traffic_volume_0': ['heavy intensity rain_0', 'mist_0', 'moderate rain_0', 'traffic_volume_0', 'traffic_volume_2'],
+                'traffic_volume_1': ['mist_0', 'moderate rain_0', 'traffic_volume_1', 'light rain_0'],
+                'traffic_volume_2': ['moderate rain_0', 'light rain_0', 'heavy intensity rain_0', 'traffic_volume_1', 'traffic_volume_2']
+            },
+            5:{
+                'traffic_volume_0': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+            },
+            10:{
+                'traffic_volume_0': ['moderate rain_0', 'snow_0', 'traffic_volume_0', 'traffic_volume_1'],
+                'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+            }
         },
-        5:{
-            'traffic_volume_0': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
-            'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
-            'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
-        },
-        10:{
-            'traffic_volume_0': ['moderate rain_0', 'snow_0', 'traffic_volume_0', 'traffic_volume_1'],
-            'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
-            'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+        'no_cluster':{
+            1:{
+                'traffic_volume_0': ['heavy intensity rain', 'mist', 'moderate rain', 'traffic_volume_0', 'traffic_volume_2'],
+                'traffic_volume_1': ['mist', 'moderate rain', 'traffic_volume_1', 'light rain'],
+                'traffic_volume_2': ['moderate rain', 'light rain', 'heavy intensity rain', 'traffic_volume_1', 'traffic_volume_2']
+            },
+            5:{
+                'traffic_volume_0': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_1': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_2': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+            },
+            10:{
+                'traffic_volume_0': ['moderate rain', 'snow', 'traffic_volume_0', 'traffic_volume_1'],
+                'traffic_volume_1': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_2': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+            }
         }
-        # 6:{
-            
-        # },
-        # 12:{
-            
-        # },
-        # 18:{
-            
-        # },
-        # 24:{
-            
-        # }
         }
     
     trafic_column_list = ['temp_cluster','traffic_volume_cluster']
@@ -103,29 +110,7 @@ def get_traffic_datatype_obj():
     return datatype_obj(hardcoded_cir_m, trafic_cluster_col_names, trafic_baseline_col_names, trafic_cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
 
 def get_synthetic_datatype_obj():
-    hardcoded_cir_m = {
-        # 1:{
-            
-        # },
-        # 5:{
-            
-        # },
-        # 10:{
-            
-        # },
-        # 6:{
-            
-        # },
-        # 12:{
-            
-        # },
-        # 18:{
-            
-        # },
-        # 24:{
-            
-        # }
-        }
+    hardcoded_cir_m = None
     
     cluster_col_names = ['events_cluster']
     baseline_col_names = ['events']
@@ -150,29 +135,7 @@ def get_synthetic_datatype_obj():
     return datatype_obj(hardcoded_cir_m, cluster_col_names, baseline_col_names, cluster_colums, ds_path, time_colum, temp_csv_path, cause_column, effect_column, result_path)
 
 def get_air_datatype_obj():
-    hardcoded_cir_m = {
-        # 1:{
-            
-        # },
-        # 5:{
-            
-        # },
-        # 10:{
-            
-        # },
-        # 6:{
-            
-        # },
-        # 12:{
-            
-        # },
-        # 18:{
-            
-        # },
-        # 24:{
-            
-        # }
-        }
+    hardcoded_cir_m = None
     
     col_names = ['PM10_cluster']
     # col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
