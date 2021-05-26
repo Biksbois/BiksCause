@@ -1,6 +1,6 @@
 import sys
 import statistics
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits,Create_table_wrapper, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits,Create_table_wrapper,generate_air_tables, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
 import itertools
 import time
 import pandas as pd
@@ -104,6 +104,8 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions,
         print(full_path)
         for k in k_vals:
             for s in scores:
+                # Create_table_wrapper('BiksCalculations\\air_results\\', 'PM10 Concentration', 'Weather Event','air')
+                # exit()
                 if exp_type == power:
                     print(f'Air experiment with {s} and a k = {k}.')
                     found,hyper = refactored_air_experiment(full_path, k, s, get_ground_truth())
