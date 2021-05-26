@@ -4,6 +4,7 @@ from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_averag
 import itertools
 import time
 import pandas as pd
+import numpy as np
 import datetime
 from experiment_obj import *
 from BiksCalculations.find_ideal_window import find_idea_window
@@ -209,11 +210,18 @@ def find_window_size(effect_col, head_val, args, ds_p):
             overall_list.extend(effect_dict[e_key][c_key])
             # print(f"  - {c_key} - avg: {round(sum(effect_dict[e_key][c_key]) / len(effect_dict[e_key][c_key]), 2)}, min: {min(effect_dict[e_key][c_key])}, max:{max(effect_dict[e_key][c_key])}, count: {len(effect_dict[e_key][c_key])}")
     
+    overall_list.sort()
+
+    percents = [0.25, 0.5, 0.75, 0.9]
+    quan = np.quantile(overall_list, percents)
+    
     mode = max(set(overall_list), key=overall_list.count)
     average = round(sum(overall_list) / len(overall_list), 2)
     median = statistics.median(overall_list)
     
-    print(f"\n---\n  - average: {average}\n  - mode: {mode}\n  - median : {median}")
+    print(f"\n---\n  - average: {average}\n  - mode: {mode}\n  - median : {median}\n  - quan: ")
+    for q in range(len(quan)):
+        print(f"    - {percents[q]} : {quan[q]}")
 
 def run_one_find_window(col_list, ds_path):
     cause_col = col_list[:-1]
@@ -227,6 +235,7 @@ def run_one_find_window(col_list, ds_path):
     effect_col = col_list[-1]
     
     for ds_p in ds_path:
+        print(f"\ndataset path: {ds_p}")
         find_window_size(effect_col, head_val, cause_col, ds_p)
 
 
