@@ -105,14 +105,17 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions,
         for k in k_vals:
             for s in scores:
                 if exp_type == power:
-                    #generate_air_tables()
-                    #exit()
-                    refactored_air_experiment(full_path, k, s, get_ground_truth())
-                    
+                    print(f'Air experiment with {s} and a k = {k}.')
+                    found,hyper = refactored_air_experiment(full_path, k, s, get_ground_truth())
+                    print(f'There was {found} causal pairs found.')
+                    print(f"The Best configuration was a {hyper[10:-4]}.\n")   
                 if exp_type == traffic:
-                    get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                    print(f'Traffic experiment with {s} and a k = {k}.')
+                    found, hyper = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
+                    print(f'There was {found} causal pairs found.')
+                    print(f"The Best configuration was a {hyper[10:-4]}.\n")
                 if exp_type == synthetic:
-                    run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val])                    
+                    print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))                   
 
 def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
     is_number = c[1]
@@ -138,7 +141,7 @@ def get_ground_truth():
         'a_0': cluster_class((1,2), ['b_0'], [0.6]),
         'a_1': cluster_class((7,8), ['b_1'], [0.6]),
         'b_0': cluster_class((1,2), ['c_0'], [0.6]),
-        'b_1': cluster_class((7,8), ['c_1'], [0.6]),
+        'b_1':  cluster_class((7,8), ['c_1'], [0.6]),
         'c_0': cluster_class((1,2), ['d_1'], [0.6]),
         'c_1': cluster_class((7,8), ['d_0'], [0.6]),
         'd_0': cluster_class((1,2), ['e_1'], [0.6]),
@@ -309,7 +312,7 @@ if __name__ == '__main__':
     
     # Parameters for CEAS scores
     window_size = [1, 5, 10, 12, 18, 24]
-    alpha_val = [0,0.5,1.0,2.0,5.0]
+    alpha_val = [0, 0.5, 1.0, 2.0, 5.0]
     lambda_val = [0, 0.25, 0.50, 0.75, 1.0]
     
     k_vals = [10, 15, 20, 25]
@@ -356,7 +359,7 @@ if __name__ == '__main__':
             if exp_type == synthetic:
                 window_list = get_synthetic_window(window_list)
             
-            window_size = window_list
+            window_size = [int(x) for x in window_list]
             e_obj = exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
             print(f"The updated windows size for the {exp_type} experiment is: {window_list}")
         
@@ -366,7 +369,7 @@ if __name__ == '__main__':
         
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
-            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
+            print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions, exp_type)
 
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))
