@@ -268,6 +268,21 @@ def run_experiment(arg, written_args, run_everything):
 def init_exp_obj(head_val, exp_type, alpha_val, lambda_val, window_size, support, scores):
     return exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
 
+def get_synthetic_window(window_list):
+    percents = [0.25, 0.50, 0.75]
+    quan = np.quantile(window_list, percents)
+    average = round(sum(window_list) / len(window_list))
+    
+    # print(f"quan: {quan}")
+    # print(f"avg: {average}")
+    # print(f"min: {min(window_list)}")
+    # print(f"max: {max(window_list)}")
+    
+    quan = [int(x) for x in quan]
+    quan.append(int(average))
+    
+    return sorted(quan)
+
 # Parameters for what dataset to use
 traffic = 'traffic'
 synthetic = 'synthetic'
@@ -338,10 +353,12 @@ if __name__ == '__main__':
             if exp_type == traffic:
                 window_list.extend([1.0,5.0,10.0])
                 window_list = list(set(window_list))
+            if exp_type == synthetic:
+                window_list = get_synthetic_window(window_list)
             
             window_size = window_list
             e_obj = exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
-            # print(window_list)
+            print(f"The updated windows size for the {exp_type} experiment is: {window_list}")
         
         if run_experiment(experiment, written_args, run_everythin):
             print_start(exp_type, head_val, written_args, window_size, lambda_val, alpha_val, support, e_obj.scores)
