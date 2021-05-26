@@ -1,10 +1,12 @@
 import sys
+import statistics
 from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
 import itertools
 import time
 import pandas as pd
 import datetime
 from experiment_obj import *
+from BiksCalculations.find_ideal_window import find_idea_window
 from BiksPrepare.duration_method import generate_clusters
 from BiksCalculations.calc_main import do_calculations
 from BiksCalculations.dataset_object import init_obj_test_trafic
@@ -74,6 +76,7 @@ def get_exp_type(ds_pat):
 
 def call_experiment(e_obj, data_obj, window_size, exp_type):
     for p in range(len(data_obj.ds_path)):
+        print(f"---\nExperiment {p}/{len(data_obj.ds_path)} will now be executed.\nThis will be on the following path: {data_obj.ds_path[p]}")
         ds_obj = init_obj_test_trafic(cause_column=data_obj.cause_column, effect_column=data_obj.effect_column, 
                                     ds_path=data_obj.ds_path[p], windows_size=window_size, head_val=e_obj.head_val, time_column=data_obj.time_colum)
         
@@ -188,6 +191,39 @@ def generate_dataset(years, dataset_count, window_size, exp_type):
         for key in pd_dict.keys():
             pd_dict[key].to_csv(dongsi_dict[key][1])
 
+
+def find_window_size(effect_col, head_val, args, ds_p):
+    effect_dict = find_idea_window(effect_col, head_val, args, ds_path=ds_p)
+    overall_list = []
+
+    for e_key in effect_dict.keys():
+        # print(f"EFFECT: {e_key}")
+        for c_key in effect_dict[e_key].keys():
+            overall_list.extend(effect_dict[e_key][c_key])
+            # print(f"  - {c_key} - avg: {round(sum(effect_dict[e_key][c_key]) / len(effect_dict[e_key][c_key]), 2)}, min: {min(effect_dict[e_key][c_key])}, max:{max(effect_dict[e_key][c_key])}, count: {len(effect_dict[e_key][c_key])}")
+    
+    mode = max(set(overall_list), key=overall_list.count)
+    average = round(sum(overall_list) / len(overall_list), 2)
+    median = statistics.median(overall_list)
+    
+    print(f"\n---\n  - average: {average}\n  - mode: {mode}\n  - median : {median}")
+
+def run_one_find_window(col_list, ds_path):
+    cause_col = col_list[:-1]
+
+    if len(cause_col) == 0:
+        if len(col_list) == 1:
+            cause_col = [col_list[0]]
+        else:
+            print(f"ERROR: the dataset object did not have any cause column names.\nThe program will now exit")
+    
+    effect_col = col_list[-1]
+    
+    for ds_p in ds_path:
+        find_window_size(effect_col, head_val, cause_col, ds_p)
+
+
+
 def run_experiment(arg, written_args, run_everything):
     if arg in written_args or run_everything in written_args:
         return True
@@ -201,6 +237,7 @@ def init_exp_obj(head_val, exp_type, alpha_val, lambda_val, window_size, support
 traffic = 'traffic'
 synthetic = 'synthetic'
 power = 'air'
+window = 'window'
 
 if __name__ == '__main__':
     start_time = time.time()
@@ -241,12 +278,12 @@ if __name__ == '__main__':
     
     support = 10
     
-    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, cluster, experiment, result, generate, run_everythin)
+    exp_type, head_val, written_args = get_userinput(head_val_small, head_val_large, large, traffic, synthetic, power, cluster, experiment, result, generate, run_everythin, window)
     
     if exp_type == '':
         print(f"\n\n---\nPlease input what dataset to run on.\nThis can be either:\n  - {traffic}\n  - {synthetic}\n  - {power}\n\n---")
     elif len(written_args) == 0:
-        print(f"\n\n---\n\nPlease input what experiments to run.\nThis can be either:\n  - {cluster}: if you wish to create new clusters\n  - {experiment}: if you wish to run the experiments\n  - {result}: If you wish to see the results\n  - {generate}: if you wish to generate new datasets\n  - {run_everythin}: if you wish to run everything")
+        print(f"\n\n---\n\nPlease input what experiments to run.\nThis can be either:\n  - {cluster}: if you wish to create new clusters\n  - {experiment}: if you wish to run the experiments\n  - {result}: If you wish to see the results\n  - {generate}: if you wish to generate new datasets\n  - {window}: if you wish to see and estimate of ideal window sizes\n  - {run_everythin}: if you wish to run everything")
     else:
         e_obj = exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
         data_obj = get_datatype(exp_type)
@@ -267,6 +304,12 @@ if __name__ == '__main__':
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
             print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
-    
+        
+        if run_experiment(window, written_args, run_everythin):
+            print("\n---\nThe sizes without clusters are as following:\n")
+            run_one_find_window(data_obj.baseline_col_names, data_obj.ds_path)
+            print("\n---\nThe sizes with clusters are as following:\n")
+            run_one_find_window(data_obj.cluster_col_names, data_obj.ds_path)
+
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))
