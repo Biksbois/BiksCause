@@ -24,6 +24,7 @@ In addition to the dataset, you should also specify what you wish to run. This c
 * __Cluster__: This will generate clusters on the dataset. The effect will be the same no matter what the specified dataset is.
 * __Experiment__: This will run the experiment. For the synthetic dataset, this will run the experiment one time for each dataset (100 times), for air one time per season and for traffic just one time. This will find causal pairs based on eight different scores, including three different CIR scores and the NST where each score has a variant with and without clusters, adding up to a combined eight scores.
 * __Result__: This will show all the results from the experiment.
+* __Window__: This will find an idea lag value. If this is not selected, the default window sizes will be [1, 5, 10, 18, 24]
 * __All__: This will run everything.
 
 When running the program, one dataset should be specified and one to many commands. Exampels could be:

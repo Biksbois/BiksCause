@@ -108,14 +108,17 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions,
                     print(f'Air experiment with {s} and a k = {k}.')
                     found,hyper = refactored_air_experiment(full_path, k, s, get_ground_truth())
                     print(f'There was {found} causal pairs found.')
-                    print(f"The Best configuration was a {hyper[10:-4]}.\n")   
+                    print(f"The Best configuration was a {hyper}.\n")   
                 if exp_type == traffic:
                     print(f'Traffic experiment with {s} and a k = {k}.')
                     found, hyper = get_at_k_hits(full_path, k, s, f"traffic_{e}", window=window_size, heads=[head_val])
                     print(f'There was {found} causal pairs found.')
                     print(f"The Best configuration was a {hyper[10:-4]}.\n")
                 if exp_type == synthetic:
-                    print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))                  
+                    print(f'Synthetic experiment with {s} and a k = {k}.')
+                    hyper,found = run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val])
+                    print(f'There was {found} causal pairs on average.')
+                    print(f"The Best configuration was a {hyper}.\n")                 
 def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
     is_number = c[1]
     col_name = c[0]

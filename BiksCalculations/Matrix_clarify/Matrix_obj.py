@@ -284,7 +284,7 @@ def run_average_expriment(path, k, score,groundtruth, window=None, heads=None):
     avg_scores = average_score_all_matrixes(matrixes,k, groundtruth)
     avg_scores = sorted(avg_scores,key=lambda x: x[1])
     save_matrix_results(avg_scores[-1])
-    return avg_scores[-1]
+    return avg_scores[-1][:-1]
 
 def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
     hyper_dict = {}
@@ -553,7 +553,7 @@ def extract_aspects_air(line):
     caused = caused[1:-2]
     causal = causal[3:-1]
     pair = (caused,causal)
-    return (pair,season,is_true)
+    return (pair,season, is_true)
 
 def generate_table_line(line):
     res = ''
