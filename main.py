@@ -1,6 +1,6 @@
 import sys
 import statistics
-from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
+from BiksCalculations.Matrix_clarify.Matrix_obj import get_at_k_hits,Create_table_wrapper, run_average_expriment, generate_air_tables ,air_experiment_results, refactored_air_experiment
 import itertools
 import time
 import pandas as pd
@@ -115,8 +115,7 @@ def print_scores(scores, window_size, head_val, result_path, k_vals, extensions,
                     print(f'There was {found} causal pairs found.')
                     print(f"The Best configuration was a {hyper[10:-4]}.\n")
                 if exp_type == synthetic:
-                    print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))                   
-
+                    print(run_average_expriment(full_path, k, s, get_ground_truth(), window=window_size, heads=[head_val]))                  
 def cluster_one_file(c, ds_path, data_obj, e_obj, ind):
     is_number = c[1]
     col_name = c[0]

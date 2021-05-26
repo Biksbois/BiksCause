@@ -47,14 +47,16 @@ class result_matrix():
                 if season in self.matrix_type:
                     self.season = season
                     break;
+        if 'synthetic' in self.matrix_type:
+            self.rem_self_cause()
 
     def extract_file_config(self, file):
         alpha_regex,lambda_regex,header_regex,window_regex = ('_a(\d+|\d+.\d)_','_l(\d+|\d+.\d)_','_h\d+_','_w\d+_')
         self.window = re.search(window_regex,file).group().replace('_','').replace('w','')
         self.header = re.search(header_regex,file).group().replace('_','').replace('h','')
         if('cir' not in file):
-            self.lamb = int(float(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10)
-            self.alpha = int(float(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100)
+            self.lamb = float(re.search(lambda_regex,file).group().replace('_','').replace('l',''))/10
+            self.alpha = float(re.search(alpha_regex,file).group().replace('_','').replace('a',''))/100
 
     def create_label_mapping(self,df):
         self.lookup_dict = {}
@@ -94,6 +96,12 @@ class result_matrix():
                     if self.check_values(col,idx):
                         self.matrix_list.append((idx,col))#swap
         return self.matrix_list
+    
+    def rem_self_cause(self):
+        for pair in self.matrix_sorted_list:
+            if pair[0] != pair[1]:
+                self.interesting_results.append(pair)
+        self.interesting_results.reverse()
 
     def get_interesting_result(self, effect_cond = ""):
         for pair in self.matrix_sorted_list:
@@ -121,7 +129,6 @@ class result_matrix():
     def adjust_score(self,avg , cause_effect, exp_range):
         if not isinstance(cause_effect, str):
             for value in cause_effect:
-                print(value)
                 if self.calculate_exp(avg,value) in range(exp_range[0], exp_range[1]):
                     self.score += 1
 
@@ -146,13 +153,12 @@ class result_matrix():
         causal_pairs = []
         for key in ground_truth.keys():
             for value in ground_truth[key].cause:
-                causal_pairs.append((key,value))
+                causal_pairs.append((value,key))
         return causal_pairs
     
     def Count_causal_pair_from_groundtruth(self, groundtruth, k=10):
         counter = 0
-        self.matrix_sorted_list.reverse()
-        found = self.matrix_sorted_list[:k]
+        found = self.interesting_results[:k]
         truths = self.Convert_ground_truth(groundtruth)
         if self.cluster_stat == "no_cluster":
             found = list(set(self.translate_to_non_cluster(found)))
@@ -179,9 +185,7 @@ class result_matrix():
             return self.get_Value((idx,col)) != 0
             
     def get_calc_ac(self,K,avg = 3259):
-        # used_pair = []
         strings = []
-        #print(len(self.))
         for i in range(len(self.interesting_results[:K])):
             translated_effect = self.translated_pairs[i][0]
             traffic_range = self.mapper_obj.event_to_value[translated_effect]
@@ -238,7 +242,7 @@ def get_at_k_hits(path, k, score,maps, window=None, heads=None):
     matrixes.sort(key=lambda x : x.score)
     calcs = matrixes[-1].get_calc_ac(k)
     save_in_text(calcs,matrixes[-1].generate_matrix_key())
-    return matrixes[-1].score    
+    return (matrixes[-1].score, matrixes[-1].matrix_type)    
 
 def save_in_text(lst, name):
     textfile = open(f"BiksCalculations\Calculations_for_roni\{name}.txt", "w")
@@ -298,8 +302,6 @@ def air_experiment_results(path,k,score,groundtruth,window=None, heads=None):
         result_matrixes.append(sorted(matrix, key=lambda x: x[2]))
     for m in result_matrixes:
         m.reverse()
-    print(get_seasons_average())
-    exit()
     return count_air_cause(result_matrixes)
 
 def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
@@ -308,19 +310,23 @@ def refactored_air_experiment(path,k,score,groundtruth,window=None,heads=None):
     grouped_result_matrixes = calculate_group_causality(grouped_matrixes,k)
     result_list = merge_result_matrixes(grouped_result_matrixes)
     most_causal_list = select_most_causal(result_list,k)
-    
     print_top_k(most_causal_list,k)
+    count = count_air_causal_pairs(most_causal_list[1][:k])
+    return count, most_causal_list[0]
 
+def count_air_causal_pairs(lst):
+    count =  0
+    for pair in lst: 
+        if pair[0][1]:
+            count += 1
+    return count
+        
 def print_top_k(lst,k):
     with open(f'BiksCalculations\\air_results\{lst[0]}.txt', 'w') as f:
         write = csv.writer(f)
 
         for entry in lst[1][:k]:
-            # pair = (entry[0][0][0],split_on_underscore(entry[0][0][1]),entry[2])
-            # if pair not in usedpairs:
-            print(entry)
             write.writerow(entry)
-                # usedpairs.append(pair)
 
 def select_most_causal(reslut_lst,k):
     counts = []
@@ -328,13 +334,8 @@ def select_most_causal(reslut_lst,k):
     for lst in reslut_lst:
         count = 0
         for entry in lst[1][:k]:
-            # pair = (entry[0][0][0],split_on_underscore(entry[0][0][1]),entry[2])
-            # if pair not in usedpairs:
-            #     usedpairs.append(pair)
             if entry[0][1]:
                 count += 1
-        #usedpairs = []
-        print(count)
         counts.append(count)
     return reslut_lst[explicit(counts)]
 
@@ -342,13 +343,6 @@ def explicit(l):
     max_val = max(l)
     max_idx = l.index(max_val)
     return max_idx
-
-def count_causal_in_k(lst, k):
-    print(lst[1][0])
-    for element in lst[0][1][:k]:
-        if element[0][1]:
-            print(element)
-        
 
 def merge_result_matrixes(groups):
     Matrix_results = []
@@ -513,7 +507,7 @@ def causal_air_dic():
         }
     }
 
-def save_matrix_results(matrix_result): 
+def save_matrix_results(matrix_result):
     with open(f'BiksCalculations\synthetic_avg_results\{matrix_result[0]}.txt', 'w') as f:
         write = csv.writer(f)
         
@@ -524,13 +518,11 @@ def generate_air_tables():
     paths = find_air_results(basepath)
     files = load_files_air(paths,basepath)
     for entry in files:
-        print('______________________________')
         generate_air_table(entry)
 
 def generate_air_table(string):
     lst = string[0].split('  ')
     lines = []
-    print(string[1])
     textfile = open(f"BiksCalculations\\air_results\Tablefiles\{string[1]}", "w")
     for i,s in enumerate(lst):
         if not len(s)<1:
@@ -658,7 +650,6 @@ def Create_table_wrapper(path, effect_colum, cause_colum,exp):
             table_data = load_table_air_data(info[-1])
         else:
             table_data = load_table_traffic_data(info[-1])
-            print(table_data)
         end_table = f"\\hline\n\\end{{tabular}}\n\\caption{{Showing results from {generate_caption(info)}}}\n\\end{{table}}"
         table = start_table+table_data+end_table#tables.append(start_table+table_data+end_table)
         with open(f'{path}{info[-1]}', 'w') as f:
