@@ -19,8 +19,6 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
         matrixes['cir_m_avg'].xs(x)[y] = round(cir_m_avg, 2)
         matrixes['cir_m_min'].xs(x)[y] = round(cir_m_min, 2)
         matrixes['cir_m_max'].xs(x)[y] = round(cir_m_max, 2)
-    else:
-        print(f"{y} was not in {x}")
     
     for key in e_obj.nst_keys:
         matrixes[key].xs(x)[y] = round(nst[key], 2)
