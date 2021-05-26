@@ -368,12 +368,9 @@ def calcualte_matrix_causalty(matrix_group, k):
     return_matrixes = []
     for matrix in matrix_group:
         season = matrix.season
-        #matrix.interesting_results.reverse()
-        # for m in matrix.interesting_results:
-        #     print(matrix.get_Value(m))
         for element in matrix.interesting_results[:k]:
             if is_air_causal(season, element):
-                matrix.comprehension_list.append((element,True))#add tuple containing truth and season, and pair
+                matrix.comprehension_list.append((element,True))
             else:
                 matrix.comprehension_list.append((element,False))
         return_matrixes.append(matrix)
@@ -612,7 +609,7 @@ def generate_caption(info):
     return caption
 
 def extract_info_air(file):
-    alpha_regex,lambda_regex,k_regex,window_regex = ('_a(\d+|\d+.\d)_','_l(\d+|\d+.\d)_','_k\d+_','_w\d+_')
+    alpha_regex,lambda_regex,k_regex,window_regex = ('_a(\d+|\d+.\d\d)_','_l(\d+|\d+.\d)_','_k\d+_','_w\d+_')
     window = re.search(window_regex,file).group().replace('_','').replace('w','')
     k = re.search(k_regex,file).group().replace('_','').replace('k','') 
     is_cluster =""
