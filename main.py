@@ -5,6 +5,7 @@ import itertools
 import time
 import pandas as pd
 import numpy as np
+import math
 import datetime
 from experiment_obj import *
 from BiksCalculations.find_ideal_window import find_idea_window
@@ -212,7 +213,7 @@ def find_window_size(effect_col, head_val, args, ds_p):
     
     overall_list.sort()
 
-    percents = [0.25, 0.5, 0.75, 0.9]
+    percents = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
     quan = np.quantile(overall_list, percents)
     
     mode = max(set(overall_list), key=overall_list.count)
@@ -222,10 +223,18 @@ def find_window_size(effect_col, head_val, args, ds_p):
     print(f"\n---\n  - average: {average}\n  - mode: {mode}\n  - median : {median}\n  - quan: ")
     for q in range(len(quan)):
         print(f"    - {percents[q]} : {quan[q]}")
+    
+    print(f"\nUnique windows sizes include: {sorted(list(set(quan)))}")
+    
+    quan = list(quan)
+    quan.extend([math.ceil(average)])
+    
+    return sorted(list(set(quan)))
 
 def run_one_find_window(col_list, ds_path):
     cause_col = col_list[:-1]
-
+    window_list = []
+    
     if len(cause_col) == 0:
         if len(col_list) == 1:
             cause_col = [col_list[0]]
@@ -236,8 +245,18 @@ def run_one_find_window(col_list, ds_path):
     
     for ds_p in ds_path:
         print(f"\ndataset path: {ds_p}")
-        find_window_size(effect_col, head_val, cause_col, ds_p)
+        window_list.extend(find_window_size(effect_col, head_val, cause_col, ds_p))
+    
+    return window_list
 
+def run_window(data_obj):
+    window_list = []
+    print("\n---\nThe sizes without clusters are as following:\n")
+    window_list.extend(run_one_find_window(data_obj.baseline_col_names, data_obj.ds_path))
+    print("\n---\nThe sizes with clusters are as following:\n")
+    window_list.extend(run_one_find_window(data_obj.cluster_col_names, data_obj.ds_path))
+    
+    return sorted(list(set(window_list)))
 
 
 def run_experiment(arg, written_args, run_everything):
@@ -313,6 +332,17 @@ if __name__ == '__main__':
             data_obj = get_datatype(exp_type)
             call_cluster(e_obj, data_obj)
         
+        if run_experiment(window, written_args, run_everythin):
+            window_list = run_window(data_obj)
+            
+            if exp_type == traffic:
+                window_list.extend([1.0,5.0,10.0])
+                window_list = list(set(window_list))
+            
+            window_size = window_list
+            e_obj = exp_obj(alpha_val, lambda_val, window_size, head_val, exp_type, head_val, support, scores)
+            # print(window_list)
+        
         if run_experiment(experiment, written_args, run_everythin):
             print_start(exp_type, head_val, written_args, window_size, lambda_val, alpha_val, support, e_obj.scores)
             call_experiment(e_obj, data_obj, window_size, exp_type)
@@ -320,12 +350,6 @@ if __name__ == '__main__':
         if run_experiment(result, written_args, run_everythin):
             print("\n---\nThe result scores are being estimated...\n---\n", flush=True)
             print_scores(scores_short, window_size, head_val, data_obj.result_path, k_vals, extensions)
-        
-        if run_experiment(window, written_args, run_everythin):
-            print("\n---\nThe sizes without clusters are as following:\n")
-            run_one_find_window(data_obj.baseline_col_names, data_obj.ds_path)
-            print("\n---\nThe sizes with clusters are as following:\n")
-            run_one_find_window(data_obj.cluster_col_names, data_obj.ds_path)
 
     print("\nThe program will now exit.\n")
     print("\n\n--- %s seconds ---\n\n" % round((time.time() - start_time), 2))
