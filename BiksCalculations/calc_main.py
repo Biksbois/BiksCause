@@ -16,24 +16,17 @@ def calculate(x, y, ds_obj, matrixes, suf_dict, nec_dict, d_dict, e_obj):
     if not ds_obj.hardcoded_cir_m == None and x in ds_obj.hardcoded_cir_m and y in ds_obj.hardcoded_cir_m[x]:
         cir_m_avg, cir_m_max, cir_m_min = calc_cir_m_avg_max(x, y, ds_obj.hardcoded_cir_m[x], nec_dict, d_dict, ds_obj)
         
-        
-        # print(f"\n\n---\n\nx = {x}, y = {y}, z = {ds_obj.hardcoded_cir_m[x]}")
-        # print(f"avg out: {round(cir_m_avg,2)}")
-        # print(f"max out: {round(cir_m_max,2)}")
-        # print(f"min out: {round(cir_m_min, 2)}")
-        
-        
         matrixes['cir_m_avg'].xs(x)[y] = round(cir_m_avg, 2)
         matrixes['cir_m_min'].xs(x)[y] = round(cir_m_min, 2)
         matrixes['cir_m_max'].xs(x)[y] = round(cir_m_max, 2)
-    # else:
-    #     print(f"{y} was not in {x}")
+    else:
+        print(f"{y} was not in {x}")
     
-    # for key in e_obj.nst_keys:
-    #     matrixes[key].xs(x)[y] = round(nst[key], 2)
+    for key in e_obj.nst_keys:
+        matrixes[key].xs(x)[y] = round(nst[key], 2)
     
-    # matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
-    # matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
+    matrixes['cir_c'].xs(x)[y] = round(cir_c, 2)
+    matrixes['cir_b'].xs(x)[y] = round(cir_b, 2)
 
 def extract_values(colum_list, colum_dict):
     vals_to_check = []

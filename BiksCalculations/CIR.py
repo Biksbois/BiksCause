@@ -45,9 +45,6 @@ def calc_cir_m_avg_max(x, y, z_set, big_dict, d_dict, ds_obj):
     for z in z_set:
         result_list.append(calc_cir_m(x, y, z, big_dict, d_dict, ds_obj))
     
-    # print("\n\n\n---\n")
-    # print(result_list)
-    
     avg_res = sum(result_list) / len(result_list)
     max_res = max(result_list) 
     min_res = max_res
@@ -55,15 +52,6 @@ def calc_cir_m_avg_max(x, y, z_set, big_dict, d_dict, ds_obj):
     for num in result_list:
         if min_res > num and not num == 0:
             min_res = num
-    
-    # print(f"avg res: {avg_res}")
-    # print(f"max res: {max_res}")
-    # print(f"min res: {min_res}")
-    
-    # print(big_dict)
-    # print('\n\n\n\n-------------------------\n\n\n\n')
-    # print(d_dict)
-    # exit()
     
     return avg_res, max_res, min_res
 

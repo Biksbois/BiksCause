@@ -61,7 +61,7 @@ def get_traffic_datatype_obj():
             1:{
                 'traffic_volume_0': ['heavy intensity rain_0', 'mist_0', 'moderate rain_0', 'traffic_volume_0', 'traffic_volume_2'],
                 'traffic_volume_1': ['mist_0', 'moderate rain_0', 'traffic_volume_1', 'light rain_0'],
-                'traffic_volume_2': ['moderate rain_0', 'light rain_0', 'heavy intensity rain_0', 'traffic_volume_1', 'traffic_volume_2']
+                'traffic_volume_2': ['heavy intensity rain_0', 'light rain_0', 'moderate rain_0', 'traffic_volume_0', 'traffic_volume_2']
             },
             5:{
                 'traffic_volume_0': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
@@ -77,17 +77,17 @@ def get_traffic_datatype_obj():
         'no_cluster':{
             1:{
                 'traffic_volume_0': ['heavy intensity rain', 'mist', 'moderate rain', 'traffic_volume_0', 'traffic_volume_2'],
-                'traffic_volume_1': ['mist', 'moderate rain', 'traffic_volume_1', 'light rain'],
-                'traffic_volume_2': ['moderate rain', 'light rain', 'heavy intensity rain', 'traffic_volume_1', 'traffic_volume_2']
+                'traffic_volume_1': ['light rain', 'mist', 'moderate rain', 'traffic_volume_1'],
+                'traffic_volume_2': ['heavy intensity rain', 'light rain', 'moderate rain', 'traffic_volume_0', 'traffic_volume_2']
             },
             5:{
-                'traffic_volume_0': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_0': ['moderate rain', 'snow', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
                 'traffic_volume_1': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
                 'traffic_volume_2': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
             },
             10:{
                 'traffic_volume_0': ['moderate rain', 'snow', 'traffic_volume_0', 'traffic_volume_1'],
-                'traffic_volume_1': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
+                'traffic_volume_1': ['light intensity drizzle', 'snow', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
                 'traffic_volume_2': ['mist', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
             }
         }
