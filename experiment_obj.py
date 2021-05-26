@@ -71,19 +71,20 @@ def get_traffic_datatype_obj():
             'traffic_volume_0': ['moderate rain_0', 'snow_0', 'traffic_volume_0', 'traffic_volume_1'],
             'traffic_volume_1': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
             'traffic_volume_2': ['mist_0', 'traffic_volume_0', 'traffic_volume_1', 'traffic_volume_2'],
-        },
-        6:{
+        }
+        # 6:{
             
-        },
-        12:{
+        # },
+        # 12:{
             
-        },
-        18:{
+        # },
+        # 18:{
             
-        },
-        24:{
+        # },
+        # 24:{
             
-        }}
+        # }
+        }
     
     trafic_column_list = ['temp_cluster','traffic_volume_cluster']
     
@@ -103,27 +104,28 @@ def get_traffic_datatype_obj():
 
 def get_synthetic_datatype_obj():
     hardcoded_cir_m = {
-        1:{
+        # 1:{
             
-        },
-        5:{
+        # },
+        # 5:{
             
-        },
-        10:{
+        # },
+        # 10:{
             
-        },
-        6:{
+        # },
+        # 6:{
             
-        },
-        12:{
+        # },
+        # 12:{
             
-        },
-        18:{
+        # },
+        # 18:{
             
-        },
-        24:{
+        # },
+        # 24:{
             
-        }}
+        # }
+        }
     
     cluster_col_names = ['events_cluster']
     baseline_col_names = ['events']
@@ -149,27 +151,28 @@ def get_synthetic_datatype_obj():
 
 def get_air_datatype_obj():
     hardcoded_cir_m = {
-        1:{
+        # 1:{
             
-        },
-        5:{
+        # },
+        # 5:{
             
-        },
-        10:{
+        # },
+        # 10:{
             
-        },
-        6:{
+        # },
+        # 6:{
             
-        },
-        12:{
+        # },
+        # 12:{
             
-        },
-        18:{
+        # },
+        # 18:{
             
-        },
-        24:{
+        # },
+        # 24:{
             
-        }}
+        # }
+        }
     
     col_names = ['PM10_cluster']
     # col_names = ['PM10_cluster', 'TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'RAIN_cluster', 'wd_cluster']
