@@ -1,0 +1,15 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{m}$ with window size = 5}
+\end{table}\hline
+\end{tabular}
+\caption{Showing results from $NST_{e}$ with window size = 5, $\alpha$ =  and $\lambda$ = 15}
+\end{table}

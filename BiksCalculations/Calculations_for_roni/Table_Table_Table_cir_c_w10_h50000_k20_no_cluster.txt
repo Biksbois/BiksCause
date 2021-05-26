@@ -1,0 +1,42 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+1 & trafficvolume2 & proximity thunderstorm with drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+2 & trafficvolume0 & thunderstorm with heavy rain & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+3 & trafficvolume0 & snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [269, 1880]$\\
+4 & trafficvolume2 & temp5 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+5 & trafficvolume2 & heavy intensity drizzle & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [4131, 7100]$\\
+6 & trafficvolume0 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+7 & trafficvolume2 & thunderstorm with rain & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+8 & trafficvolume2 & temp4 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+\rowcolor{lightgray} 9 & trafficvolume1 & snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+10 & trafficvolume2 & mist & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+11 & trafficvolume1 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+12 & trafficvolume1 & smoke & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+13 & trafficvolume2 & thunderstorm with light drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+\rowcolor{lightgray} 14 & trafficvolume1 & light snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+15 & trafficvolume1 & heavy snow & \footnotesize $(3259*(1+(-67.6/100))) = 1055 \in [1881, 4130]$\\
+16 & trafficvolume2 & fog & \footnotesize $(3259*(1+(-12.5/100))) = 2851 \in [4131, 7100]$\\
+\rowcolor{lightgray} 17 & trafficvolume1 & haze & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [1881, 4130]$\\
+18 & trafficvolume0 & thunderstorm & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+\rowcolor{lightgray} 19 & trafficvolume1 & proximity shower rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+\rowcolor{lightgray} 20 & trafficvolume0 & heavy snow & \footnotesize $(3259*(1+(-67.6/100))) = 1055 \in [269, 1880]$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{c}$ with window size = 10}
+\end{table}\hline
+\end{tabular}
+\caption{Showing results from $NST_{e}$ with window size = 10, $\alpha$ =  and $\lambda$ = 20}
+\end{table}\hline
+\end{tabular}
+\caption{Showing results from $NST_{e}$ with window size = 10, $\alpha$ =  and $\lambda$ = 20}
+\end{table}

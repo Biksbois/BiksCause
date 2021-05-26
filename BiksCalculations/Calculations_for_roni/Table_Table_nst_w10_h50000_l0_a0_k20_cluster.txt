@@ -1,0 +1,35 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather Effect}  & \textbf{Calculation}\\
+\hline
+\rowcolor{lightgray} 1 & trafficvolume1 & snow1 & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+\rowcolor{lightgray} 2 & trafficvolume1 & haze8 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [1881, 4130]$\\
+\rowcolor{lightgray} 3 & trafficvolume1 & heavy intensity rain2 & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+\rowcolor{lightgray} 4 & trafficvolume1 & very heavy rain0 & \footnotesize $(3259*(1+(-13.5/100))) = 2819 \in [1881, 4130]$\\
+\rowcolor{lightgray} 5 & trafficvolume1 & heavy intensity rain1 & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+6 & trafficvolume2 & heavy intensity rain1 & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [4131, 7100]$\\
+\rowcolor{lightgray} 7 & trafficvolume1 & haze4 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [1881, 4130]$\\
+8 & trafficvolume0 & haze4 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [269, 1880]$\\
+9 & trafficvolume2 & fog2 & \footnotesize $(3259*(1+(-12.5/100))) = 2851 \in [4131, 7100]$\\
+10 & trafficvolume1 & smoke0 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+11 & trafficvolume2 & smoke0 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+\rowcolor{lightgray} 12 & trafficvolume1 & proximity thunderstorm2 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+13 & trafficvolume0 & proximity thunderstorm2 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [269, 1880]$\\
+\rowcolor{lightgray} 14 & trafficvolume1 & fog2 & \footnotesize $(3259*(1+(-12.5/100))) = 2851 \in [1881, 4130]$\\
+15 & trafficvolume2 & proximity thunderstorm2 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [4131, 7100]$\\
+16 & trafficvolume2 & thunderstorm with rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [4131, 7100]$\\
+17 & trafficvolume0 & thunderstorm with rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [269, 1880]$\\
+18 & trafficvolume1 & heavy snow4 & \footnotesize $(3259*(1+(-67.6/100))) = 1055 \in [1881, 4130]$\\
+\rowcolor{lightgray} 19 & trafficvolume1 & haze3 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [1881, 4130]$\\
+\rowcolor{lightgray} 20 & trafficvolume1 & thunderstorm with rain0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+\hline
+\end{tabular}
+\caption{Showing results from $NST_{c}$ with window size = 10, $\alpha$ = 0 and $\lambda$ = 0}
+\end{table}\hline
+\end{tabular}
+\caption{Showing results from $NST_{c}$ with window size = 10, $\alpha$ = 0 and $\lambda$ = 0}
+\end{table}
