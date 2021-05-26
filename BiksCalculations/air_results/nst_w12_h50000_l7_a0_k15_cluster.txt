@@ -1,0 +1,15 @@
+"(('PM10_0', 'DEWP_0_0'), True)",14439871.21,summer
+"(('PM10_0', 'DEWP_1_1'), False)",2294267.84,spring
+"(('PM10_0', 'WSPM_1_2'), True)",447867.96,summer
+"(('PM10_0', 'WSPM_1_3'), True)",298185.46,fall
+"(('PM10_0', 'WSPM_1_3'), True)",19378.42,winter
+"(('PM10_0', 'WSPM_1_2'), True)",19091.02,fall
+"(('PM10_0', 'WSPM_1_1'), True)",13879.64,fall
+"(('PM10_0', 'WSPM_1_0'), True)",11873.46,fall
+"(('PM10_0', 'WSPM_1_1'), True)",11643.4,summer
+"(('PM10_0', 'WSPM_0_4'), True)",9844.65,summer
+"(('PM10_0', 'WSPM_1_0'), True)",5579.35,winter
+"(('PM10_1', 'WSPM_1_0'), False)",5345.81,fall
+"(('PM10_1', 'WSPM_1_1'), False)",4780.88,fall
+"(('PM10_0', 'WSPM_0_0'), True)",4481.49,fall
+"(('PM10_0', 'WSPM_1_1'), True)",3968.14,winter

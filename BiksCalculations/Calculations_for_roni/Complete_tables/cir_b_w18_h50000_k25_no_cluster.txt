@@ -1,0 +1,33 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+1 & trafficvolume2 & light shower snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [4131, 7100]$\\
+2 & trafficvolume2 & light rain and snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [4131, 7100]$\\
+3 & trafficvolume0 & light rain and snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [269, 1880]$\\
+\rowcolor{lightgray} 4 & trafficvolume1 & light rain and snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+5 & trafficvolume2 & shower drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [4131, 7100]$\\
+6 & trafficvolume0 & shower drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+\rowcolor{lightgray} 7 & trafficvolume1 & shower drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [1881, 4130]$\\
+8 & trafficvolume2 & SQUALLS & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+9 & trafficvolume0 & SQUALLS & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+10 & trafficvolume1 & SQUALLS & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+11 & trafficvolume2 & sleet & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+12 & trafficvolume0 & sleet & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+13 & trafficvolume1 & sleet & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+14 & trafficvolume2 & thunderstorm with drizzle & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [4131, 7100]$\\
+15 & trafficvolume0 & thunderstorm with drizzle & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [269, 1880]$\\
+\rowcolor{lightgray} 16 & trafficvolume1 & thunderstorm with drizzle & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [1881, 4130]$\\
+17 & trafficvolume2 & freezing rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [4131, 7100]$\\
+18 & trafficvolume0 & freezing rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [269, 1880]$\\
+\rowcolor{lightgray} 19 & trafficvolume1 & freezing rain & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+20 & trafficvolume2 & shower snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [4131, 7100]$\\
+21 & trafficvolume0 & shower snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [269, 1880]$\\
+\rowcolor{lightgray} 22 & trafficvolume1 & shower snow & \footnotesize $(3259*(1+(-37.9/100))) = 2023 \in [1881, 4130]$\\
+\rowcolor{lightgray} 23 & trafficvolume1 & very heavy rain & \footnotesize $(3259*(1+(-13.5/100))) = 2819 \in [1881, 4130]$\\
+24 & trafficvolume0 & proximity thunderstorm with drizzle & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [269, 1880]$\\
+\rowcolor{lightgray} 25 & trafficvolume1 & thunderstorm with rain & \footnotesize $(3259*(1+(-8.3/100))) = 2988 \in [1881, 4130]$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{b}$ with window size = 18}
+\end{table}

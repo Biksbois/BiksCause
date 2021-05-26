@@ -1,9 +1,0 @@
-\rowcolor{lightgray} trafficvolume1 & light snow & $(3259*(1+(-37.9/100)))) = 2023 \in [1881, 4130]$\\
-trafficvolume0 & light snow & $(3259*(1+(-37.9/100)))) = 2023 \in [269, 1880]$\\
-trafficvolume2 & drizzle & $(3259*(1+(-8.3/100)))) = 2988 \in [4131, 7100]$\\
-\rowcolor{lightgray} trafficvolume1 & haze & $(3259*(1+(1.4/100)))) = 3304 \in [1881, 4130]$\\
-trafficvolume0 & haze & $(3259*(1+(1.4/100)))) = 3304 \in [269, 1880]$\\
-trafficvolume0 & light intensity drizzle & $(3259*(1+(-8.3/100)))) = 2988 \in [269, 1880]$\\
-trafficvolume2 & proximity shower rain & $(3259*(1+(12.1/100)))) = 3653 \in [4131, 7100]$\\
-\rowcolor{lightgray} trafficvolume1 & drizzle & $(3259*(1+(-8.3/100)))) = 2988 \in [1881, 4130]$\\
-\rowcolor{lightgray} trafficvolume1 & heavy intensity rain & $(3259*(1+(-3.4/100)))) = 3148 \in [1881, 4130]$\\

@@ -1,0 +1,18 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{PM10 Concentration} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+1 & PM10\_1 & WSPM\_0 & \footnotesize $(111*(1+(-0.45))) = 61 \in range(105, 260)$\\
+2 & PM10\_2 & WSPM\_0 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(261, 500)$\\
+3 & PM10\_2 & WSPM\_0 & \footnotesize $(124*(1+(-0.18))) = 102 \in range(261, 500)$\\
+4 & PM10\_1 & WSPM\_0 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(105, 260)$\\
+5 & PM10\_2 & TEMP\_0 & \footnotesize $(111*(1+(0.38))) = 154 \in range(261, 500)$\\
+6 & PM10\_2 & PRES\_0 & \footnotesize $(124*(1+(-0.45))) = 68 \in range(261, 500)$\\
+\rowcolor{lightgray} 7 & PM10\_0 & WSPM\_1 & \footnotesize $(112*(1+(-0.33))) = 75 \in range(1, 104)$\\
+8 & PM10\_1 & WSPM\_0 & \footnotesize $(124*(1+(-0.18))) = 102 \in range(105, 260)$\\
+\rowcolor{lightgray} 9 & PM10\_0 & WSPM\_1 & \footnotesize $(111*(1+(-0.45))) = 61 \in range(1, 104)$\\
+\rowcolor{lightgray} 10 & PM10\_0 & WSPM\_1 & \footnotesize $(124*(1+(-0.18))) = 102 \in range(1, 104)$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{c}$ with window size = 18}
+\end{table}

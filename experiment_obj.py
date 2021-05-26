@@ -186,12 +186,12 @@ def get_air_datatype_obj():
     
     result_path = f"{get_result_path()}/air"
     
-    # ds_path = ['input_csv\PRSA_Data_Dongsi_spring.csv',
-    #         'input_csv\PRSA_Data_Dongsi_summer.csv', 
-    #         'input_csv\PRSA_Data_Dongsi_fall.csv', 
-    #         'input_csv\PRSA_Data_Dongsi_winter.csv']
+    ds_path = ['input_csv\PRSA_Data_Dongsi_spring.csv',
+            'input_csv\PRSA_Data_Dongsi_summer.csv', 
+            'input_csv\PRSA_Data_Dongsi_fall.csv', 
+            'input_csv\PRSA_Data_Dongsi_winter.csv']
     
-    ds_path = ['input_csv\PRSA_Data_Dongsi_20130301-20170228.csv']
+    # ds_path = ['input_csv\PRSA_Data_Dongsi_20130301-20170228.csv']
     
     time_colum = 'time_set'
     temp_csv_path = get_temp_csv_path()

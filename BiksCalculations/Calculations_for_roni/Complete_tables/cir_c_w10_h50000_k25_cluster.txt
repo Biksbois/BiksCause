@@ -1,0 +1,33 @@
+\begin{table}[H]
+\begin{tabular}{ll|p{.35\textwidth}|l}
+\# & \textbf{Traffic Volume} & \textbf{Weather event}  & \textbf{Calculation}\\
+\hline
+1 & trafficvolume1 & temp0 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+2 & trafficvolume2 & temp0 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+3 & trafficvolume0 & temp0 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+4 & trafficvolume1 & temp1 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+5 & trafficvolume0 & temp1 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+6 & trafficvolume2 & temp1 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+7 & trafficvolume0 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+8 & trafficvolume1 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+9 & trafficvolume2 & temp7 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+10 & trafficvolume2 & temp4 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+11 & trafficvolume0 & temp4 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+12 & trafficvolume1 & temp4 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+13 & trafficvolume0 & temp2 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+14 & trafficvolume2 & temp2 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+15 & trafficvolume1 & temp2 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+16 & trafficvolume2 & temp5 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+17 & trafficvolume0 & temp5 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+18 & trafficvolume1 & temp5 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+19 & trafficvolume2 & temp3 & \footnotesize $(3259*(1+(-1))) = 0 \in [4131, 7100]$\\
+20 & trafficvolume1 & temp3 & \footnotesize $(3259*(1+(-1))) = 0 \in [1881, 4130]$\\
+21 & trafficvolume0 & temp3 & \footnotesize $(3259*(1+(-1))) = 0 \in [269, 1880]$\\
+\rowcolor{lightgray} 22 & trafficvolume1 & heavy intensity rain2 & \footnotesize $(3259*(1+(12.1/100))) = 3653 \in [1881, 4130]$\\
+\rowcolor{lightgray} 23 & trafficvolume1 & haze4 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [1881, 4130]$\\
+24 & trafficvolume2 & proximity thunderstorm with drizzle0 & \footnotesize $(3259*(1+(-4.18/100))) = 3122 \in [4131, 7100]$\\
+25 & trafficvolume0 & haze4 & \footnotesize $(3259*(1+(1.4/100))) = 3304 \in [269, 1880]$\\
+\hline
+\end{tabular}
+\caption{Showing results from $cir_{c_c}$ with window size = 10}
+\end{table}
