@@ -9,10 +9,10 @@ class exp_obj():
         self.head_val = head_val
         self.exp_type = exp_type
         self.exp_size = exp_size
-        self.nst_keys = []#self.generate_nst_keys()
+        self.nst_keys = self.generate_nst_keys()
         self.support = support
         self.scores = scores
-        # scores.extend(self.nst_keys)
+        scores.extend(self.nst_keys)
         
     
     def parse_val(self, val):
