@@ -143,9 +143,9 @@ def get_air_datatype_obj():
     cluster_col_names = ['TEMP_cluster_cluster', 'PRES_cluster_cluster', 'DEWP_cluster_cluster', 'WSPM_cluster_cluster'] + col_names
     baseline_col_names = ['TEMP_cluster', 'PRES_cluster', 'DEWP_cluster', 'WSPM_cluster'] + col_names
     
-    # cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
+    cluster_colums = [('PM2.5', True), ('PM10', True), ('TEMP', True), ('PRES', True), ('DEWP', True), ('RAIN', True), ('wd', False), ('WSPM', True)]
+    # cluster_colums = [('PM10_cluster', False), ('TEMP_cluster', False)]#, ('PRES_cluster', False), ('DEWP_cluster', False),('RAIN_cluster', False),('WSPM_cluster', False)]
     # cluster_colums = [('TEMP_cluster', False), ('PRES_cluster', False), ('DEWP_cluster', False),('RAIN_cluster', False),('WSPM_cluster', False)]
-    cluster_colums = [('PM10_cluster', False)]#, ('TEMP_cluster', False)]#, ('PRES_cluster', False), ('DEWP_cluster', False),('RAIN_cluster', False),('WSPM_cluster', False)]
     
     cause_column = 'PM2.5'
     effect_column = 'PM2.5'
